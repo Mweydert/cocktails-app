@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "rimraf ./build && tsc",
+    "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +17,15 @@
   "bugs": {
     "url": "https://github.com/Mweydert/cocktails-app/issues"
   },
-  "homepage": "https://github.com/Mweydert/cocktails-app#readme"
+  "homepage": "https://github.com/Mweydert/cocktails-app#readme",
+  "devDependencies": {
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "rimraf": "^4.3.0"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
 }
