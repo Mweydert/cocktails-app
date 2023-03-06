@@ -1,6 +1,8 @@
 import { CocktailGateway, CreateCocktailCommand } from "./cocktails.contract";
 import Cocktail from "./model";
 
+// TODO: manage conflict in cocktail name
+
 export default class CreateCocktail {
     #cocktailGateway: CocktailGateway;
 
