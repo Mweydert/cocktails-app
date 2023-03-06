@@ -11,4 +11,13 @@ describe("create cocktails UC", () => {
         const storedCocktail = gateway.data.get(cocktail.id);
         expect(storedCocktail).toEqual(cocktail);
     });
+
+    test("should succeed to create cocktail without note", async () => {
+        const gateway = new CocktailInMemoryGateway(); 
+        const cocktail = await new CreateCocktailUC(gateway).execute({
+            name: "awesome cocktail"
+        });
+        const storedCocktail = gateway.data.get(cocktail.id);
+        expect(storedCocktail).toEqual(cocktail);
+    });
 });
