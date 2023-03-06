@@ -2,9 +2,10 @@
   "name": "app-domain",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "build": "rimraf ./build && tsc",
+    "dev": "rimraf ./build && tsc --watch",
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "test:watch": "jest --watch"
