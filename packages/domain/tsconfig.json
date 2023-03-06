@@ -1,5 +1,5 @@
 {
-  "exclude": ["./tests/**"],
+  "exclude": ["./tests/**", "./jest.config.ts"],
   "compilerOptions": {
     "target": "es2016",
     "lib": ["es6"],
