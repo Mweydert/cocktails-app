@@ -5,6 +5,7 @@
     },
     "workspaces": [
         "packages/applications/backend",
-        "packages/domain"
+        "packages/domain",
+        "packages/infrastructure"
     ]
 }
