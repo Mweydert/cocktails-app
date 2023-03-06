@@ -1,8 +1,6 @@
 import CreateCocktailUC from "../../src/cocktails/createCocktail";
 import CocktailInMemoryGateway from "../gateways/cocktails";
 
-// TODO: alias
-
 describe("create cocktails UC", () => {
     test("should succeed to create cocktail", async () => {
         const gateway = new CocktailInMemoryGateway(); 
