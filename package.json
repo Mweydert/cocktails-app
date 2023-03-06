@@ -1,0 +1,7 @@
+{
+    "name": "cocktails-app",
+    "workspaces": [
+        "packages/applications/backend",
+        "packages/domain"
+    ]
+}

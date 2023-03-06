@@ -35,5 +35,13 @@
   },
   "_moduleAliases": {
     "@": "build"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mweydert/cocktails-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mweydert/cocktails-app/issues"
+  },
+  "homepage": "https://github.com/Mweydert/cocktails-app#readme"
 }
