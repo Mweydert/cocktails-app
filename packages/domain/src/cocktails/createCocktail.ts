@@ -1,7 +1,7 @@
 import { CocktailGateway, CreateCocktailCommand } from "./cocktails.contract";
 import Cocktail from "./model";
 
-export class CreateCocktail {
+export default class CreateCocktail {
     #cocktailGateway: CocktailGateway;
 
     constructor(cocktailGateway: CocktailGateway) {

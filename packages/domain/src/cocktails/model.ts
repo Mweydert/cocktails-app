@@ -7,14 +7,14 @@ interface CocktailPayload {
 }
 
 class Cocktail {
-    #id: string;
-    #name: string;
-    #note?: number;
+    id: string;
+    name: string;
+    note?: number;
 
     constructor(payload: CocktailPayload) {
-        this.#id = payload.id ?? uuid();
-        this.#name = payload.name;
-        this.#note = payload.note;
+        this.id = payload.id ?? uuid();
+        this.name = payload.name;
+        this.note = payload.note;
     }
 }
 
