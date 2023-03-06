@@ -1,4 +1,7 @@
-import "module-alias/register";
+import moduleAlias from "module-alias";
+moduleAlias.addAliases({
+    "@": `${__dirname}/`,
+});
 import cors from "@koa/cors";
 import Koa from "koa";
 import apiRouter from "@/routes";

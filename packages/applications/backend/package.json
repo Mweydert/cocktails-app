@@ -16,6 +16,7 @@
     "@types/koa": "^2.13.5",
     "@types/koa__cors": "^3.3.1",
     "@types/koa__router": "^12.0.0",
+    "@types/module-alias": "^2.0.1",
     "@types/node": "^18.14.6",
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
@@ -32,9 +33,6 @@
     "koa": "^2.14.1",
     "module-alias": "^2.2.2",
     "winston": "^3.8.2"
-  },
-  "_moduleAliases": {
-    "@": "build"
   },
   "repository": {
     "type": "git",

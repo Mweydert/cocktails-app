@@ -4,6 +4,7 @@
     "lib": ["es6"],
     "module": "commonjs",
     "rootDir": "src",
+    "baseUrl": "./src",
     "resolveJsonModule": true,
     "allowJs": true,
     "outDir": "build",
@@ -13,7 +14,7 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     }
   }
 }
