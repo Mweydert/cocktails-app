@@ -1,9 +1,12 @@
+import cors from "@koa/cors";
 import Koa from "koa";
 import apiRouter from "./routes";
 
 // middlewares to add: cors, koa-response-time, winston, bodyparser, 
 
 const app = new Koa();
+
+app.use(cors());
 
 app.use(async (ctx, next) => {
     await next();
