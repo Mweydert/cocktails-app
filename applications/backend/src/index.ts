@@ -1,10 +1,9 @@
 import Koa from "koa";
-import Router from "@koa/router";
+import apiRouter from "./routes";
 
-// middlewares to add: , koa-response-time, winston, bodyparser, 
+// middlewares to add: cors, koa-response-time, winston, bodyparser, 
 
 const app = new Koa();
-const router = new Router();
 
 app.use(async (ctx, next) => {
     await next();
@@ -19,12 +18,6 @@ app.use(async (ctx, next) => {
     ctx.set("X-Response-Time", `${ms}ms`);
 });
 
-router.get("/", (ctx, next) => {
-    ctx.status = 200;
-    ctx.body = "Hello cocktail World";
-    next();
-})
-
-app.use(router.routes()).use(router.allowedMethods());
+app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
 
 app.listen(3000);
