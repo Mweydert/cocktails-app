@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    # volumes:
+    #   - volume_data:/var/lib/postgresql/data
+    networks:
+      - cocktail-app
+
+networks:
+  cocktail-app:
+    name: cocktail-app
