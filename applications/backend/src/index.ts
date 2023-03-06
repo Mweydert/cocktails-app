@@ -1,6 +1,7 @@
+import "module-alias/register";
 import cors from "@koa/cors";
 import Koa from "koa";
-import apiRouter from "./routes";
+import apiRouter from "@/routes";
 
 // middlewares to add: cors, koa-response-time, winston, bodyparser, 
 

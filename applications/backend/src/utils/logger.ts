@@ -1,7 +1,5 @@
 import { createLogger, format, transports } from "winston";
-import config from "../config";
-
-// TODO: alias folder
+import config from "@/config";
 
 console.info(`Logger configured with LOG_LEVEL ${config.LOG_LEVEL}`);
 
