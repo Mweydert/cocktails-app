@@ -1,6 +1,7 @@
 import Cocktail from "app-domain/src/cocktails/model";
 import { CocktailGateway } from "app-domain/src/cocktails/cocktails.contract";
 import { DataSource } from "typeorm";
+import logger from "../utils/logger";
 import { Cocktail as PSQLCocktail } from "./cocktail.contract";
 
 export default class CocktailGatewayImpl implements CocktailGateway {
@@ -27,21 +28,27 @@ export default class CocktailGatewayImpl implements CocktailGateway {
     }
 
     async createCocktail(cocktail: Cocktail): Promise<void> {
+        logger.debug("Create new cocktail")
+
         const repository = this.#dataSource.getRepository(PSQLCocktail);
         const psqlCocktail = CocktailGatewayImpl.cocktailToPSQLCocktail(cocktail);
         await repository.save(psqlCocktail);
-
-        console.debug(`Create new cocktail ${cocktail.id}`);
+        
+        logger.debug(`Successfuly created new cocktail ${cocktail.id}`);
     }
     
     async getCocktail(id: string): Promise<Cocktail | null> {
+        logger.debug(`Get cocktail ${id}`);
+        
         const repository = this.#dataSource.getRepository(PSQLCocktail);
         const psqlCocktail = await repository.findOneBy({id});
-
+        
         if (!psqlCocktail) {
+            logger.warn(`Cocktail ${id} not found`);
             return null;
         }
-
+        
+        logger.debug(`Successfully got cocktail ${id}`);
         return CocktailGatewayImpl.psqlCocktailToCocktail(psqlCocktail);
     }
 }

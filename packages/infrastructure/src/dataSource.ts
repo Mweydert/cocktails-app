@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
 import * as schemas from "./schemas";
+import logger from "./utils/logger";
+
 
 interface DataSourceConfig {
     host: string;
@@ -20,8 +22,7 @@ export const getDataSource = (config: DataSourceConfig) => {
         database: config.database,
     })
 
-    // TODO: custom logger infra
-    console.info(`Open connection on ${config.host}:${config.port}/${config.database} with user ${config.username}`);
+    logger.info(`Open connection on ${config.host}:${config.port}/${config.database} with user ${config.username}`)
 
     return dataSource;
 }

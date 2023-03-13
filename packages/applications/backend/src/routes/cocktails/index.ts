@@ -17,8 +17,8 @@ const createCocktailUC = new CreateCocktail(cocktailGateway);
 const getCocktailUC = new GetCocktail(cocktailGateway);
 
 router.post("/", async (ctx, next) => {
-    ``
     logger.debug("body", ctx.request.body);
+    
     const command = CreateCocktailScheme.parse(ctx.request.body);
     const res = await createCocktailUC.execute(command);
     ctx.status = 200;
