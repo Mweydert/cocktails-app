@@ -1,15 +1,16 @@
 import logger from "@/utils/logger";
 import Router from "@koa/router";
 import CreateCocktail from "app-domain/src/cocktails/createCocktail";
-import CocktailGatewayImpl from "infrastructure/src/cocktails/cocktail.gateway";
+import { CocktailPSQLGateway } from "infrastructure/src";
 import { CreateCocktailScheme } from "./contract";
 
+import dataSource from "@/utils/dbConfig";
 
 // TODO: dependency injection
 
 const router = new Router();
 
-const cocktailGateway = new CocktailGatewayImpl();
+const cocktailGateway = new CocktailPSQLGateway(dataSource);
 const uc = new CreateCocktail(cocktailGateway);
 
 router.post("/", async (ctx, next) => {
