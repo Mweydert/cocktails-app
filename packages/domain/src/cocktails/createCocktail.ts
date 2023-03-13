@@ -11,7 +11,6 @@ export default class CreateCocktail {
     }
 
     async execute(command: CreateCocktailCommand) {
-        console.log("toto");
         const cocktail = new Cocktail({
             name: command.name,
             note: command.note
