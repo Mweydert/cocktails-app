@@ -1,0 +1,27 @@
+{
+  "name": "infrastructure",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./build && tsc",
+    "lint": "eslint . --ext .ts",
+    "migrations:generate": "typeorm-ts-node-commonjs migration:generate",
+    "migrations:run": "typeorm-ts-node-commonjs migration:run",
+    "migrations:revert": "typeorm-ts-node-commonjs migration:revert"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.10.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.12"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "@types/node": "^18.15.1",
+    "eslint": "^8.35.0",
+    "typescript": "^4.9.5"
+  }
+}
