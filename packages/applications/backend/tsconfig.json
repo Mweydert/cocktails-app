@@ -11,6 +11,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
     "paths": {

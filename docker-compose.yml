@@ -10,8 +10,6 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - 5432:5432
-    # volumes:
-    #   - volume_data:/var/lib/postgresql/data
     networks:
       - cocktail-app
 
