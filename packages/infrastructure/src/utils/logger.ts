@@ -27,6 +27,10 @@ const logger = createLogger({
             )
         })
     ]
-})
+});
 
-export default logger;
+const loggerInstance = logger.child({
+    service: "infra"
+});
+
+export default loggerInstance;

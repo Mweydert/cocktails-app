@@ -29,4 +29,8 @@ const logger = createLogger({
     ]
 })
 
-export default logger;
+const loggerInstance = logger.child({
+    service: "domain"
+})
+
+export default loggerInstance;
