@@ -2,7 +2,7 @@ import Router from "@koa/router";
 
 const router = new Router();
 
-router.get("/status", (ctx, next) => {
+router.get("/", (ctx, next) => {
     ctx.status = 200;
     ctx.body = {
         status: 200

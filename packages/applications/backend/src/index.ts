@@ -2,13 +2,15 @@ import moduleAlias from "module-alias";
 moduleAlias.addAliases({
     "@": `${__dirname}/`,
 });
-import cors from "@koa/cors";
 import Koa from "koa";
+import cors from "@koa/cors";
+import bodyParser from "koa-bodyparser";
 import apiRouter from "@/routes";
 
 const app = new Koa();
 
 app.use(cors());
+app.use(bodyParser());
 
 app.use(async (ctx, next) => {
     await next();

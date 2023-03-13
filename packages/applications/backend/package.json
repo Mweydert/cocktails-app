@@ -16,6 +16,7 @@
     "@types/koa": "^2.13.5",
     "@types/koa__cors": "^3.3.1",
     "@types/koa__router": "^12.0.0",
+    "@types/koa-bodyparser": "^4.3.10",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^18.14.6",
     "@types/winston": "^2.4.4",
@@ -30,9 +31,12 @@
   "dependencies": {
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
+    "app-domain": "*",
     "koa": "^2.14.1",
+    "koa-bodyparser": "^4.3.0",
     "module-alias": "^2.2.2",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "zod": "^3.21.2"
   },
   "repository": {
     "type": "git",
