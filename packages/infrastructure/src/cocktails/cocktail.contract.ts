@@ -8,7 +8,7 @@ export class Cocktail {
     @Column()
         name: string;
 
-    @Column("int")
+    @Column()
         note?: number;
 
     constructor(

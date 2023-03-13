@@ -6,7 +6,10 @@
   "scripts": {
     "build": "rimraf ./build && tsc",
     "lint": "eslint . --ext .ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrations:generate": "typeorm-ts-node-commonjs migration:generate",
+    "migrations:run": "typeorm-ts-node-commonjs migration:run",
+    "migrations:revert": "typeorm-ts-node-commonjs migration:revert"
   },
   "author": "",
   "license": "ISC",

@@ -13,7 +13,7 @@ const config: Config = {
     DB_PORT: parseInt(process.env.DB_PORT || "5432"),
     DB_USER: process.env.DB_USER || "root",
     DB_PASSWORD: process.env.DB_PASSWORD || "password",
-    DB_NAME: process.env.DB_NAME || "",
+    DB_NAME: process.env.DB_NAME || "postgres",
 }
 
 export default config;
