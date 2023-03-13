@@ -18,11 +18,30 @@ export default class CocktailGatewayImpl implements CocktailGateway {
         )
     }
 
+    private static psqlCocktailToCocktail({id, name, note}: PSQLCocktail): Cocktail {
+        return new Cocktail({
+            id,
+            name,
+            note
+        })
+    }
+
     async createCocktail(cocktail: Cocktail): Promise<void> {
         const repository = this.#dataSource.getRepository(PSQLCocktail);
         const psqlCocktail = CocktailGatewayImpl.cocktailToPSQLCocktail(cocktail);
         await repository.save(psqlCocktail);
 
         console.debug(`Create new cocktail ${cocktail.id}`);
+    }
+    
+    async getCocktail(id: string): Promise<Cocktail | null> {
+        const repository = this.#dataSource.getRepository(PSQLCocktail);
+        const psqlCocktail = await repository.findOneBy({id});
+
+        if (!psqlCocktail) {
+            return null;
+        }
+
+        return CocktailGatewayImpl.psqlCocktailToCocktail(psqlCocktail);
     }
 }
