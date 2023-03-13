@@ -1,6 +1,7 @@
 {
     "name": "cocktails-app",
     "scripts": {
+        "lint": "npm run lint --workspaces --if-present",
         "build": "npm run build --workspaces --if-present",
         "dev": "npm run dev --workspaces --if-present"
     },
