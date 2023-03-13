@@ -10,7 +10,7 @@ export default class CreateCocktail {
         this.#cocktailGateway = cocktailGateway;
     }
 
-    async execute(command: CreateCocktailCommand) {
+    async execute(command: CreateCocktailCommand): Promise<Cocktail> {
         const cocktail = new Cocktail({
             name: command.name,
             note: command.note
