@@ -1,4 +1,4 @@
-import GetCocktailUC from "../../src/cocktails/getCocktail";
+import { GetCocktail as GetCocktailUC } from "../../src/cocktails";
 import CocktailInMemoryGateway from "../gateways/cocktails";
 
 describe("create cocktails UC", () => {
@@ -8,7 +8,7 @@ describe("create cocktails UC", () => {
             name: "Awesome cocktail",
             note: 4.5
         }
-        const gateway = new CocktailInMemoryGateway([existingCocktail]); 
+        const gateway = new CocktailInMemoryGateway([existingCocktail]);
         const cocktail = await new GetCocktailUC(gateway).execute({
             id: existingCocktail.id
         });
@@ -16,7 +16,7 @@ describe("create cocktails UC", () => {
     });
 
     test("should return null if cocktail does not exist", async () => {
-        const gateway = new CocktailInMemoryGateway(); 
+        const gateway = new CocktailInMemoryGateway();
         const cocktail = await new GetCocktailUC(gateway).execute({
             id: "5ecda2f2-6adc-48c9-9998-e720b2da35ec"
         });
