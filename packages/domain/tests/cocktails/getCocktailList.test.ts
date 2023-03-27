@@ -20,13 +20,19 @@ describe("getCocktailList UC", () => {
         const uc = new GetCocktailListUC(gateway);
         const res = await uc.execute();
 
-        expect(res).toEqual(existingCocktails);
+        expect(res).toEqual({
+            data: existingCocktails,
+            total: existingCocktails.length
+        });
     });
 
     test("should successfully return empty list if no cocktail", async () => {
         const gateway = new CocktailInMemoryGateway();
         const uc = new GetCocktailListUC(gateway);
         const res = await uc.execute();
-        expect(res).toEqual([]);
+        expect(res).toEqual({
+            data: [],
+            total: 0
+        });
     });
 });
