@@ -22,4 +22,11 @@ describe("getCocktailList UC", () => {
 
         expect(res).toEqual(existingCocktails);
     });
+
+    test("should successfully return empty list if no cocktail", async () => {
+        const gateway = new CocktailInMemoryGateway();
+        const uc = new GetCocktailListUC(gateway);
+        const res = await uc.execute();
+        expect(res).toEqual([]);
+    });
 });
