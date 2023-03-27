@@ -25,4 +25,9 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         }
         return cocktail;
     }
+
+    async getCocktailList() {
+        const res = Array.from(this.data, ([_, value]) => value);
+        return res;
+    }
 }
