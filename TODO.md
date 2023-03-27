@@ -8,6 +8,8 @@ Manage existing cocktail (same name at last)
 
 Front app
 
+CI
+
 Postman with environment configured
 
 Add dependency injection
