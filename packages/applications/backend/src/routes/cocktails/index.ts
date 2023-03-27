@@ -6,7 +6,7 @@ import {
     GetCocktailList
 } from "app-domain/src/cocktails";
 import { CocktailPSQLGateway } from "infrastructure/src";
-import { CreateCocktailScheme, GetCocktailScheme } from "./contract";
+import { CreateCocktailScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
 
 import dataSource from "@/utils/dbConfig";
 
@@ -62,7 +62,20 @@ router.get("/:id", async (ctx, next) => {
 })
 
 router.get("/", async (ctx, next) => {
-    const res = await getCocktailListUC.execute();
+    logger.debug("query", ctx.query);
+    const query = GetCocktailListScheme.safeParse(ctx.query);
+    if (!query.success) {
+        ctx.status = 400;
+        ctx.body = query.error;
+        return;
+    }
+
+    const res = await getCocktailListUC.execute({
+        pagination: {
+            page: query.data.page || 1,
+            itemPerPage: query.data.itemPerPage || 10
+        }
+    });
 
     ctx.status = 200;
     ctx.body = res

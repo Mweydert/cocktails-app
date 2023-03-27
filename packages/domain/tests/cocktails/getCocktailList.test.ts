@@ -18,21 +18,55 @@ describe("getCocktailList UC", () => {
         }];
         const gateway = new CocktailInMemoryGateway(existingCocktails);
         const uc = new GetCocktailListUC(gateway);
-        const res = await uc.execute();
+        const res = await uc.execute({});
 
         expect(res).toEqual({
             data: existingCocktails,
-            total: existingCocktails.length
+            meta: {
+                total: existingCocktails.length,
+                page: 1,
+                itemPerPage: 10,
+                pageCount: 1
+            }
         });
     });
 
     test("should successfully return empty list if no cocktail", async () => {
         const gateway = new CocktailInMemoryGateway();
         const uc = new GetCocktailListUC(gateway);
-        const res = await uc.execute();
+        const res = await uc.execute({});
         expect(res).toEqual({
             data: [],
-            total: 0
+            meta: {
+                total: 0,
+                page: 1,
+                itemPerPage: 10,
+                pageCount: 1
+            }
+        });
+    });
+
+    test("should successfully return 5 item of page 2 of cocktails list", async () => {
+        const allCocktails = Array.from(Array(20)).map(((_, index) => ({
+            id: index.toString(),
+            name: "Some super cocktail name"
+        })))
+        const gateway = new CocktailInMemoryGateway(allCocktails);
+        const uc = new GetCocktailListUC(gateway);
+        const res = await uc.execute({
+            pagination: {
+                page: 2,
+                itemPerPage: 5
+            }
+        });
+        expect(res).toEqual({
+            data: allCocktails.slice(5, 10),
+            meta: {
+                total: 20,
+                page: 2,
+                itemPerPage: 5,
+                pageCount: 4
+            }
         });
     });
 });

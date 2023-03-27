@@ -8,3 +8,8 @@ export const CreateCocktailScheme = z.object({
 export const GetCocktailScheme = z.object({
     id: z.string().uuid()
 })
+
+export const GetCocktailListScheme = z.object({
+    page: z.coerce.number().optional(),
+    itemPerPage: z.coerce.number().optional(),
+})

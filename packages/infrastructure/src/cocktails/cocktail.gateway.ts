@@ -1,8 +1,10 @@
+import { PaginatedListResult } from "./../../../domain/src/utils/pagination.model";
 import Cocktail from "app-domain/src/cocktails/model";
 import { CocktailGateway } from "app-domain/src/cocktails/cocktails.contract";
 import { DataSource } from "typeorm";
 import logger from "../utils/logger";
 import { Cocktail as PSQLCocktail } from "./cocktail.contract";
+import { PaginationParams } from "app-domain/src/utils/pagination.model";
 
 export default class CocktailGatewayImpl implements CocktailGateway {
     #dataSource: DataSource;
@@ -52,13 +54,33 @@ export default class CocktailGatewayImpl implements CocktailGateway {
         return CocktailGatewayImpl.psqlCocktailToCocktail(psqlCocktail);
     }
 
-    async getCocktailList(): Promise<Cocktail[]> {
+    async getCocktailList(pagination?: PaginationParams): Promise<PaginatedListResult<Cocktail>> {
         logger.debug("Get cocktail list");
 
-        const repository = this.#dataSource.getRepository(PSQLCocktail);
-        const psqlCocktails = await repository.find();
-        logger.debug(`Successfully found ${psqlCocktails.length} cocktails`);
+        const {
+            page = 1,
+            itemPerPage = 10
+        } = pagination || {};
+        const itemsToSkip = (page - 1) * itemPerPage;
 
-        return psqlCocktails.map(CocktailGatewayImpl.psqlCocktailToCocktail);
+        const repository = this.#dataSource.getRepository(PSQLCocktail);
+        const psqlCocktails = await repository.findAndCount({
+            skip: itemsToSkip,
+            take: itemPerPage
+        });
+
+        logger.debug(`Successfully found ${psqlCocktails[0].length} cocktails over ${psqlCocktails[1]} items `);
+
+        const pageCount = psqlCocktails[1] ? Math.ceil(psqlCocktails[1] / itemPerPage) : 1;
+
+        return {
+            data: psqlCocktails[0].map(CocktailGatewayImpl.psqlCocktailToCocktail),
+            meta: {
+                total: psqlCocktails[1],
+                page,
+                itemPerPage,
+                pageCount
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
+import logger from "../utils/logger";
 import { CocktailGateway } from "./cocktails.contract";
-import { CocktailListResult } from "./getCocktailList.contract";
+import { CocktailListResult, GetCocktailListQuery } from "./getCocktailList.contract";
 
 export default class GetCocktailList {
     #cocktailGateway: CocktailGateway
@@ -8,11 +9,10 @@ export default class GetCocktailList {
         this.#cocktailGateway = cocktailGateway;
     }
 
-    async execute(): Promise<CocktailListResult> {
-        const res = await this.#cocktailGateway.getCocktailList();
-        return {
-            data: res,
-            total: res.length
-        }
+    async execute({
+        pagination
+    }: GetCocktailListQuery): Promise<CocktailListResult> {
+        logger.info("GetCocktailList", pagination);
+        return this.#cocktailGateway.getCocktailList(pagination);
     }
 }
