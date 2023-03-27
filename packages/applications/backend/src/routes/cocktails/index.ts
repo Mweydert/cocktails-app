@@ -1,9 +1,12 @@
 import logger from "@/utils/logger";
 import Router from "@koa/router";
-import CreateCocktail from "app-domain/src/cocktails/createCocktail";
-import GetCocktail from "app-domain/src/cocktails/getCocktail";
+import {
+    CreateCocktail,
+    GetCocktail,
+    GetCocktailList
+} from "app-domain/src/cocktails";
 import { CocktailPSQLGateway } from "infrastructure/src";
-import { CreateCocktailScheme, GetCocktailScheme } from "./contract";
+import { CreateCocktailScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
 
 import dataSource from "@/utils/dbConfig";
 
@@ -15,10 +18,11 @@ const cocktailGateway = new CocktailPSQLGateway(dataSource);
 
 const createCocktailUC = new CreateCocktail(cocktailGateway);
 const getCocktailUC = new GetCocktail(cocktailGateway);
+const getCocktailListUC = new GetCocktailList(cocktailGateway);
 
 router.post("/", async (ctx, next) => {
     logger.debug("body", ctx.request.body);
-    
+
     const command = CreateCocktailScheme.parse(ctx.request.body);
     const res = await createCocktailUC.execute(command);
     ctx.status = 200;
@@ -31,10 +35,10 @@ router.post("/", async (ctx, next) => {
 })
 
 router.get("/:id", async (ctx, next) => {
-    logger.info("id", ctx.params.id);
+    logger.debug("id", ctx.params.id);
     const query = GetCocktailScheme.safeParse(ctx.params);
 
-    if(!query.success) {
+    if (!query.success) {
         ctx.status = 400;
         ctx.body = query.error;
         return;
@@ -53,6 +57,28 @@ router.get("/:id", async (ctx, next) => {
         name: res.name,
         note: res.note,
     }
+
+    next();
+})
+
+router.get("/", async (ctx, next) => {
+    logger.debug("query", ctx.query);
+    const query = GetCocktailListScheme.safeParse(ctx.query);
+    if (!query.success) {
+        ctx.status = 400;
+        ctx.body = query.error;
+        return;
+    }
+
+    const res = await getCocktailListUC.execute({
+        pagination: {
+            page: query.data.page || 1,
+            itemPerPage: query.data.itemPerPage || 10
+        }
+    });
+
+    ctx.status = 200;
+    ctx.body = res
 
     next();
 })

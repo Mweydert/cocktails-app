@@ -1,4 +1,5 @@
-import { CocktailGateway, GetCocktailQuery } from "./cocktails.contract";
+import { CocktailGateway } from "./cocktails.contract";
+import { GetCocktailQuery } from "./getCocktail.contract";
 import Cocktail from "./model";
 import logger from "../utils/logger";
 
@@ -9,11 +10,11 @@ export default class GetCocktail {
         this.#cocktailGateway = cocktailGateway;
     }
 
-    async execute({id}: GetCocktailQuery): Promise<Cocktail | null> {
+    async execute({ id }: GetCocktailQuery): Promise<Cocktail | null> {
         logger.debug(`Get cocktail ${id}`);
 
         const cocktail = await this.#cocktailGateway.getCocktail(id);
-        
+
         logger.debug(`Successfully got cocktail ${id}`);
         return cocktail;
     }
