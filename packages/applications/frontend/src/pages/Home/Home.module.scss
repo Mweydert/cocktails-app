@@ -1,0 +1,22 @@
+.loader-container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    h1 {
+        font-size: 20px;
+    }
+
+    .content {
+        margin-top: 20px;
+
+        display: grid;
+        grid-template-columns: 1;
+        gap: 20px;
+    }
+}
