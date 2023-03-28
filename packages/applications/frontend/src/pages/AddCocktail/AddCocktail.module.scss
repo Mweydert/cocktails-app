@@ -1,0 +1,30 @@
+@import "../../utils/styles/globals.scss";
+
+.container {
+    .content {
+        margin-top: 50px;
+
+        .form-group {
+            &:not(:last-child) {
+                margin-bottom: 20px;
+                ;
+            }
+        }
+
+        .cta {
+            margin-top: 40px;
+
+            display: flex;
+            justify-content: center;
+
+            button {
+                width: 100%;
+
+                @media screen and (min-width: breakpoint("desktop")) {
+                    width: 200px;
+                }
+
+            }
+        }
+    }
+}

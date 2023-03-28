@@ -1,3 +1,4 @@
+import { CreateCocktailPayload } from './../models/payloads';
 import axios from 'axios';
 import { Cocktail } from '../models/cocktails';
 import { API_URL } from './../utils/config';
@@ -28,4 +29,26 @@ export const getCocktails = async ({
             total: res.data.meta.total,
         }
     }
+}
+
+export const createCocktail = async ({
+    name,
+    note
+}: CreateCocktailPayload) => {
+    let requiredPayload: any = {
+        name
+    };
+    if (note) {
+        requiredPayload = {
+            ...requiredPayload,
+            note
+        }
+    }
+
+    const res = await axios.post(`${API_URL}/cocktails`, {
+        name,
+        note
+    });
+
+    return res.data;
 }
