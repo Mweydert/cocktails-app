@@ -12,8 +12,12 @@ interface GetCocktailsResult {
     }
 }
 
-export const getCocktails = async (): Promise<GetCocktailsResult> => {
-    const res = await axios.get(`${API_URL}/cocktails`);
+export const getCocktails = async ({
+    pageParam = 1
+}: {
+    pageParam?: number;
+}): Promise<GetCocktailsResult> => {
+    const res = await axios.get(`${API_URL}/cocktails?itemPerPage=5&page=${pageParam}`);
 
     return {
         data: res.data.data,

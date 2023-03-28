@@ -1,4 +1,4 @@
-import { useGetCocktails } from "../../data/useGetCocktails";
+import { useGetCocktailsInfinite } from "../../data/useGetCocktailsInfinite";
 import { Alert, CircularProgress } from '@chakra-ui/react'
 import styles from './Home.module.scss';
 import CocktailCard from "../../components/CocktailCard";
@@ -9,7 +9,12 @@ const Home = () => {
         isLoading,
         isError,
         data,
-    } = useGetCocktails();
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage
+    } = useGetCocktailsInfinite();
+
+    const handleSeeMore = fetchNextPage;
 
     if (isLoading) {
         return (
@@ -28,11 +33,21 @@ const Home = () => {
                         Une erreur est survenue lors de la récupération des éléments
                     </Alert>
                 ) : (
-                    data?.data.map(item => (
-                        <div key={item.id}>
-                            <CocktailCard name={item.name} note={item.note} />
-                        </div>
+                    data?.pages.map(page => (
+                        page.data.map(item => (
+                            <div key={item.id}>
+                                <CocktailCard name={item.name} note={item.note} />
+                            </div>
+                        ))
                     ))
+                )}
+
+                {isFetchingNextPage ? (
+                    <CircularProgress isIndeterminate />
+                ) : (
+                    hasNextPage && (
+                        <button onClick={() => handleSeeMore()}>Voir plus</button>
+                    )
                 )}
             </div>
         </div>
