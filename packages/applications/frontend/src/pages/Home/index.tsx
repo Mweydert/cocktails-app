@@ -41,7 +41,8 @@ const Home = () => {
                         ))
                     ))
                 )}
-
+            </div>
+            <div className={styles.actions}>
                 {isFetchingNextPage ? (
                     <CircularProgress isIndeterminate />
                 ) : (
