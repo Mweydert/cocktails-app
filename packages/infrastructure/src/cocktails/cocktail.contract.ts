@@ -3,13 +3,13 @@ import { Column, Entity, PrimaryColumn } from "typeorm"
 @Entity()
 export class Cocktail {
     @PrimaryColumn()
-        id: string;
+    id: string;
 
     @Column()
-        name: string;
+    name: string;
 
-    @Column()
-        note?: number;
+    @Column({ nullable: true })
+    note?: number;
 
     constructor(
         id: string,
