@@ -1,7 +1,9 @@
 import { useGetCocktailsInfinite } from "../../data/useGetCocktailsInfinite";
-import { Alert, CircularProgress } from '@chakra-ui/react'
+import { Alert, Button, CircularProgress } from '@chakra-ui/react'
 import styles from './Home.module.scss';
 import CocktailCard from "../../components/CocktailCard";
+import { Link } from "react-router-dom";
+import { ROUTE_PATH } from "../../router";
 
 
 const Home = () => {
@@ -24,9 +26,16 @@ const Home = () => {
         );
     }
 
+    const totalNbItems = data?.pages?.[0]?.meta?.total;
+
     return (
         <div className={styles.container}>
-            <h1>Ma collection</h1>
+            <div className={styles["top-actions"]}>
+                <h1>Ma collection {totalNbItems && <span>({totalNbItems})</span>}</h1>
+                <Button>
+                    <Link to={ROUTE_PATH.ADD_COCKTAIL}>Ajouter</Link>
+                </Button>
+            </div>
             <div className={styles.content}>
                 {isError ? (
                     <Alert status='error'>
@@ -42,7 +51,7 @@ const Home = () => {
                     ))
                 )}
             </div>
-            <div className={styles.actions}>
+            <div className={styles["bottom-actions"]}>
                 {isFetchingNextPage ? (
                     <CircularProgress isIndeterminate />
                 ) : (

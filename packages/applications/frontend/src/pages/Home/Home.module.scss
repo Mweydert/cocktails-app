@@ -14,6 +14,11 @@
         font-size: 20px;
     }
 
+    .top-actions {
+        display: flex;
+        justify-content: space-between;
+    }
+
     .content {
         margin-top: 20px;
 
@@ -30,7 +35,7 @@
         }
     }
 
-    .actions {
+    .bottom-actions {
         margin-top: 20px;
 
         display: flex;
