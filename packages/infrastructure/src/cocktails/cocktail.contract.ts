@@ -2,14 +2,11 @@ import { Column, Entity, PrimaryColumn } from "typeorm"
 
 @Entity()
 export class Cocktail {
-    @PrimaryColumn()
-    id: string;
+    @PrimaryColumn() id: string;
 
-    @Column()
-    name: string;
+    @Column() name: string;
 
-    @Column({ nullable: true })
-    note?: number;
+    @Column({ nullable: true }) note?: number;
 
     constructor(
         id: string,

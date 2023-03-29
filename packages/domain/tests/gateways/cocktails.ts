@@ -33,6 +33,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
             itemPerPage = 10
         } = pagination || {};
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const allItems = Array.from(this.data, ([_, value]) => value);
 
         const firstItemIndex = (page - 1) * itemPerPage;
