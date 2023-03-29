@@ -1,12 +1,6 @@
 # TODO for next(s) sessions
 
-Front app
-- Lint
-- Setup i18n
-- Remove chackra
-- Pagination list
-- Create cocktail
-- Detailed view cocktail
+global lint and tsconfig files
 
 CI
 
@@ -21,6 +15,10 @@ S3 for image
 Add dependency injection
 
 Authentication
+
+Front app
+- Remove chackra
+
 
 # Time spent
 
