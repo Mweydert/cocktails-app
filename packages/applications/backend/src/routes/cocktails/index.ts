@@ -5,10 +5,12 @@ import {
     GetCocktail,
     GetCocktailList
 } from "app-domain/src/cocktails";
-import { CocktailPSQLGateway } from "infrastructure/src";
+import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure/src";
 import { CreateCocktailScheme, fileScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
 import multer from "@koa/multer";
 import dataSource from "@/utils/dbConfig";
+import s3Client from "@/utils/s3Config";
+import config from "@/config";
 
 const upload = multer();
 
@@ -17,8 +19,12 @@ const upload = multer();
 const router = new Router();
 
 const cocktailGateway = new CocktailPSQLGateway(dataSource);
+const mediaGateway = new S3MediaGateway(s3Client, config.S3_BUCKET);
 
-const createCocktailUC = new CreateCocktail(cocktailGateway);
+const createCocktailUC = new CreateCocktail(
+    cocktailGateway,
+    mediaGateway
+);
 const getCocktailUC = new GetCocktail(cocktailGateway);
 const getCocktailListUC = new GetCocktailList(cocktailGateway);
 
@@ -40,7 +46,13 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
     }
     const command = {
         ...commandBody.data,
-        picture: commandPicture.data
+        picture: commandPicture.data && {
+            fileName: commandPicture.data.originalname,
+            encoding: commandPicture.data.encoding,
+            mimetype: commandPicture.data.mimetype,
+            buffer: commandPicture.data.buffer,
+            size: commandPicture.data.size,
+        }
     }
 
     const res = await createCocktailUC.execute(command);

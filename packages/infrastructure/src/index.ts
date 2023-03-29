@@ -1,4 +1,7 @@
 import "reflect-metadata";
 
-export * from "./dataSource"; 
-export * from "./cocktails"; 
+export * from "./dataSource";
+export * from "./s3Client";
+
+export * from "./cocktails";
+export * from "./medias"; 
