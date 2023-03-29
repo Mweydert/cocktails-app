@@ -51,7 +51,7 @@ const AddCocktail = () => {
     });
 
     const onSubmit = (data: CreateCocktailPayload) => {
-        handleCreateCocktail(data,);
+        handleCreateCocktail(data);
     }
 
     const toast = useToast()
@@ -102,6 +102,16 @@ const AddCocktail = () => {
                             {errors?.note?.message}
                         </FormErrorMessage>
                     </FormControl>
+                </div>
+
+                <div className={styles["form-group"]}>
+                    <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/jpg"
+                        {...register("pictures", {
+                            required: t("addCocktail.form.errors.required") || true
+                        })}
+                    />
                 </div>
 
                 <div className={styles.cta}>

@@ -6,9 +6,11 @@ import {
     GetCocktailList
 } from "app-domain/src/cocktails";
 import { CocktailPSQLGateway } from "infrastructure/src";
-import { CreateCocktailScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
-
+import { CreateCocktailScheme, fileScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
+import multer from "@koa/multer";
 import dataSource from "@/utils/dbConfig";
+
+const upload = multer();
 
 // TODO: dependency injection
 
@@ -20,10 +22,27 @@ const createCocktailUC = new CreateCocktail(cocktailGateway);
 const getCocktailUC = new GetCocktail(cocktailGateway);
 const getCocktailListUC = new GetCocktailList(cocktailGateway);
 
-router.post("/", async (ctx, next) => {
-    logger.debug("body", ctx.request.body);
 
-    const command = CreateCocktailScheme.parse(ctx.request.body);
+router.post("/", upload.single("picture"), async (ctx, next) => {
+    const commandBody = CreateCocktailScheme.safeParse(ctx.request.body);
+    if (!commandBody.success) {
+        logger.warn("CocktailRouter - POST / - Invalid body", commandBody.error);
+        ctx.status = 400;
+        ctx.body = commandBody.error;
+        return;
+    }
+    const commandPicture = fileScheme.safeParse(ctx.request.file);
+    if (!commandPicture.success) {
+        logger.warn("CocktailRouter - POST / - Invalid picture", commandPicture.error);
+        ctx.status = 400;
+        ctx.body = commandPicture.error;
+        return;
+    }
+    const command = {
+        ...commandBody.data,
+        picture: commandPicture.data
+    }
+
     const res = await createCocktailUC.execute(command);
     ctx.status = 200;
     ctx.body = {
