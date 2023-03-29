@@ -1,8 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { createCocktail } from "../services/cocktails"
 
-const test = "";
-
 export interface UseCreateCocktailParams {
     onSuccess?: () => void;
     onError?: (error: unknown) => void;
