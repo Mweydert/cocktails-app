@@ -1,24 +1,21 @@
 # TODO for next(s) sessions
 
-global lint and tsconfig files
-
-CI
-
-Postman with environment configured
+S3 for image
 
 Manage existing cocktail (same name at last)
 
-Cocktails list additional features (filter, sort ?)
+Authentication
 
-S3 for image
+Cocktails list additional features (filter, sort ?)
 
 Add dependency injection
 
-Authentication
 
 Front app
 - Remove chackra
-
+  
+CI
+- Build docker images
 
 # Time spent
 
