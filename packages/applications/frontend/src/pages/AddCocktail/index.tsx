@@ -33,7 +33,7 @@ const AddCocktail = () => {
             toast({
                 title: "Ajout d'un cocktail",
                 description: "Une erreur est survenue lors de l'ajout du cocktail",
-                status: 'error',
+                status: "error",
                 duration: 5000,
                 isClosable: true,
             });
@@ -42,7 +42,7 @@ const AddCocktail = () => {
             toast({
                 title: "Ajout d'un cocktail",
                 description: "Cocktail ajouté avec succès",
-                status: 'success',
+                status: "success",
                 duration: 3000,
                 isClosable: true,
             });

@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
-import styles from './Header.module.scss';
+import { useTranslation } from "react-i18next";
+import styles from "./Header.module.scss";
 
 const Header = () => {
     const { t } = useTranslation();
