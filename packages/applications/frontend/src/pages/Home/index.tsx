@@ -4,6 +4,7 @@ import styles from './Home.module.scss';
 import CocktailCard from "../../components/CocktailCard";
 import { Link } from "react-router-dom";
 import { ROUTE_PATH } from "../../router";
+import { useTranslation } from "react-i18next"
 
 
 const Home = () => {
@@ -18,28 +19,27 @@ const Home = () => {
 
     const handleSeeMore = fetchNextPage;
 
-    if (isLoading) {
-        return (
-            <div className={styles["loader-container"]}>
-                <CircularProgress isIndeterminate />
-            </div>
-        );
-    }
+    const { t } = useTranslation();
 
     const totalNbItems = data?.pages?.[0]?.meta?.total;
 
-    return (
+
+    return isLoading ? (
+        <div className={styles["loader-container"]}>
+            <CircularProgress isIndeterminate />
+        </div>
+    ) : (
         <div className={styles.container}>
             <div className={styles["top-actions"]}>
-                <h1>Ma collection {totalNbItems && <span>({totalNbItems})</span>}</h1>
+                <h1>{t("home.title")} {totalNbItems && <span>({totalNbItems})</span>}</h1>
                 <Button>
-                    <Link to={ROUTE_PATH.ADD_COCKTAIL}>Ajouter</Link>
+                    <Link to={ROUTE_PATH.ADD_COCKTAIL}>{t("home.add")}</Link>
                 </Button>
             </div>
             <div className={styles.content}>
                 {isError ? (
                     <Alert status='error'>
-                        Une erreur est survenue lors de la récupération des éléments
+                        {t("home.error")}
                     </Alert>
                 ) : (
                     data?.pages.map(page => (
@@ -56,7 +56,7 @@ const Home = () => {
                     <CircularProgress isIndeterminate />
                 ) : (
                     hasNextPage && (
-                        <button onClick={() => handleSeeMore()}>Voir plus</button>
+                        <button onClick={() => handleSeeMore()}>{t("home.seeMore")}</button>
                     )
                 )}
             </div>

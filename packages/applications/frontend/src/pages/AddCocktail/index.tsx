@@ -7,6 +7,7 @@ import {
     useToast
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import RatingInput from "../../components/common/Form/RatingInput";
 import { useCreateCocktail } from "../../data/useCreateCocktail";
@@ -27,9 +28,6 @@ const AddCocktail = () => {
     const {
         mutate: handleCreateCocktail,
         isLoading,
-        isError,
-        error,
-        isSuccess
     } = useCreateCocktail({
         onError: () => {
             toast({
@@ -58,19 +56,21 @@ const AddCocktail = () => {
 
     const toast = useToast()
 
+    const { t } = useTranslation();
+
     return (
         <div className={styles.container}>
-            <h1>Add cocktail page</h1>
+            <h1>{t("addCocktail.title")}</h1>
 
             <form onSubmit={handleSubmit(onSubmit)} className={styles.content}>
 
                 <div className={styles["form-group"]}>
                     <FormControl isInvalid={!!errors.name}>
-                        <FormLabel htmlFor='name'>Nom</FormLabel>
+                        <FormLabel htmlFor='name'>{t("addCocktail.form.name")}</FormLabel>
                         <Input
                             id="name"
                             {...register("name", {
-                                required: "Merci de renseigner une valeur"
+                                required: t("addCocktail.form.errors.required") || true
                             })}
                         />
                         <FormErrorMessage>
@@ -82,7 +82,7 @@ const AddCocktail = () => {
 
                 <div className={styles["form-group"]}>
                     <FormControl isInvalid={!!errors.note}>
-                        <FormLabel htmlFor='note'>Note</FormLabel>
+                        <FormLabel htmlFor='note'>{t("addCocktail.form.rate")}</FormLabel>
                         <Controller
                             control={control}
                             name="note"
@@ -109,7 +109,7 @@ const AddCocktail = () => {
                         type="submit"
                         colorScheme="yellow"
                         isLoading={isLoading}
-                    >Créer</Button>
+                    >{t("addCocktail.form.cta")}</Button>
                 </div>
             </form>
         </div >
