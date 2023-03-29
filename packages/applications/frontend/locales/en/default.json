@@ -1,0 +1,30 @@
+{
+    "header": {
+        "label": "Cocktail book"
+    },
+    "home": {
+        "title": "My collection",
+        "add": "Add",
+        "error": "An error occured when getting items",
+        "seeMore": "See more"
+    },
+    "addCocktail": {
+        "title": "Add cocktail",
+        "form": {
+            "name": "Name",
+            "rate": "Rate",
+            "cta": "Add",
+            "errors": {
+                "required": "Please enter a value"
+            }
+        },
+        "successToast": {
+            "title": "Add cocktail",
+            "description": "Cocktail successfully added"
+        },
+        "errorToast": {
+            "title": "Add cocktail",
+            "description": "An error occured when adding cocktail"
+        }
+    }
+}

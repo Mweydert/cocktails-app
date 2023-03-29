@@ -1,0 +1,11 @@
+$color: (
+    primary: #F6AD55,
+);
+
+@function get-color($elem) {
+    @return map-get($color, $elem);
+}
+
+@function get-color-variant($elem, $opacity) {
+    @return rgba(get-color(primary), $opacity);
+}

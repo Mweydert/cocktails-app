@@ -1,0 +1,30 @@
+{
+    "header": {
+        "label": "Livre de cocktails"
+    },
+    "home": {
+        "title": "Ma collection",
+        "add": "Ajouter",
+        "error": "Une erreur est survenue lors de la récupération des éléments",
+        "seeMore": "Voir plus"
+    },
+    "addCocktail": {
+        "title": "Ajouter un cocktail",
+        "form": {
+            "name": "Nom",
+            "rate": "Note",
+            "cta": "Ajouter",
+            "errors": {
+                "required": "Merci de renseigner ce champ"
+            }
+        },
+        "successToast": {
+            "title": "Ajout d'un cocktail",
+            "description": "Cocktail ajouté avec succès"
+        },
+        "errorToast": {
+            "title": "Ajout d'un cocktail",
+            "description": "une erreur est survenue lors de l'ajout du cocktail"
+        }
+    }
+}
