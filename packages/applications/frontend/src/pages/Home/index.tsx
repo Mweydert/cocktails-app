@@ -1,6 +1,6 @@
 import { useGetCocktailsInfinite } from "../../data/useGetCocktailsInfinite";
-import { Alert, Button, CircularProgress } from '@chakra-ui/react'
-import styles from './Home.module.scss';
+import { Alert, Button, CircularProgress } from "@chakra-ui/react"
+import styles from "./Home.module.scss";
 import CocktailCard from "../../components/CocktailCard";
 import { Link } from "react-router-dom";
 import { ROUTE_PATH } from "../../router";
