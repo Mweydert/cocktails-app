@@ -5,8 +5,6 @@ import styles from "./RatingInput.module.scss";
 export enum RatingInputSize {
     SMALL = "sm",
     MEDIUM = "md",
-    // SMALL = 5,
-    // MEDIUM = 10,
 }
 
 const getIconSize = (size: RatingInputSize): number => {

@@ -1,7 +1,5 @@
 # TODO for next(s) sessions
 
-S3 for image
-
 Manage existing cocktail (same name at last) and other errors
 
 Note accept 1/2 point

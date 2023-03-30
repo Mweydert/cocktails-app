@@ -10,8 +10,5 @@
         "packages/applications/frontend",
         "packages/domain",
         "packages/infrastructure"
-    ],
-    "devDependencies": {
-        "@types/koa__multer": "^2.0.4"
-    }
+    ]
 }
