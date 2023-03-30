@@ -51,7 +51,7 @@ const AddCocktail = () => {
     });
 
     const onSubmit = (data: CreateCocktailPayload) => {
-        handleCreateCocktail(data,);
+        handleCreateCocktail(data);
     }
 
     const toast = useToast()
@@ -100,6 +100,20 @@ const AddCocktail = () => {
 
                         <FormErrorMessage>
                             {errors?.note?.message}
+                        </FormErrorMessage>
+                    </FormControl>
+                </div>
+
+                <div className={styles["form-group"]}>
+                    <FormControl isInvalid={!!errors.pictures}>
+                        <FormLabel htmlFor="pictures">{t("addCocktail.form.pictures")}</FormLabel>
+                        <input
+                            type="file"
+                            accept="image/png,image/jpeg,image/jpg"
+                            {...register("pictures")}
+                        />
+                        <FormErrorMessage>
+                            {errors?.pictures?.message}
                         </FormErrorMessage>
                     </FormControl>
                 </div>

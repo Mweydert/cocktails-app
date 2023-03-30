@@ -1,5 +1,6 @@
 $color: (
     primary: #F6AD55,
+    gray: #4A5568
 );
 
 @function get-color($elem) {
@@ -7,5 +8,5 @@ $color: (
 }
 
 @function get-color-variant($elem, $opacity) {
-    @return rgba(get-color(primary), $opacity);
+    @return rgba(get-color($elem), $opacity);
 }

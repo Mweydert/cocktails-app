@@ -32,9 +32,11 @@ const Home = () => {
         <div className={styles.container}>
             <div className={styles["top-actions"]}>
                 <h1>{t("home.title")} {totalNbItems && <span>({totalNbItems})</span>}</h1>
-                <Button>
-                    <Link to={ROUTE_PATH.ADD_COCKTAIL}>{t("home.add")}</Link>
-                </Button>
+                <Link to={ROUTE_PATH.ADD_COCKTAIL}>
+                    <Button>
+                        {t("home.add")}
+                    </Button>
+                </Link>
             </div>
             <div className={styles.content}>
                 {isError ? (
@@ -45,7 +47,11 @@ const Home = () => {
                     data?.pages.map(page => (
                         page.data.map(item => (
                             <div key={item.id}>
-                                <CocktailCard name={item.name} note={item.note} />
+                                <CocktailCard
+                                    name={item.name}
+                                    note={item.note}
+                                    pictureUrl={item.pictureUrl}
+                                />
                             </div>
                         ))
                     ))

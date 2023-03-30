@@ -18,14 +18,16 @@ export default class CocktailGatewayImpl implements CocktailGateway {
             cocktail.id,
             cocktail.name,
             cocktail.note,
+            cocktail.pictureKey,
         )
     }
 
-    private static psqlCocktailToCocktail({ id, name, note }: PSQLCocktail): Cocktail {
+    private static psqlCocktailToCocktail({ id, name, note, pictureKey }: PSQLCocktail): Cocktail {
         return new Cocktail({
             id,
             name,
-            note
+            note,
+            pictureKey,
         })
     }
 

@@ -3,7 +3,8 @@
     "scripts": {
         "lint": "npm run lint --workspaces --if-present",
         "build": "npm run build --workspaces --if-present",
-        "dev": "npm run dev --workspace=frontend & npm run dev --workspace=backend"
+        "dev": "npm run dev --workspace=frontend & npm run dev --workspace=backend",
+        "test": "npm run test --workspaces --if-present"
     },
     "workspaces": [
         "packages/applications/backend",

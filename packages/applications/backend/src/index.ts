@@ -2,6 +2,8 @@ import moduleAlias from "module-alias";
 moduleAlias.addAliases({
     "@": `${__dirname}/`,
 });
+import { config as dotenvConfig } from "dotenv";
+dotenvConfig();
 import Koa from "koa";
 import cors from "@koa/cors";
 import bodyParser from "koa-bodyparser";

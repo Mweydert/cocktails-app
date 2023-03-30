@@ -18,7 +18,7 @@ export const getCocktails = async ({
 }: {
     pageParam?: number;
 }): Promise<GetCocktailsResult> => {
-    const res = await axios.get(`${API_URL}/cocktails?itemPerPage=5&page=${pageParam}`);
+    const res = await axios.get(`${API_URL}/cocktails?itemPerPage=10&page=${pageParam}`);
 
     return {
         data: res.data.data,
@@ -33,11 +33,23 @@ export const getCocktails = async ({
 
 export const createCocktail = async ({
     name,
-    note
+    note,
+    pictures
 }: CreateCocktailPayload) => {
-    const res = await axios.post(`${API_URL}/cocktails`, {
-        name,
-        note
+    const form = new FormData();
+
+    form.append("name", name);
+    if (note) {
+        form.append("note", note.toString());
+    }
+    if (pictures && pictures.length > 0) {
+        form.append("picture", pictures[0]);
+    }
+
+    const res = await axios.post(`${API_URL}/cocktails`, form, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
     });
     return res.data;
 }

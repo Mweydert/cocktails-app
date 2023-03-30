@@ -5,11 +5,60 @@
     background-color: get-color-variant(primary, 0.2);
     padding: 1rem;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    min-height: 350px;
+
+    display: flex;
+    flex-direction: column;
 
     h2 {
         font-size: 18px;
 
         display: flex;
         justify-content: center;
+    }
+
+    .title {
+        flex-shrink: 0;
+
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+
+        .rate {
+            flex-shrink: 0;
+        }
+    }
+
+    .content {
+        flex-shrink: 1;
+        flex-grow: 1;
+
+        display: flex;
+
+        .picture-container {
+            flex: 1;
+            display: flex;
+
+            max-height: 250px;
+
+            img {
+                object-fit: contain;
+            }
+
+            .no-picture {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                background: repeating-linear-gradient(45deg,
+                        get-color-variant(gray, 0.2),
+                        get-color-variant(gray, 0.2) 40px,
+                        get-color-variant(gray, 0.3) 40px,
+                        get-color-variant(gray, 0.3) 80px);
+
+                border-radius: 10px;
+            }
+        }
     }
 }

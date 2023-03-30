@@ -1,28 +1,29 @@
 # TODO for next(s) sessions
 
-global lint and tsconfig files
+Note accept 1/2 point
 
-CI
+Manage existing cocktail (same name at last) and other errors
 
-Postman with environment configured
-
-Manage existing cocktail (same name at last)
-
-Cocktails list additional features (filter, sort ?)
-
-S3 for image
-
-Add dependency injection
+Infinite scroll without need for button's click
 
 Authentication
 
+Cocktails list additional features (filter, sort ?)
+
+Add dependency injection
+
+
 Front app
 - Remove chackra
-
+  
+CI
+- Build docker images
 
 # Time spent
 
 - 06/03/23: around 1 day
 - 13/03/23: around 1/2 day
 - 27/03/23: around 2h
-- 28/03/23: around 2h
+- 28/03/23: around 4h
+- 29/03/23: around 6h
+- 30/03/23: around 4h

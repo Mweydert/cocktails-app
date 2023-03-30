@@ -1,0 +1,1 @@
+export { default as S3MediaGateway } from "./media.gateway";

@@ -1,5 +1,9 @@
 .button {
     &:not(:last-child) {
         margin-right: 20px;
+
+        &.sm {
+            margin-right: 10px;
+        }
     }
 }

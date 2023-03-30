@@ -14,6 +14,7 @@
             "name": "Nom",
             "rate": "Note",
             "cta": "Ajouter",
+            "pictures": "Photo",
             "errors": {
                 "required": "Merci de renseigner ce champ"
             }
@@ -26,5 +27,9 @@
             "title": "Ajout d'un cocktail",
             "description": "une erreur est survenue lors de l'ajout du cocktail"
         }
+    },
+    "cocktailCard": {
+        "noRate": "Non noté",
+        "noPicture": "Pas de photo"
     }
 }
