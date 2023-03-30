@@ -1,9 +1,43 @@
-.button {
-    &:not(:last-child) {
-        margin-right: 20px;
+.container {
+    display: inline-flex;
+
+    .full-star {
+        &:not(:last-child) {
+            margin-right: 20px;
+
+            &.sm {
+                margin-right: 10px;
+            }
+        }
+
+        position: relative;
+
+        height: 40px;
+        width: 40px;
 
         &.sm {
-            margin-right: 10px;
+            height: 20px;
+            width: 20px;
+        }
+
+        .button {
+            position: absolute;
+            overflow: hidden;
+
+            width: 20px;
+
+            &.sm {
+                width: 10px;
+            }
+
+            &.right {
+                right: 0;
+
+                -moz-transform: scaleX(-1); // Gecko
+                -o-transform: scaleX(-1); // Opera
+                -webkit-transform: scaleX(-1); // Webkit
+                transform: scaleX(-1); // Standard
+            }
         }
     }
 }

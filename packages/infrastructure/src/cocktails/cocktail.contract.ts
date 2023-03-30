@@ -6,7 +6,7 @@ export class Cocktail {
 
     @Column() name: string;
 
-    @Column({ nullable: true }) note?: number;
+    @Column({ nullable: true, type: "float" }) note?: number;
 
     @Column({ nullable: true }) pictureKey?: string;
 

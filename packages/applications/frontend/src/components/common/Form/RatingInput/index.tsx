@@ -42,30 +42,44 @@ const RatingInput = ({
         }
     }, [defaultRate])
 
-    const handleClick = (index: number) => {
+    const handleClick = (newRate: number) => {
         if (!disabled) {
-            const newRate = index + 1;
             setRate(newRate);
             onRate(newRate);
         }
     };
 
+
     return (
-        <div>
+        <div className={styles.container}>
             {Array.from(Array(maxRating)).map((_, index) => {
-                const isChecked = rate > index;
+                const leftStarChecked = rate > index;
+                const rightStarChecked = rate > index + 0.5;
                 return (
-                    <button
-                        type="button"
-                        className={`${styles.button} ${styles[size]}`}
-                        onClick={() => handleClick(index)}
-                        disabled={disabled}
-                    >
-                        <StarIcon
-                            boxSize={getIconSize(size)}
-                            color={isChecked ? "#ECC94B" : "gray"}
-                        />
-                    </button>
+                    <div className={`${styles["full-star"]} ${styles[size]}`}>
+                        <button
+                            type="button"
+                            className={`${styles.button} ${styles[size]}`}
+                            onClick={() => handleClick(index + 0.5)}
+                            disabled={disabled}
+                        >
+                            <StarIcon
+                                boxSize={getIconSize(size)}
+                                color={leftStarChecked ? "#ECC94B" : "gray"}
+                            />
+                        </button>
+                        <button
+                            type="button"
+                            className={`${styles.button} ${styles.right} ${styles[size]}`}
+                            onClick={() => handleClick(index + 1)}
+                            disabled={disabled}
+                        >
+                            <StarIcon
+                                boxSize={getIconSize(size)}
+                                color={rightStarChecked ? "#ECC94B" : "gray"}
+                            />
+                        </button>
+                    </div>
                 );
             })}
         </div>
