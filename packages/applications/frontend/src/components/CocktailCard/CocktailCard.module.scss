@@ -39,6 +39,12 @@
             flex: 1;
             display: flex;
 
+            max-height: 250px;
+
+            img {
+                object-fit: contain;
+            }
+
             .no-picture {
                 flex: 1;
                 display: flex;
