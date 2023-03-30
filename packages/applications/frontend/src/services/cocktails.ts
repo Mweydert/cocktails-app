@@ -42,7 +42,7 @@ export const createCocktail = async ({
     if (note) {
         form.append("note", note.toString());
     }
-    if (pictures.length > 0) {
+    if (pictures && pictures.length > 0) {
         form.append("picture", pictures[0]);
     }
 

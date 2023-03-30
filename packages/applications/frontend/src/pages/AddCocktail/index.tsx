@@ -105,13 +105,17 @@ const AddCocktail = () => {
                 </div>
 
                 <div className={styles["form-group"]}>
-                    <input
-                        type="file"
-                        accept="image/png,image/jpeg,image/jpg"
-                        {...register("pictures", {
-                            required: t("addCocktail.form.errors.required") || true
-                        })}
-                    />
+                    <FormControl isInvalid={!!errors.pictures}>
+                        <FormLabel htmlFor="pictures">{t("addCocktail.form.pictures")}</FormLabel>
+                        <input
+                            type="file"
+                            accept="image/png,image/jpeg,image/jpg"
+                            {...register("pictures")}
+                        />
+                        <FormErrorMessage>
+                            {errors?.pictures?.message}
+                        </FormErrorMessage>
+                    </FormControl>
                 </div>
 
                 <div className={styles.cta}>
