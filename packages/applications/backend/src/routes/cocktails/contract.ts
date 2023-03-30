@@ -7,7 +7,7 @@ export const fileScheme = z.object({
     mimetype: z.string(),
     buffer: z.instanceof(Buffer),
     size: z.number()
-})
+}).optional();
 
 export const CreateCocktailScheme = z.object({
     name: z.string(),
@@ -16,9 +16,9 @@ export const CreateCocktailScheme = z.object({
 
 export const GetCocktailScheme = z.object({
     id: z.string().uuid()
-})
+});
 
 export const GetCocktailListScheme = z.object({
     page: z.coerce.number().optional(),
     itemPerPage: z.coerce.number().optional(),
-})
+});
