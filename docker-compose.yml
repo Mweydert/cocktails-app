@@ -5,6 +5,8 @@ services:
     image: postgres:latest
     container_name: db
     restart: unless-stopped
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
@@ -16,7 +18,7 @@ services:
   s3:
     image: minio/minio
     container_name: s3
-    # restart: unless-stopped
+    restart: unless-stopped
     volumes:
       - ./data/minio_storage:/data
     environment:
