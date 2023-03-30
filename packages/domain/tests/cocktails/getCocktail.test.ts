@@ -32,7 +32,7 @@ describe("create cocktails UC", () => {
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
             note: 4.5,
-            pictureUrl: existingMedia.fileName
+            pictureKey: existingMedia.fileName
         }
         const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
         const mediaGateway = new MediaInMemoryGateway([existingMedia]);

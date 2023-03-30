@@ -24,9 +24,9 @@ describe("create cocktails UC", () => {
         const storedCocktail = cocktailGateway.data.get(cocktail.id);
         expect(storedCocktail).toEqual(cocktail);
 
-        expect(cocktail.pictureUrl).toBeDefined();
+        expect(cocktail.pictureKey).toBeDefined();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const storedMedia = mediaGateway.data.get(cocktail.pictureUrl!);
+        const storedMedia = mediaGateway.data.get(cocktail.pictureKey!);
         expect(storedMedia).toEqual(picture);
     });
 

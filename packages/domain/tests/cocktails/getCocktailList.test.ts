@@ -25,12 +25,12 @@ describe("getCocktailList UC", () => {
             id: "1500d25f-27a8-4981-9bfe-18250e0964d3",
             name: "New cocktail",
             note: 3.2,
-            pictureUrl: existingMedias[0].fileName
+            pictureKey: existingMedias[0].fileName
         }, {
             id: "34263753-883c-4c1c-8d3b-50f4ed257127",
             name: "Toto's cocktail",
             note: 2,
-            pictureUrl: existingMedias[1].fileName
+            pictureKey: existingMedias[1].fileName
         }];
         const cocktailGateway = new CocktailInMemoryGateway(existingCocktails);
         const mediaGateway = new MediaInMemoryGateway(existingMedias);
@@ -42,9 +42,11 @@ describe("getCocktailList UC", () => {
 
         expect(res).toEqual({
             data: existingCocktails.map(item => ({
-                ...item,
-                pictureUrl: item.pictureUrl
-                    ? `http://fakeUrl/${item.pictureUrl}?abcsd`
+                id: item.id,
+                name: item.name,
+                note: item.note,
+                pictureUrl: item.pictureKey
+                    ? `http://fakeUrl/${item.pictureKey}?abcsd`
                     : undefined
             })),
             meta: {

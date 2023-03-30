@@ -1,8 +1,10 @@
 # TODO for next(s) sessions
 
+Note accept 1/2 point
+
 Manage existing cocktail (same name at last) and other errors
 
-Note accept 1/2 point
+Infinite scroll without need for button's click
 
 Authentication
 

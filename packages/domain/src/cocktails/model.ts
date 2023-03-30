@@ -4,20 +4,20 @@ interface CocktailPayload {
     id?: string;
     name: string;
     note?: number;
-    pictureUrl?: string;
+    pictureKey?: string;
 }
 
 class Cocktail {
     id: string;
     name: string;
     note?: number;
-    pictureUrl?: string
+    pictureKey?: string
 
     constructor(payload: CocktailPayload) {
         this.id = payload.id ?? uuid();
         this.name = payload.name;
         this.note = payload.note;
-        this.pictureUrl = payload.pictureUrl;
+        this.pictureKey = payload.pictureKey;
     }
 }
 

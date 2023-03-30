@@ -8,17 +8,17 @@ export class Cocktail {
 
     @Column({ nullable: true }) note?: number;
 
-    @Column({ nullable: true }) pictureUrl?: string;
+    @Column({ nullable: true }) pictureKey?: string;
 
     constructor(
         id: string,
         name: string,
         note?: number,
-        pictureUrl?: string,
+        pictureKey?: string,
     ) {
         this.id = id;
         this.name = name;
         this.note = note;
-        this.pictureUrl = pictureUrl;
+        this.pictureKey = pictureKey;
     }
 }

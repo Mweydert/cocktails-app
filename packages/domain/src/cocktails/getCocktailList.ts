@@ -36,8 +36,8 @@ export default class GetCocktailList {
         const cocktailList = await this.#cocktailGateway.getCocktailList(pagination);
 
         const cocktailWithSignedPictureUrl = await Promise.all(cocktailList.data.map(async cocktail => {
-            if (cocktail.pictureUrl) {
-                const pictureSignedUrl = await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureUrl);
+            if (cocktail.pictureKey) {
+                const pictureSignedUrl = await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey);
                 return GetCocktailList.mapCocktailToCocktailListItem(
                     cocktail,
                     pictureSignedUrl

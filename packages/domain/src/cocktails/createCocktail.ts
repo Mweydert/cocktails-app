@@ -5,7 +5,6 @@ import { CreateCocktailCommand } from "./createCocktail.contract";
 import { MediaGateway } from "./../medias/medias.contract";
 
 // TODO: manage conflict in cocktail name
-// TODO: see if pictureUrl or pictureId or else
 
 export default class CreateCocktail {
     #cocktailGateway: CocktailGateway;
@@ -26,19 +25,18 @@ export default class CreateCocktail {
     }: CreateCocktailCommand): Promise<Cocktail> {
         logger.debug("Create new cocktail");
 
-        const pictureUrl = picture
+        const pictureKey = picture
             ? await this.#mediaGateway.storeMedia(picture)
             : undefined;
 
         const cocktail = new Cocktail({
             name,
             note,
-            pictureUrl
+            pictureKey
         })
         await this.#cocktailGateway.createCocktail(cocktail);
 
         // TODO when time: delete picture if fail to create Cocktail
-
 
         logger.debug(`Successfully created new cocktail ${cocktail.id}`);
         return cocktail;

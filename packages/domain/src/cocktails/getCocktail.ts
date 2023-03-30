@@ -37,8 +37,8 @@ export default class GetCocktail {
             return null;
         }
 
-        const signedUrl = cocktail?.pictureUrl
-            ? await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureUrl)
+        const signedUrl = cocktail?.pictureKey
+            ? await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey)
             : undefined;
 
         logger.debug(`Successfully got cocktail ${id}`);
