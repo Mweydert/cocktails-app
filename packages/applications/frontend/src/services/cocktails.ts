@@ -18,7 +18,7 @@ export const getCocktails = async ({
 }: {
     pageParam?: number;
 }): Promise<GetCocktailsResult> => {
-    const res = await axios.get(`${API_URL}/cocktails?itemPerPage=5&page=${pageParam}`);
+    const res = await axios.get(`${API_URL}/cocktails?itemPerPage=10&page=${pageParam}`);
 
     return {
         data: res.data.data,
