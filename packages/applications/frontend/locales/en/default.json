@@ -13,6 +13,7 @@
         "form": {
             "name": "Name",
             "rate": "Rate",
+            "pictures": "Picture",
             "cta": "Add",
             "errors": {
                 "required": "Please enter a value"
@@ -26,5 +27,9 @@
             "title": "Add cocktail",
             "description": "An error occured when adding cocktail"
         }
+    },
+    "cocktailCard": {
+        "noRate": "Unrated",
+        "noPicture": "No picture"
     }
 }

@@ -2,7 +2,9 @@
 
 S3 for image
 
-Manage existing cocktail (same name at last)
+Manage existing cocktail (same name at last) and other errors
+
+Note accept 1/2 point
 
 Authentication
 
