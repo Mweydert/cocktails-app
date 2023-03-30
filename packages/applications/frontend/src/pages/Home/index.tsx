@@ -47,7 +47,11 @@ const Home = () => {
                     data?.pages.map(page => (
                         page.data.map(item => (
                             <div key={item.id}>
-                                <CocktailCard name={item.name} note={item.note} />
+                                <CocktailCard
+                                    name={item.name}
+                                    note={item.note}
+                                    pictureUrl={item.pictureUrl}
+                                />
                             </div>
                         ))
                     ))

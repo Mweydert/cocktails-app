@@ -25,8 +25,14 @@ const createCocktailUC = new CreateCocktail(
     cocktailGateway,
     mediaGateway
 );
-const getCocktailUC = new GetCocktail(cocktailGateway);
-const getCocktailListUC = new GetCocktailList(cocktailGateway);
+const getCocktailUC = new GetCocktail(
+    cocktailGateway,
+    mediaGateway
+);
+const getCocktailListUC = new GetCocktailList(
+    cocktailGateway,
+    mediaGateway
+);
 
 
 router.post("/", upload.single("picture"), async (ctx, next) => {

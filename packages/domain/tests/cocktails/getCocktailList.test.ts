@@ -1,8 +1,22 @@
 import { GetCocktailList as GetCocktailListUC } from "../../../domain/src/cocktails";
 import CocktailInMemoryGateway from "../gateways/cocktails";
+import MediaInMemoryGateway from "../gateways/medias";
 
 describe("getCocktailList UC", () => {
     test("should successfully return list of cocktail", async () => {
+        const existingMedias = [{
+            fileName: "test.png",
+            encoding: "utf-7",
+            mimetype: "image/png",
+            buffer: Buffer.from("azerty"),
+            size: 122332
+        }, {
+            fileName: "new-test.jpg",
+            encoding: "utf-7",
+            mimetype: "image/jpg",
+            buffer: Buffer.from("ytreza"),
+            size: 23244223
+        }]
         const existingCocktails = [{
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
@@ -10,18 +24,29 @@ describe("getCocktailList UC", () => {
         }, {
             id: "1500d25f-27a8-4981-9bfe-18250e0964d3",
             name: "New cocktail",
-            note: 3.2
+            note: 3.2,
+            pictureUrl: existingMedias[0].fileName
         }, {
             id: "34263753-883c-4c1c-8d3b-50f4ed257127",
             name: "Toto's cocktail",
-            note: 2
+            note: 2,
+            pictureUrl: existingMedias[1].fileName
         }];
-        const gateway = new CocktailInMemoryGateway(existingCocktails);
-        const uc = new GetCocktailListUC(gateway);
+        const cocktailGateway = new CocktailInMemoryGateway(existingCocktails);
+        const mediaGateway = new MediaInMemoryGateway(existingMedias);
+        const uc = new GetCocktailListUC(
+            cocktailGateway,
+            mediaGateway
+        );
         const res = await uc.execute({});
 
         expect(res).toEqual({
-            data: existingCocktails,
+            data: existingCocktails.map(item => ({
+                ...item,
+                pictureUrl: item.pictureUrl
+                    ? `http://fakeUrl/${item.pictureUrl}?abcsd`
+                    : undefined
+            })),
             meta: {
                 total: existingCocktails.length,
                 page: 1,
@@ -32,8 +57,12 @@ describe("getCocktailList UC", () => {
     });
 
     test("should successfully return empty list if no cocktail", async () => {
-        const gateway = new CocktailInMemoryGateway();
-        const uc = new GetCocktailListUC(gateway);
+        const cocktailGateway = new CocktailInMemoryGateway();
+        const mediaGateway = new MediaInMemoryGateway();
+        const uc = new GetCocktailListUC(
+            cocktailGateway,
+            mediaGateway
+        );
         const res = await uc.execute({});
         expect(res).toEqual({
             data: [],
@@ -51,8 +80,12 @@ describe("getCocktailList UC", () => {
             id: index.toString(),
             name: "Some super cocktail name"
         })))
-        const gateway = new CocktailInMemoryGateway(allCocktails);
-        const uc = new GetCocktailListUC(gateway);
+        const cocktailGateway = new CocktailInMemoryGateway(allCocktails);
+        const mediaGateway = new MediaInMemoryGateway();
+        const uc = new GetCocktailListUC(
+            cocktailGateway,
+            mediaGateway
+        );
         const res = await uc.execute({
             pagination: {
                 page: 2,
