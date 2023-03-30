@@ -37,7 +37,7 @@ export default class CreateCocktail {
         })
         await this.#cocktailGateway.createCocktail(cocktail);
 
-        // Step: delete picture if failed to create Cocktail
+        // TODO when time: delete picture if fail to create Cocktail
 
 
         logger.debug(`Successfully created new cocktail ${cocktail.id}`);

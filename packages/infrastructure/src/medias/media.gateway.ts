@@ -1,6 +1,7 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { MediaGateway } from "app-domain/src/medias/medias.contract";
+import { v4 as uuid } from "uuid";
 import logger from "../utils/logger";
 import { File } from "app-domain/src/medias/medias.model";
 
@@ -22,13 +23,20 @@ export default class S3MediaGateway implements MediaGateway {
     async storeMedia(file: File): Promise<string> {
         logger.debug("Store file", file.fileName);
 
+        const fileExtension = file.fileName.match(/\.[0-9a-z]+$/i)?.[0];
+        if (!fileExtension) {
+            throw new Error(`Unable to found extension in file ${file.fileName}`);
+        }
+
+        const key = `${uuid()}${fileExtension}`;
+
         const command = new PutObjectCommand({
             Bucket: this.#bucketName,
-            Key: file.fileName,
+            Key: key,
             Body: file.buffer
         });
         await this.#s3Client.send(command);
-        return file.fileName;
+        return key;
     }
 
     async getMediaSignedUrl(key: string): Promise<string> {
