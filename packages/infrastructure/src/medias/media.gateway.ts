@@ -1,9 +1,8 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { MediaGateway } from "app-domain/src/medias/medias.contract";
 import { v4 as uuid } from "uuid";
 import logger from "../utils/logger";
-import { File } from "app-domain/src/medias/medias.model";
+import { File, MediaGateway } from "app-domain";
 
 export default class S3MediaGateway implements MediaGateway {
     #s3Client: S3Client;

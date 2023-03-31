@@ -1,4 +1,4 @@
-import { getS3Client } from "infrastructure/src";
+import { getS3Client } from "infrastructure";
 import config from "@/config";
 
 const s3Client = getS3Client({

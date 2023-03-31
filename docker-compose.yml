@@ -28,6 +28,18 @@ services:
       - "9000:9000"
       - "9090:9090"
     command: minio server /data --console-address ":9090"
+  api:
+    image: cocktails-app-api:tmp
+    build:
+      context: ./
+      dockerfile: Dockerfile.api
+
+    environment:
+      DB_HOST: db
+    ports:
+      - 3000:3000
+    networks:
+      - cocktail-app
 
 networks:
   cocktail-app:

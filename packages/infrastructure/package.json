@@ -2,9 +2,9 @@
   "name": "infrastructure",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "build/src/index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build": "rimraf ./build && tsc --build tsconfig.json",
     "lint": "eslint . --ext .ts",
     "migrations:generate": "typeorm-ts-node-commonjs migration:generate",
     "migrations:run": "typeorm-ts-node-commonjs migration:run",

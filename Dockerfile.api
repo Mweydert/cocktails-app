@@ -1,0 +1,27 @@
+FROM node:18-alpine as builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY .eslintrc ./
+
+COPY packages/domain/ ./packages/domain/
+COPY packages/infrastructure/ ./packages/infrastructure/
+COPY packages/applications/backend ./packages/applications/backend
+
+RUN npm ci -w backend
+RUN npm run build -w backend
+
+# TODO only install dev deps
+# ENV NODE_ENV production
+
+FROM node:18
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages/applications/backend/build ./build
+COPY --from=builder /app/packages/infrastructure/ ./packages/infrastructure
+COPY --from=builder /app/packages/domain/ ./packages/domain
+COPY --from=builder /app/packages/applications/backend/package.json ./package.json
+
+CMD ["npm", "run", "start"]
