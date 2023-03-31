@@ -4,8 +4,8 @@ import {
     CreateCocktail,
     GetCocktail,
     GetCocktailList
-} from "app-domain/src/cocktails";
-import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure/src";
+} from "app-domain";
+import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
 import { CreateCocktailScheme, fileScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
 import multer from "@koa/multer";
 import dataSource from "@/utils/dbConfig";

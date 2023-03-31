@@ -3,7 +3,6 @@
     "target": "es2016",
     "lib": ["es6"],
     "module": "commonjs",
-    "baseUrl": "./src",
     "resolveJsonModule": true,
     "allowJs": true,
     "outDir": "build",
@@ -13,10 +12,15 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
+    "isolatedModules": true,
     "experimentalDecorators": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "composite": true
   },
+  "references": [
+    {
+      "path": "../domain"
+    }
+  ],
+  "include": ["**/*.ts"],
   "exclude": ["migrations/**", "ormconfig.ts"]
 }

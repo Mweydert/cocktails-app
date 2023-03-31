@@ -1,4 +1,4 @@
-import { getDataSource } from "infrastructure/src";
+import { getDataSource } from "infrastructure";
 import config from "@/config";
 
 const dataSource = getDataSource({

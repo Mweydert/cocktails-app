@@ -18,5 +18,14 @@
     "paths": {
       "@/*": ["./*"]
     }
-  }
+  },
+  "include": ["**/*.ts"],
+  "references": [
+    {
+      "path": "../../domain"
+    },
+    {
+      "path": "../../infrastructure"
+    }
+  ]
 }
