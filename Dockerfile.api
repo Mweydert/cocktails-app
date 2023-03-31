@@ -1,3 +1,4 @@
+# Builder
 FROM node:18-alpine as builder
 
 WORKDIR /app
@@ -10,15 +11,27 @@ COPY packages/infrastructure/ ./packages/infrastructure/
 COPY packages/applications/backend ./packages/applications/backend
 
 RUN npm ci -w backend
+
+ENV NODE_ENV production
 RUN npm run build -w backend
 
-# TODO only install dev deps
-# ENV NODE_ENV production
 
-FROM node:18
+# Installer of prod node_modules only 
+FROM node:18-alpine as prod-modules
+WORKDIR /app
+COPY --from=builder /app/package.json /app/package-lock.json ./
+COPY --from=builder /app/packages/applications/backend/package.json ./packages/applications/backend/package.json
+COPY --from=builder /app/packages/infrastructure/ ./packages/infrastructure
+COPY --from=builder /app/packages/domain/ ./packages/domain
+ENV NODE_ENV production
+RUN npm ci -w backend
+
+
+# Run
+FROM node:18-alpine
 WORKDIR /app
 
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=prod-modules /app/node_modules ./node_modules
 COPY --from=builder /app/packages/applications/backend/build ./build
 COPY --from=builder /app/packages/infrastructure/ ./packages/infrastructure
 COPY --from=builder /app/packages/domain/ ./packages/domain
