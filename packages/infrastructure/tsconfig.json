@@ -22,5 +22,5 @@
     }
   ],
   "include": ["**/*.ts"],
-  "exclude": ["migrations/**", "ormconfig.ts"]
+  "exclude": ["migrations/**", "ormconfig.ts", "build/**"]
 }
