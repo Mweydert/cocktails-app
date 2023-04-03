@@ -18,5 +18,13 @@
     "paths": {
       "@/*": ["./*"]
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../domain"
+    },
+    {
+      "path": "../../infrastructure"
+    }
+  ]
 }

@@ -1,7 +1,5 @@
 # TODO for next(s) sessions
 
-Note accept 1/2 point
-
 Manage existing cocktail (same name at last) and other errors
 
 Infinite scroll without need for button's click
@@ -27,3 +25,4 @@ CI
 - 28/03/23: around 4h
 - 29/03/23: around 6h
 - 30/03/23: around 4h
+- 31/03/23: around 3h

@@ -4,17 +4,16 @@
     "target": "es2016",
     "lib": ["es6"],
     "module": "commonjs",
-    "rootDir": "src",
     "resolveJsonModule": true,
-    "allowJs": true,
+    "allowJs": false,
     "outDir": "build",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+    "isolatedModules": true,
+    "composite": true,
+  },
+  "include": ["**/*.ts"]
 }

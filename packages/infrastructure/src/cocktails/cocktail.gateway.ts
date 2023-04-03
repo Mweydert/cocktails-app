@@ -1,10 +1,12 @@
-import { PaginatedListResult } from "./../../../domain/src/utils/pagination.model";
-import Cocktail from "app-domain/src/cocktails/model";
-import { CocktailGateway } from "app-domain/src/cocktails/cocktails.contract";
+import {
+    Cocktail,
+    CocktailGateway,
+    PaginationParams,
+    PaginatedListResult
+} from "app-domain";
 import { DataSource } from "typeorm";
 import logger from "../utils/logger";
 import { Cocktail as PSQLCocktail } from "./cocktail.contract";
-import { PaginationParams } from "app-domain/src/utils/pagination.model";
 
 export default class CocktailGatewayImpl implements CocktailGateway {
     #dataSource: DataSource;
