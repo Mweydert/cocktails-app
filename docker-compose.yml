@@ -22,7 +22,6 @@ services:
       - 5432:5432
     networks:
       - cocktail-app
-
   s3:
     image: minio/minio
     container_name: s3
@@ -37,6 +36,8 @@ services:
       - "9000:9000"
       - "9090:9090"
     command: minio server /data --console-address ":9090"
+    networks:
+      - cocktail-app
   api:
     image: api:latest
     build:
@@ -45,6 +46,10 @@ services:
 
     environment:
       DB_HOST: db
+      S3_URL: http://s3:9000
+      S3_BUCKET: cocktail-pictures
+      S3_ACCESS_KEY: TtJnQSJ9SadIZZ1e
+      S3_SECRET_KEY: XWKAakdVyPv0YrHI0AAcP5JfaqGk1rGS
     ports:
       - 3000:3000
     networks:
