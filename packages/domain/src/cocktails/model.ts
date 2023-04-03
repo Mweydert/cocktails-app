@@ -19,6 +19,11 @@ class Cocktail {
         this.note = payload.note;
         this.pictureKey = payload.pictureKey;
     }
+
+    // TODO: see if needed
+    updateNote(note: number) {
+        this.note = note;
+    }
 }
 
 export default Cocktail;
