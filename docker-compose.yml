@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  lb:
+    image: lb:latest
+    build:
+      context: ./infra/nginx
+    ports:
+      - 80:80
+    networks:
+      - cocktail-app
   db:
     image: postgres:latest
     container_name: db
@@ -21,6 +29,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/minio_storage:/data
+      - ./tmp:/var/log/nginx/
     environment:
       MINIO_ROOT_USER: s3user
       MINIO_ROOT_PASSWORD: s3password
@@ -29,7 +38,7 @@ services:
       - "9090:9090"
     command: minio server /data --console-address ":9090"
   api:
-    image: cocktails-app-api:tmp
+    image: api:latest
     build:
       context: ./
       dockerfile: Dockerfile.api
@@ -38,6 +47,15 @@ services:
       DB_HOST: db
     ports:
       - 3000:3000
+    networks:
+      - cocktail-app
+  front:
+    image: front:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
+    ports:
+      - 4173:80
     networks:
       - cocktail-app
 
