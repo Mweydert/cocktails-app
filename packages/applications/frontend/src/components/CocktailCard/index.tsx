@@ -1,22 +1,28 @@
 import { useTranslation } from "react-i18next";
 import RatingInput, { RatingInputSize } from "../common/Form/RatingInput";
 import styles from "./CocktailCard.module.scss";
+import clsx from "clsx";
 
 interface CocktailCardParams {
     name: string;
     note?: number;
     pictureUrl?: string;
+    onClick?: () => void;
 }
 
 const CocktailCard = ({
     name,
     note,
-    pictureUrl
+    pictureUrl,
+    onClick
 }: CocktailCardParams) => {
     const { t } = useTranslation();
 
     return (
-        <div className={styles.container}>
+        <div
+            className={clsx(styles.container, {[styles.clickable]: !!onClick})}
+            onClick={onClick}
+        >
             <div className={styles.title}>
                 <h2>{name}</h2>
                 <div className={styles.rate}>

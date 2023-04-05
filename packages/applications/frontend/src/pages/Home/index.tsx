@@ -1,4 +1,5 @@
 import { useGetCocktailsInfinite } from "../../data/useGetCocktailsInfinite";
+import { useNavigate } from "react-router-dom";
 import { Alert, Button, CircularProgress } from "@chakra-ui/react"
 import styles from "./Home.module.scss";
 import CocktailCard from "../../components/CocktailCard";
@@ -24,6 +25,12 @@ const Home = () => {
     const totalNbItems = data?.pages?.[0]?.meta?.total;
 
 
+    const navigate = useNavigate();
+
+    const handleCocktailCardClick = (id: string) => {
+        navigate(`/${id}`);
+    }
+
     return isLoading ? (
         <div className={styles["loader-container"]}>
             <CircularProgress isIndeterminate />
@@ -41,7 +48,7 @@ const Home = () => {
             <div className={styles.content}>
                 {isError ? (
                     <Alert status='error'>
-                        {t("home.error")}
+                        { t("home.error") }
                     </Alert>
                 ) : (
                     data?.pages.map(page => (
@@ -51,6 +58,7 @@ const Home = () => {
                                     name={item.name}
                                     note={item.note}
                                     pictureUrl={item.pictureUrl}
+                                    onClick={() => handleCocktailCardClick(item.id)}
                                 />
                             </div>
                         ))
