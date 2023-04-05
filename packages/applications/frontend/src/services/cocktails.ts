@@ -53,3 +53,10 @@ export const createCocktail = async ({
     });
     return res.data;
 }
+
+export const getCocktail = async (
+    id: string
+): Promise<Cocktail> => {
+    const res = await axios.get(`${API_URL}/cocktails/${id}`);
+    return res.data;
+}

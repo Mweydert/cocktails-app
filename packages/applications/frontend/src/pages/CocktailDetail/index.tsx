@@ -1,18 +1,46 @@
 import { useTranslation } from "react-i18next";
 import styles from "./CocktailDetail.module.scss";
 import { useParams } from "react-router-dom";
+import { useGetCocktail } from "../../data/useGetCocktail";
+import { Alert, CircularProgress } from "@chakra-ui/react";
+import RatingInput from "../../components/common/Form/RatingInput";
 
 const CocktailDetail = () => {
     const { t } = useTranslation();
+    // TODO: implement goBack
+    // TODO: add picture to URL return
 
     const { cocktailId } = useParams();
+    if (!cocktailId) {
+        throw new Error("No cocktail ID to fetch")
+    }
+    
+    const {
+        isLoading,
+        isError,
+        data
+    } = useGetCocktail(cocktailId);
 
 
-    return (
+    return isLoading ? (
+        <div className={styles["loader-container"]}>
+            <CircularProgress isIndeterminate />
+        </div>
+    ) : (
         <div className={styles.container}>
-            <h1>{t("cocktailDetail.title")}</h1>
-            <div>CONTENT {cocktailId}</div>
-        </div >
+            {isError || !data ? (
+                <Alert status='error'>
+                    { t("cocktailDetail.error") }
+                </Alert>
+            ) : (
+                <>
+                    <h1>{data.name}</h1>
+                    <div className={styles.content}>
+                        <RatingInput disabled defaultRate={data.note} onRate={() => null} />
+                    </div>
+                </>
+            )}
+        </div>
     )
 };
 
