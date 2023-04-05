@@ -19,18 +19,30 @@
                 "required": "Please enter a value"
             }
         },
-        "successToast": {
-            "title": "Add cocktail",
-            "description": "Cocktail successfully added"
-        },
-        "errorToast": {
-            "title": "Add cocktail",
-            "description": "An error occured when adding cocktail"
+        "toasters": {
+            "success": {
+                "title": "Add cocktail",
+                "description": "Cocktail successfully added"
+            },
+            "error": {
+                "title": "Add cocktail",
+                "description": "An error occured when adding cocktail"
+            }
         }
     },
     "cocktailDetail": {
         "error": "An error occured when getting cocktail detail",
-        "noPicture": "No picture"
+        "noPicture": "No picture",
+        "toasters": {
+            "success": {
+                "title": "Update cocktail",
+                "description": "Cocktail successfully updated"
+            },
+            "error": {
+                "title": "Update cocktail",
+                "description": "An error occured when updating cocktail"
+            }
+        }
     },
     "cocktailCard": {
         "noRate": "Unrated",

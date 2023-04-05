@@ -19,18 +19,30 @@
                 "required": "Merci de renseigner ce champ"
             }
         },
-        "successToast": {
-            "title": "Ajout d'un cocktail",
-            "description": "Cocktail ajouté avec succès"
-        },
-        "errorToast": {
-            "title": "Ajout d'un cocktail",
-            "description": "une erreur est survenue lors de l'ajout du cocktail"
+        "toasters": {
+            "success": {
+                "title": "Ajout d'un cocktail",
+                "description": "Cocktail ajouté avec succès"
+            },
+            "error": {
+                "title": "Ajout d'un cocktail",
+                "description": "Une erreur est survenue lors de l'ajout du cocktail"
+            }
         }
     },
     "cocktailDetail": {
         "error": "Une erreur est survenue lors de la récupération des détails du cocktail",
-        "noPicture": "Pas de photo"
+        "noPicture": "Pas de photo",
+        "toasters": {
+            "success": {
+                "title": "Mise à jour d'un cocktail",
+                "description": "Cocktail mis à jour avec succès"
+            },
+            "error": {
+                "title": "Mise à jour d'un cocktail",
+                "description": "Une erreur est survenue lors de la mise à jour du cocktail"
+            }
+        }
     },
     "cocktailCard": {
         "noRate": "Non noté",

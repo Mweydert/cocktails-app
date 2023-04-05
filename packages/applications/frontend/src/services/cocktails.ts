@@ -60,3 +60,15 @@ export const getCocktail = async (
     const res = await axios.get(`${API_URL}/cocktails/${id}`);
     return res.data;
 }
+
+export interface UpdateCocktailPayload {
+    note?: number;
+}
+
+export const updateCocktail = async (
+    id: string,
+    payload: UpdateCocktailPayload
+): Promise<void> => {
+    const res = await axios.put(`${API_URL}/cocktails/${id}`, payload);
+    return res.data;
+}
