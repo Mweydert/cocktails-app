@@ -28,6 +28,10 @@
             "description": "une erreur est survenue lors de l'ajout du cocktail"
         }
     },
+    "cocktailDetail": {
+        "error": "Une erreur est survenue lors de la récupération des détails du cocktail",
+        "noPicture": "Pas de photo"
+    },
     "cocktailCard": {
         "noRate": "Non noté",
         "noPicture": "Pas de photo"

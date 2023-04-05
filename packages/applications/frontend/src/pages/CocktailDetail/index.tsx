@@ -36,7 +36,18 @@ const CocktailDetail = () => {
                 <>
                     <h1>{data.name}</h1>
                     <div className={styles.content}>
-                        <RatingInput disabled defaultRate={data.note} onRate={() => null} />
+                        <div className={styles.rate}>
+                            <RatingInput disabled defaultRate={data.note} onRate={() => null} />
+                        </div>
+                        <div className={styles.picture}>
+                            {data.pictureUrl ? (
+                                <img src={data.pictureUrl} alt="" />
+                            ): (
+                                <div className={styles["no-picture"]}>
+                                    {t("cocktailDetail.noPicture")}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </>
             )}

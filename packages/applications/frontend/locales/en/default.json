@@ -28,6 +28,10 @@
             "description": "An error occured when adding cocktail"
         }
     },
+    "cocktailDetail": {
+        "error": "An error occured when getting cocktail detail",
+        "noPicture": "No picture"
+    },
     "cocktailCard": {
         "noRate": "Unrated",
         "noPicture": "No picture"

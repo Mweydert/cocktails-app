@@ -100,11 +100,7 @@ router.get("/:id", async (ctx, next) => {
     }
 
     ctx.status = 200;
-    ctx.body = {
-        id: res.id,
-        name: res.name,
-        note: res.note,
-    }
+    ctx.body = res;
 
     next();
 })
