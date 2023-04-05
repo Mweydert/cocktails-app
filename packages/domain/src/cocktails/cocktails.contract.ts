@@ -3,6 +3,7 @@ import Cocktail from "./model";
 
 export interface UpdateCocktailPayload {
     note?: number;
+    pictureKey?: string;
 }
 
 export interface CocktailGateway {

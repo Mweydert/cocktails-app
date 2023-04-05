@@ -1,8 +1,9 @@
 import { Cocktail, UpdateCocktail as UpdateCocktailUC } from "../../../domain/src/cocktails";
 import CocktailInMemoryGateway from "../gateways/cocktails";
+import MediaInMemoryGateway from "../gateways/medias";
 
 describe("Update cocktail UC", () => {
-    test("should successfully update cocktail", async () => {
+    test("should successfully update cocktail's note", async () => {
         const existingCocktail = new Cocktail({
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
@@ -10,19 +11,66 @@ describe("Update cocktail UC", () => {
             pictureKey: undefined
         });
         const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
-        const uc = new UpdateCocktailUC(cocktailGateway);
+        const mediaGateway = new MediaInMemoryGateway();
+        const uc = new UpdateCocktailUC(cocktailGateway, mediaGateway);
         await uc.execute({
             id: existingCocktail.id,
             note: 1.2
         });
-        const updateCocktail = {
+        const updatedCocktail = {
             ...existingCocktail,
             note: 1.2
         };
-        expect(cocktailGateway.data.get(existingCocktail.id)).toEqual(updateCocktail);
+        expect(cocktailGateway.data.get(existingCocktail.id)).toEqual(updatedCocktail);
     });
 
-    // Manage picture update
-    // can't update id / name
+    test("should successfully update cocktail's picture", async () => {
+        const existingMedia = {
+            fileName: "test.png",
+            encoding: "utf-7",
+            mimetype: "image/png",
+            buffer: Buffer.from("azerty"),
+            size: 122332
+        }
+        const existingCocktail = new Cocktail({
+            id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
+            name: "Awesome cocktail",
+            note: 4.5,
+            pictureKey: MediaInMemoryGateway.computeMediaKey(existingMedia)
+        });
+        const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
+        const mediaGateway = new MediaInMemoryGateway([existingMedia]);
+        const uc = new UpdateCocktailUC(cocktailGateway, mediaGateway);
+        const newPicture = {
+            fileName: "new test.jpeg",
+            encoding: "utf-8",
+            mimetype: "image/jpg",
+            buffer: Buffer.from("ytreza"),
+            size: 43243
+        };
+        await uc.execute({
+            id: existingCocktail.id,
+            picture: newPicture
+        });
+
+        // TODO: update test when returning cocktail in UC
+        const newMediaKey = MediaInMemoryGateway.computeMediaKey(newPicture);
+        const newMedia = mediaGateway.data.get(newMediaKey);
+        expect(newMedia).toEqual(newPicture);
+
+
+        expect(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            mediaGateway.data.has(MediaInMemoryGateway.computeMediaKey(existingMedia))
+        ).toBeFalsy();
+
+        const updatedCocktail = {
+            ...existingCocktail,
+            pictureKey: newMediaKey
+        };
+        expect(cocktailGateway.data.get(existingCocktail.id)).toEqual(updatedCocktail);
+
+    });
+
     // should manage non existing cocktail
 });

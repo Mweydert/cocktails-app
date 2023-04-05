@@ -2,7 +2,7 @@ import { Cocktail, GetCocktail as GetCocktailUC } from "../../src/cocktails";
 import CocktailInMemoryGateway from "../gateways/cocktails";
 import MediaInMemoryGateway from "../gateways/medias";
 
-describe("create cocktails UC", () => {
+describe("get cocktail UC", () => {
     test("should succeed to get cocktail", async () => {
         const existingCocktail = new Cocktail({
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
@@ -32,7 +32,7 @@ describe("create cocktails UC", () => {
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
             note: 4.5,
-            pictureKey: existingMedia.fileName
+            pictureKey: MediaInMemoryGateway.computeMediaKey(existingMedia)
         });
         const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
         const mediaGateway = new MediaInMemoryGateway([existingMedia]);
@@ -46,7 +46,7 @@ describe("create cocktails UC", () => {
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
             note: 4.5,
-            pictureUrl: `http://fakeUrl/${existingMedia.fileName}?abcsd`
+            pictureUrl: `http://fakeUrl/${existingCocktail.pictureKey}?abcsd`
         });
     });
 

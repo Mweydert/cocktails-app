@@ -26,12 +26,12 @@ describe("getCocktailList UC", () => {
                 id: "1500d25f-27a8-4981-9bfe-18250e0964d3",
                 name: "New cocktail",
                 note: 3.2,
-                pictureKey: existingMedias[0].fileName
+                pictureKey: MediaInMemoryGateway.computeMediaKey(existingMedias[0])
             }), new Cocktail({
                 id: "34263753-883c-4c1c-8d3b-50f4ed257127",
                 name: "Toto's cocktail",
                 note: 2,
-                pictureKey: existingMedias[1].fileName
+                pictureKey: MediaInMemoryGateway.computeMediaKey(existingMedias[1])
             })
         ];
         const cocktailGateway = new CocktailInMemoryGateway(existingCocktails);
