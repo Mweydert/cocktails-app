@@ -1,6 +1,7 @@
 import { MediaGateway } from "../medias";
 import logger from "../utils/logger";
 import { CocktailGateway } from "./cocktails.contract";
+import Cocktail from "./model";
 import { UpdateCocktailCommand } from "./updateCocktail.contract";
 
 // TODO: introduce result type to manage errors
@@ -19,22 +20,27 @@ export default class UpdateCocktail {
 
     async execute(
         command: UpdateCocktailCommand
-    ): Promise<void> {
+    ): Promise<Cocktail> {
         const cocktail = await this.#cocktailGateway.getCocktail(command.id);
         if (!cocktail) {
-            return;
+            throw new Error(`Cocktail ${command.id} not found`);
         }
 
+
+        let oldPictureKey;
         let payload = {};
         if (command.picture) {
+            oldPictureKey = cocktail.pictureKey;
             logger.debug("Update new media for cocktail", cocktail.id);
             const mediaKey = await this.#mediaGateway.storeMedia(command.picture);
+            cocktail.pictureKey = mediaKey;
             payload = {
                 ...payload,
                 pictureKey: mediaKey
             };
         }
         if (command.note) {
+            cocktail.note = command.note;
             payload = {
                 ...payload,
                 note: command.note
@@ -43,9 +49,11 @@ export default class UpdateCocktail {
 
         await this.#cocktailGateway.updateCocktail(command.id, payload);
 
-        if (cocktail.pictureKey) {
-            logger.debug("Delete old media", cocktail.pictureKey, "of cocktail", cocktail.id);
-            await this.#mediaGateway.deleteMedia(cocktail.pictureKey);
+        if (oldPictureKey) {
+            logger.debug("Delete old media", oldPictureKey, "of cocktail", cocktail.id);
+            await this.#mediaGateway.deleteMedia(oldPictureKey);
         }
+
+        return cocktail;
     }
 }

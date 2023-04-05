@@ -48,26 +48,20 @@ describe("Update cocktail UC", () => {
             buffer: Buffer.from("ytreza"),
             size: 43243
         };
-        await uc.execute({
+        const updatedCocktail = await uc.execute({
             id: existingCocktail.id,
             picture: newPicture
         });
 
-        // TODO: update test when returning cocktail in UC
-        const newMediaKey = MediaInMemoryGateway.computeMediaKey(newPicture);
-        const newMedia = mediaGateway.data.get(newMediaKey);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const newMedia = mediaGateway.data.get(updatedCocktail.pictureKey!);
         expect(newMedia).toEqual(newPicture);
 
 
         expect(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             mediaGateway.data.has(MediaInMemoryGateway.computeMediaKey(existingMedia))
         ).toBeFalsy();
 
-        const updatedCocktail = {
-            ...existingCocktail,
-            pictureKey: newMediaKey
-        };
         expect(cocktailGateway.data.get(existingCocktail.id)).toEqual(updatedCocktail);
 
     });
