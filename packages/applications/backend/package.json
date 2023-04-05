@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rimraf ./build && tsc --build tsconfig.json",
     "start": "node build/index.js",
-    "dev": "npx nodemon",
+    "dev": "tsc-watch -b --onSuccess 'node build/index.js'",
     "lint": "eslint . --ext .ts"
   },
   "author": "",
@@ -23,9 +23,9 @@
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.35.0",
-    "nodemon": "^2.0.21",
     "rimraf": "^4.3.0",
     "ts-node": "^10.9.1",
+    "tsc-watch": "^6.0.0",
     "typescript": "^4.9.5"
   },
   "dependencies": {
