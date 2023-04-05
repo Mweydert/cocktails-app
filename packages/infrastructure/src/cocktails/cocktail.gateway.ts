@@ -2,7 +2,8 @@ import {
     Cocktail,
     CocktailGateway,
     PaginationParams,
-    PaginatedListResult
+    PaginatedListResult,
+    UpdateCocktailPayload
 } from "app-domain";
 import { DataSource } from "typeorm";
 import logger from "../utils/logger";
@@ -86,5 +87,17 @@ export default class CocktailGatewayImpl implements CocktailGateway {
                 pageCount
             }
         }
+    }
+
+    async updateCocktail(
+        id: string,
+        payload: UpdateCocktailPayload
+    ): Promise<void> {
+        logger.debug(`Update cocktail ${id}`);
+
+        const repository = this.#dataSource.getRepository(PSQLCocktail);
+        await repository.update(id, payload);
+
+        logger.debug(`Successfully updated cocktail ${id}`);
     }
 }

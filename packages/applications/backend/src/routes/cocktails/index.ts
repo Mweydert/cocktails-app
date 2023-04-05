@@ -3,10 +3,18 @@ import Router from "@koa/router";
 import {
     CreateCocktail,
     GetCocktail,
-    GetCocktailList
+    GetCocktailList,
+    UpdateCocktail
 } from "app-domain";
 import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
-import { CreateCocktailScheme, fileScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
+import {
+    CreateCocktailScheme,
+    fileScheme,
+    GetCocktailListScheme,
+    GetCocktailScheme,
+    UpdateCocktailBodyScheme,
+    UpdateCocktailIdScheme
+} from "./contract";
 import multer from "@koa/multer";
 import dataSource from "@/utils/dbConfig";
 import s3Client from "@/utils/s3Config";
@@ -32,6 +40,9 @@ const getCocktailUC = new GetCocktail(
 const getCocktailListUC = new GetCocktailList(
     cocktailGateway,
     mediaGateway
+);
+const updateCocktailUC = new UpdateCocktail(
+    cocktailGateway
 );
 
 
@@ -72,7 +83,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
 })
 
 router.get("/:id", async (ctx, next) => {
-    logger.debug("id", ctx.params.id);
+    logger.debug("Get cocktail", ctx.params.id);
     const query = GetCocktailScheme.safeParse(ctx.params);
 
     if (!query.success) {
@@ -120,5 +131,36 @@ router.get("/", async (ctx, next) => {
     next();
 })
 
+router.put("/:id", async (ctx, next) => {
+    logger.debug("update cocktail", ctx.params.id);
+
+    const parsedId = UpdateCocktailIdScheme.safeParse({
+        id: ctx.params.id,
+    });
+    const parsedBody = UpdateCocktailBodyScheme.safeParse(ctx.request.body)
+    if (!parsedId.success) {
+        ctx.status = 400;
+        ctx.body = parsedId.error;
+        return;
+    }
+    if (!parsedBody.success) {
+        ctx.status = 400;
+        ctx.body = parsedBody.error;
+        return;
+    }
+    const command = {
+        ...parsedId.data,
+        ...parsedBody.data,
+    }
+
+
+    await updateCocktailUC.execute(command);
+
+    ctx.status = 200;
+
+    // TODO: return updated object
+
+    next();
+})
 
 export default router;

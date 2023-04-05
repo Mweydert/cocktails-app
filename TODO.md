@@ -4,6 +4,10 @@ Manage existing cocktail (same name at last) and other errors
 
 Infinite scroll without need for button's click
 
+Recipees
+
+Ingredients
+
 Authentication
 
 Cocktails list additional features (filter, sort ?)
