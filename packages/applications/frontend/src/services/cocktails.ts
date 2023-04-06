@@ -64,7 +64,7 @@ export const getCocktail = async (
 export const updateCocktail = async (
     id: string,
     payload: UpdateCocktailPayload
-): Promise<void> => {
+): Promise<Cocktail> => {
     const form = new FormData();
 
     if (payload.note) {
@@ -79,5 +79,6 @@ export const updateCocktail = async (
             "Content-Type": "multipart/form-data"
         }
     });
+
     return res.data;
 }

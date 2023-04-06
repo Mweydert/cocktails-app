@@ -5,3 +5,10 @@ export interface UpdateCocktailCommand {
     note?: number;
     picture?: File;
 }
+
+export interface UpdateCocktailResult {
+    id: string;
+    name: string;
+    note?: number;
+    pictureUrl?: string;
+}
