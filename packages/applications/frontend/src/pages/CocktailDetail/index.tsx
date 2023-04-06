@@ -11,7 +11,6 @@ import { ChangeEvent } from "react";
 const CocktailDetail = () => {
     const { t } = useTranslation();
     // TODO: implement goBack
-    // TODO: add picture to URL return
 
     const { cocktailId } = useParams();
     if (!cocktailId) {

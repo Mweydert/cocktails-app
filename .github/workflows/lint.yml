@@ -3,12 +3,14 @@ name: "Lint and build"
 on:
   pull_request:
     branches:
-      - main
-      - develop
       - feat/**
       - fix/**
       - chores/**
       - ci/**
+  push:
+    branches:
+      - main
+      - develop
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
