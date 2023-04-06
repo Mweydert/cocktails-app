@@ -3,7 +3,12 @@ import {
     CocktailGateway,
     PaginationParams,
     PaginatedListResult,
-    UpdateCocktailPayload
+    UpdateCocktailPayload,
+    CreateCocktailGatewayResult,
+    ResultObject,
+    GetCocktailGatewayResult,
+    GetCocktailListGatewayResult,
+    UpdateCocktailGatewayResult
 } from "app-domain";
 import { DataSource } from "typeorm";
 import logger from "../utils/logger";
@@ -34,7 +39,9 @@ export default class CocktailGatewayImpl implements CocktailGateway {
         })
     }
 
-    async createCocktail(cocktail: Cocktail): Promise<void> {
+    async createCocktail(
+        cocktail: Cocktail
+    ): Promise<ResultObject<CreateCocktailGatewayResult, undefined>> {
         logger.debug("Create new cocktail")
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
@@ -42,24 +49,32 @@ export default class CocktailGatewayImpl implements CocktailGateway {
         await repository.save(psqlCocktail);
 
         logger.debug(`Successfuly created new cocktail ${cocktail.id}`);
+        return new ResultObject(CreateCocktailGatewayResult.SUCCESS);
     }
 
-    async getCocktail(id: string): Promise<Cocktail | null> {
+    async getCocktail(
+        id: string
+    ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
         logger.debug(`Get cocktail ${id}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
         const psqlCocktail = await repository.findOneBy({ id });
 
         if (!psqlCocktail) {
-            logger.warn(`Cocktail ${id} not found`);
-            return null;
+            return new ResultObject(GetCocktailGatewayResult.NOT_FOUND);
         }
 
         logger.debug(`Successfully got cocktail ${id}`);
-        return CocktailGatewayImpl.psqlCocktailToCocktail(psqlCocktail);
+
+        return new ResultObject(
+            GetCocktailGatewayResult.SUCCESS,
+            CocktailGatewayImpl.psqlCocktailToCocktail(psqlCocktail)
+        )
     }
 
-    async getCocktailList(pagination?: PaginationParams): Promise<PaginatedListResult<Cocktail>> {
+    async getCocktailList(
+        pagination?: PaginationParams
+    ): Promise<ResultObject<GetCocktailListGatewayResult, PaginatedListResult<Cocktail>>> {
         logger.debug("Get cocktail list");
 
         const {
@@ -78,26 +93,31 @@ export default class CocktailGatewayImpl implements CocktailGateway {
 
         const pageCount = psqlCocktails[1] ? Math.ceil(psqlCocktails[1] / itemPerPage) : 1;
 
-        return {
-            data: psqlCocktails[0].map(CocktailGatewayImpl.psqlCocktailToCocktail),
-            meta: {
-                total: psqlCocktails[1],
-                page,
-                itemPerPage,
-                pageCount
+        return new ResultObject(
+            GetCocktailListGatewayResult.SUCCESS,
+            {
+                data: psqlCocktails[0].map(CocktailGatewayImpl.psqlCocktailToCocktail),
+                meta: {
+                    total: psqlCocktails[1],
+                    page,
+                    itemPerPage,
+                    pageCount
+                }
             }
-        }
+        );
     }
 
     async updateCocktail(
         id: string,
         payload: UpdateCocktailPayload
-    ): Promise<void> {
+    ): Promise<ResultObject<UpdateCocktailGatewayResult, undefined>> {
         logger.debug(`Update cocktail ${id}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
+        // TODO: try catch and generic type error ?
         await repository.update(id, payload);
 
         logger.debug(`Successfully updated cocktail ${id}`);
+        return new ResultObject(UpdateCocktailGatewayResult.SUCCESS);
     }
 }

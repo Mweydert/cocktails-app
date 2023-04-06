@@ -1,4 +1,5 @@
 import { Cocktail, GetCocktailList as GetCocktailListUC } from "../../../domain/src/cocktails";
+import { GetCocktaiListResult } from "../../src/cocktails/getCocktailList.contract";
 import CocktailInMemoryGateway from "../gateways/cocktails";
 import MediaInMemoryGateway from "../gateways/medias";
 
@@ -41,8 +42,11 @@ describe("getCocktailList UC", () => {
             mediaGateway
         );
         const res = await uc.execute({});
+        expect(res.result).toBe(GetCocktaiListResult.SUCCESS);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const data = res.data!;
 
-        expect(res).toEqual({
+        expect(data).toEqual({
             data: existingCocktails.map(item => ({
                 id: item.id,
                 name: item.name,
@@ -68,7 +72,11 @@ describe("getCocktailList UC", () => {
             mediaGateway
         );
         const res = await uc.execute({});
-        expect(res).toEqual({
+        expect(res.result).toBe(GetCocktaiListResult.SUCCESS);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const data = res.data!;
+
+        expect(data).toEqual({
             data: [],
             meta: {
                 total: 0,
@@ -96,7 +104,11 @@ describe("getCocktailList UC", () => {
                 itemPerPage: 5
             }
         });
-        expect(res).toEqual({
+        expect(res.result).toBe(GetCocktaiListResult.SUCCESS);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const data = res.data!;
+
+        expect(data).toEqual({
             data: allCocktails.slice(5, 10),
             meta: {
                 total: 20,

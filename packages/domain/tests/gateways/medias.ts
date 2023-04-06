@@ -1,5 +1,6 @@
 import { File } from "../../src/medias/medias.model";
-import { MediaGateway } from "./../../src/medias/medias.contract";
+import { ResultObject } from "../../src/utils";
+import { DeleteMediaGatewayResult, GetMediaSignedUrlGatewayResult, MediaGateway, StoreMediaGatewayResult } from "./../../src/medias/medias.contract";
 
 export default class MediaInMemoryGateway implements MediaGateway {
     data: Map<string, File>
@@ -19,26 +20,38 @@ export default class MediaInMemoryGateway implements MediaGateway {
         );
     }
 
-    async storeMedia(file: File): Promise<string> {
+    async storeMedia(
+        file: File
+    ): Promise<ResultObject<StoreMediaGatewayResult, string>> {
         const id = MediaInMemoryGateway.computeMediaKey(file);
         this.data.set(id, file);
-        return id;
+        return new ResultObject(
+            StoreMediaGatewayResult.SUCCESS,
+            id
+        );
     }
 
-    async getMediaSignedUrl(key: string): Promise<string> {
+    async getMediaSignedUrl(
+        key: string
+    ): Promise<ResultObject<GetMediaSignedUrlGatewayResult, string>> {
         const media = this.data.get(key);
         if (!media) {
             throw new Error("No media corresponding to key");
         }
-
-        return `http://fakeUrl/${key}?abcsd`;
+        return new ResultObject(
+            GetMediaSignedUrlGatewayResult.SUCCESS,
+            `http://fakeUrl/${key}?abcsd`
+        );
     }
 
-    async deleteMedia(key: string): Promise<void> {
+    async deleteMedia(
+        key: string
+    ): Promise<ResultObject<DeleteMediaGatewayResult, undefined>> {
         if (!this.data.has(key)) {
             throw new Error(`Media does not exist ${key}`);
         } else {
             this.data.delete(key);
         }
+        return new ResultObject(DeleteMediaGatewayResult.SUCCESS);
     }
 }

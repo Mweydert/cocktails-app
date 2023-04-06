@@ -9,3 +9,8 @@ export interface CreateCocktailCommand {
         size: number;
     };
 }
+
+export enum CreateCocktailResult {
+    SUCCESS = "success",
+    UNHANDLED_ERROR = "unhandled_error"
+}

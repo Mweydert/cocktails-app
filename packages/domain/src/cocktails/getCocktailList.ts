@@ -1,8 +1,9 @@
 import logger from "../utils/logger";
-import { CocktailGateway } from "./cocktails.contract";
-import { MediaGateway } from "../medias/medias.contract";
-import { CocktailListResult, GetCocktailListItem, GetCocktailListQuery } from "./getCocktailList.contract";
+import { CocktailGateway, GetCocktailListGatewayResult } from "./cocktails.contract";
+import { GetMediaSignedUrlGatewayResult, MediaGateway } from "../medias/medias.contract";
+import { CocktailListData, GetCocktaiListResult, GetCocktailListItem, GetCocktailListQuery } from "./getCocktailList.contract";
 import Cocktail from "./model";
+import { ResultObject } from "../utils";
 
 export default class GetCocktailList {
     #cocktailGateway: CocktailGateway
@@ -30,25 +31,37 @@ export default class GetCocktailList {
 
     async execute({
         pagination
-    }: GetCocktailListQuery): Promise<CocktailListResult> {
+    }: GetCocktailListQuery): Promise<ResultObject<GetCocktaiListResult, CocktailListData>> {
         logger.info("GetCocktailList", pagination);
 
-        const cocktailList = await this.#cocktailGateway.getCocktailList(pagination);
+        const cocktailListRes = await this.#cocktailGateway.getCocktailList(pagination);
+        if (cocktailListRes.result !== GetCocktailListGatewayResult.SUCCESS || !cocktailListRes.data) {
+            return new ResultObject(GetCocktaiListResult.UNHANDLED_ERROR);
+        }
 
-        const cocktailWithSignedPictureUrl = await Promise.all(cocktailList.data.map(async cocktail => {
+        const cocktailWithSignedPictureUrl = await Promise.all(cocktailListRes.data.data.map(async cocktail => {
+            let signedUrl;
             if (cocktail.pictureKey) {
-                const pictureSignedUrl = await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey);
-                return GetCocktailList.mapCocktailToCocktailListItem(
-                    cocktail,
-                    pictureSignedUrl
-                );
+                const pictureSignedUrlRes = await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey);
+                if (pictureSignedUrlRes.result !== GetMediaSignedUrlGatewayResult.SUCCESS) {
+                    logger.warn(`Fail to get signed URL for picture ${cocktail.pictureKey} of cocktail ${cocktail.id}`);
+                }
+
+                signedUrl = pictureSignedUrlRes.data;
             }
-            return GetCocktailList.mapCocktailToCocktailListItem(cocktail);
+
+            return GetCocktailList.mapCocktailToCocktailListItem(
+                cocktail,
+                signedUrl
+            );
         }));
 
-        return {
-            data: cocktailWithSignedPictureUrl,
-            meta: cocktailList.meta
-        };
+        return new ResultObject(
+            GetCocktaiListResult.SUCCESS,
+            {
+                data: cocktailWithSignedPictureUrl,
+                meta: cocktailListRes.data.meta
+            }
+        );
     }
 }

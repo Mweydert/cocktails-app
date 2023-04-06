@@ -1,6 +1,9 @@
 # TODO for next(s) sessions
 
 Manage existing cocktail (same name at last) and other errors
+- Return type
+- Error 404, 409
+- Review logs
 
 Infinite scroll without need for button's click
 
