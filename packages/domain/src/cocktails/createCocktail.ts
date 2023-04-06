@@ -2,10 +2,8 @@ import { CocktailGateway, CreateCocktailGatewayResult, GetCocktailGatewayResult 
 import Cocktail from "./model";
 import logger from "../utils/logger";
 import { CreateCocktailCommand, CreateCocktailResult } from "./createCocktail.contract";
-import { MediaGateway, StoreMediaGatewayResult } from "./../medias/medias.contract";
+import { DeleteMediaGatewayResult, MediaGateway, StoreMediaGatewayResult } from "./../medias/medias.contract";
 import ResultObject from "../utils/resultObject";
-
-// TODO: manage conflict in cocktail name
 
 export default class CreateCocktail {
     #cocktailGateway: CocktailGateway;
@@ -35,7 +33,6 @@ export default class CreateCocktail {
         if (picture) {
             const storeMediaRes = await this.#mediaGateway.storeMedia(picture);
             if (storeMediaRes.result !== StoreMediaGatewayResult.SUCCESS) {
-                // LOG HERE ?
                 return new ResultObject(CreateCocktailResult.UNHANDLED_ERROR);
             }
             pictureKey = storeMediaRes.data;
@@ -49,10 +46,15 @@ export default class CreateCocktail {
 
         const createCocktailRes = await this.#cocktailGateway.createCocktail(cocktail);
         if (createCocktailRes.result !== CreateCocktailGatewayResult.SUCCESS) {
+            if (pictureKey) {
+                const deleteMediaRes = await this.#mediaGateway.deleteMedia(pictureKey);
+                if (deleteMediaRes.result !== DeleteMediaGatewayResult.SUCCESS) {
+                    logger.warn(`Fail to clean picture ${pictureKey}`);
+                }
+            }
+
             return new ResultObject(CreateCocktailResult.UNHANDLED_ERROR);
         }
-
-        // TODO when time: delete picture if fail to create Cocktail
 
         logger.debug(`Successfully created new cocktail ${cocktail.id}`);
         return new ResultObject(CreateCocktailResult.SUCCESS, cocktail);
