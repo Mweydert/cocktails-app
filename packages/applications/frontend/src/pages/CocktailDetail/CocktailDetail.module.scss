@@ -6,6 +6,41 @@
 
         .picture {
             margin-top: 30px;
+            position: relative;
+
+            .edit-picture-cta {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+
+                @media screen and (min-width: breakpoint("tablet")) {
+                    right: 20px;
+                    top: 20px;
+                }
+
+                .cta-icon {
+                    background-color: get-color(light_gray);
+
+                    height: 30px;
+                    width: 30px;
+
+                    @media screen and (min-width: breakpoint("tablet")) {
+                        height: 40px;
+                        width: 40px;
+                    }
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+                input {
+                    display: none;
+                }
+            }
         }
     }
 }

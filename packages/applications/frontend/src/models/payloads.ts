@@ -3,3 +3,8 @@ export interface CreateCocktailPayload {
     note?: number;
     pictures?: FileList;
 }
+
+export interface UpdateCocktailPayload {
+    note?: number;
+    picture?: File;
+}

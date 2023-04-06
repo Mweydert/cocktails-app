@@ -8,12 +8,13 @@ import {
 } from "app-domain";
 import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
 import {
+    CreateCocktailFileScheme,
     CreateCocktailScheme,
-    fileScheme,
     GetCocktailListScheme,
     GetCocktailScheme,
     UpdateCocktailBodyScheme,
-    UpdateCocktailIdScheme
+    UpdateCocktailIdScheme,
+    UpdateCocktailPictureScheme
 } from "./contract";
 import multer from "@koa/multer";
 import dataSource from "@/utils/dbConfig";
@@ -42,7 +43,8 @@ const getCocktailListUC = new GetCocktailList(
     mediaGateway
 );
 const updateCocktailUC = new UpdateCocktail(
-    cocktailGateway
+    cocktailGateway,
+    mediaGateway
 );
 
 
@@ -54,7 +56,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         ctx.body = commandBody.error;
         return;
     }
-    const commandPicture = fileScheme.safeParse(ctx.request.file);
+    const commandPicture = CreateCocktailFileScheme.safeParse(ctx.request.file);
     if (!commandPicture.success) {
         logger.warn("CocktailRouter - POST / - Invalid picture", commandPicture.error);
         ctx.status = 400;
@@ -127,13 +129,14 @@ router.get("/", async (ctx, next) => {
     next();
 })
 
-router.put("/:id", async (ctx, next) => {
+router.put("/:id", upload.single("picture"), async (ctx, next) => {
     logger.debug("update cocktail", ctx.params.id);
 
     const parsedId = UpdateCocktailIdScheme.safeParse({
         id: ctx.params.id,
     });
     const parsedBody = UpdateCocktailBodyScheme.safeParse(ctx.request.body)
+    const parsedPicture = UpdateCocktailPictureScheme.safeParse(ctx.request.file)
     if (!parsedId.success) {
         ctx.status = 400;
         ctx.body = parsedId.error;
@@ -144,15 +147,28 @@ router.put("/:id", async (ctx, next) => {
         ctx.body = parsedBody.error;
         return;
     }
+    if (!parsedPicture.success) {
+        ctx.status = 400;
+        ctx.body = parsedPicture.error;
+        return;
+    }
+
     const command = {
         ...parsedId.data,
         ...parsedBody.data,
+        picture: parsedPicture.data && {
+            fileName: parsedPicture.data.originalname,
+            encoding: parsedPicture.data.encoding,
+            mimetype: parsedPicture.data.mimetype,
+            buffer: parsedPicture.data.buffer,
+            size: parsedPicture.data.size,
+        }
     }
 
-
-    await updateCocktailUC.execute(command);
+    const res = await updateCocktailUC.execute(command);
 
     ctx.status = 200;
+    ctx.body = res;
 
     // TODO: return updated object
 

@@ -5,6 +5,8 @@ import { useGetCocktail } from "../../data/useGetCocktail";
 import { Alert, CircularProgress, useToast } from "@chakra-ui/react";
 import RatingInput from "../../components/common/Form/RatingInput";
 import { useUpdateCocktail } from "../../data/useUpdateCocktail";
+import { EditIcon } from "@chakra-ui/icons";
+import { ChangeEvent } from "react";
 
 const CocktailDetail = () => {
     const { t } = useTranslation();
@@ -52,6 +54,19 @@ const CocktailDetail = () => {
         });
     }
 
+    // TODO: manage loading
+
+    const handleFileSelected = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length) {
+            mutate({
+                picture: event.target.files[0]
+            });
+        } else {
+            console.info("No picture selected");
+        }
+    }
+
+
     return isLoading ? (
         <div className={styles["loader-container"]}>
             <CircularProgress isIndeterminate />
@@ -73,6 +88,21 @@ const CocktailDetail = () => {
                             />
                         </div>
                         <div className={styles.picture}>
+                            <div className={styles["edit-picture-cta"]}>
+                                <label htmlFor="file-input">
+                                    <div className={styles["cta-icon"]}>
+                                        <EditIcon />
+                                    </div>
+                                </label>
+                                
+                                <input
+                                    id="file-input"
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg"
+                                    onChange={handleFileSelected}
+                                />
+                            </div>
+                            
                             {data.pictureUrl ? (
                                 <img src={data.pictureUrl} alt="" />
                             ): (

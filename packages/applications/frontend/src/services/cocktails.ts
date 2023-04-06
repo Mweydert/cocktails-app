@@ -1,4 +1,4 @@
-import { CreateCocktailPayload } from "./../models/payloads";
+import { CreateCocktailPayload, UpdateCocktailPayload } from "./../models/payloads";
 import axios from "axios";
 import { Cocktail } from "../models/cocktails";
 import { API_URL } from "./../utils/config";
@@ -61,14 +61,23 @@ export const getCocktail = async (
     return res.data;
 }
 
-export interface UpdateCocktailPayload {
-    note?: number;
-}
-
 export const updateCocktail = async (
     id: string,
     payload: UpdateCocktailPayload
 ): Promise<void> => {
-    const res = await axios.put(`${API_URL}/cocktails/${id}`, payload);
+    const form = new FormData();
+
+    if (payload.note) {
+        form.append("note", payload.note.toString());
+    }
+    if (payload.picture) {
+        form.append("picture", payload.picture);
+    }
+
+    const res = await axios.put(`${API_URL}/cocktails/${id}`, form, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
     return res.data;
 }
