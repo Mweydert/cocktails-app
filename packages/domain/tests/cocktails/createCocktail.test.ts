@@ -1,4 +1,4 @@
-import { CreateCocktail as CreateCocktailUC } from "../../src/cocktails";
+import { Cocktail, CreateCocktail as CreateCocktailUC } from "../../src/cocktails";
 import { CreateCocktailResult } from "../../src/cocktails/createCocktail.contract";
 import CocktailInMemoryGateway from "../gateways/cocktails";
 import MediaInMemoryGateway from "../gateways/medias";
@@ -72,4 +72,25 @@ describe("create cocktails UC", () => {
         const storedCocktail = cocktailGateway.data.get(cocktail.id);
         expect(storedCocktail).toEqual(cocktail);
     });
+
+    test("should fail to create cocktail if a cocktail with same name already exist", async () => {
+        const existingCocktail = new Cocktail({
+            id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
+            name: "Awesome cocktail",
+            note: 4.5,
+        });
+        const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
+        const mediaGateway = new MediaInMemoryGateway();
+        const res = await new CreateCocktailUC(
+            cocktailGateway,
+            mediaGateway
+        ).execute({
+            name: existingCocktail.name
+        });
+
+        expect(res.result).toBe(CreateCocktailResult.COCKTAIL_ALREADY_EXIST);
+
+        const storedCocktail = cocktailGateway.data.get(existingCocktail.id);
+        expect(storedCocktail).toEqual(existingCocktail);
+    })
 });

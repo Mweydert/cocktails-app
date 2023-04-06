@@ -31,6 +31,9 @@ export interface CocktailGateway {
     getCocktail: (
         id: string
     ) => Promise<ResultObject<GetCocktailGatewayResult, Cocktail>>;
+    getCocktailByName: (
+        name: string
+    ) => Promise<ResultObject<GetCocktailGatewayResult, Cocktail>>;
     getCocktailList: (
         pagination?: PaginationParams
     ) => Promise<ResultObject<GetCocktailListGatewayResult, PaginatedListResult<Cocktail>>>;

@@ -36,6 +36,17 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         return new ResultObject(GetCocktailGatewayResult.SUCCESS, data);
     }
 
+    async getCocktailByName(
+        name: string
+    ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
+        for (const [_, item] of this.data) {
+            if (item.name === name) {
+                return new ResultObject(GetCocktailGatewayResult.SUCCESS, item);
+            }
+        }
+        return new ResultObject(GetCocktailGatewayResult.NOT_FOUND);
+    }
+
     async getCocktailList(
         pagination?: PaginationParams
     ): Promise<ResultObject<GetCocktailListGatewayResult, PaginatedListResult<Cocktail>>> {

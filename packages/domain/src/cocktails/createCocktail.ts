@@ -1,4 +1,4 @@
-import { CocktailGateway, CreateCocktailGatewayResult } from "./cocktails.contract";
+import { CocktailGateway, CreateCocktailGatewayResult, GetCocktailGatewayResult } from "./cocktails.contract";
 import Cocktail from "./model";
 import logger from "../utils/logger";
 import { CreateCocktailCommand, CreateCocktailResult } from "./createCocktail.contract";
@@ -25,6 +25,11 @@ export default class CreateCocktail {
         picture
     }: CreateCocktailCommand): Promise<ResultObject<CreateCocktailResult, Cocktail>> {
         logger.debug("Create new cocktail");
+
+        const cocktailWithSameNameRes = await this.#cocktailGateway.getCocktailByName(name);
+        if (cocktailWithSameNameRes.result !== GetCocktailGatewayResult.NOT_FOUND) {
+            return new ResultObject(CreateCocktailResult.COCKTAIL_ALREADY_EXIST);
+        }
 
         let pictureKey;
         if (picture) {

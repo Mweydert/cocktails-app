@@ -72,6 +72,26 @@ export default class CocktailGatewayImpl implements CocktailGateway {
         )
     }
 
+    async getCocktailByName(
+        name: string
+    ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
+        logger.debug(`Get cocktail by name ${name}`);
+
+        const repository = this.#dataSource.getRepository(PSQLCocktail);
+        const psqlCocktail = await repository.findOneBy({ name });
+
+        if (!psqlCocktail) {
+            return new ResultObject(GetCocktailGatewayResult.NOT_FOUND);
+        }
+
+        logger.debug(`Successfully got cocktail named ${name}`);
+
+        return new ResultObject(
+            GetCocktailGatewayResult.SUCCESS,
+            CocktailGatewayImpl.psqlCocktailToCocktail(psqlCocktail)
+        )
+    }
+
     async getCocktailList(
         pagination?: PaginationParams
     ): Promise<ResultObject<GetCocktailListGatewayResult, PaginatedListResult<Cocktail>>> {
