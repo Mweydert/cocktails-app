@@ -1,4 +1,5 @@
 import { Cocktail, UpdateCocktail as UpdateCocktailUC } from "../../../domain/src/cocktails";
+import { UpdateCocktailResult } from "../../src/cocktails/updateCocktail.contract";
 import CocktailInMemoryGateway from "../gateways/cocktails";
 import MediaInMemoryGateway from "../gateways/medias";
 
@@ -13,10 +14,11 @@ describe("Update cocktail UC", () => {
         const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
         const mediaGateway = new MediaInMemoryGateway();
         const uc = new UpdateCocktailUC(cocktailGateway, mediaGateway);
-        await uc.execute({
+        const res = await uc.execute({
             id: existingCocktail.id,
             note: 1.2
         });
+        expect(res.result).toBe(UpdateCocktailResult.SUCCESS);
         const updatedCocktail = {
             ...existingCocktail,
             note: 1.2
@@ -48,10 +50,11 @@ describe("Update cocktail UC", () => {
             buffer: Buffer.from("ytreza"),
             size: 43243
         };
-        await uc.execute({
+        const res = await uc.execute({
             id: existingCocktail.id,
             picture: newPicture
         });
+        expect(res.result).toBe(UpdateCocktailResult.SUCCESS);
 
         const updatedCocktail = cocktailGateway.data.get(existingCocktail.id);
 
@@ -64,5 +67,14 @@ describe("Update cocktail UC", () => {
         ).toBeFalsy();
     });
 
-    // should manage non existing cocktail
+    test("should fail to update cocktail if not exist", async () => {
+        const cocktailGateway = new CocktailInMemoryGateway();
+        const mediaGateway = new MediaInMemoryGateway();
+        const uc = new UpdateCocktailUC(cocktailGateway, mediaGateway);
+        const res = await uc.execute({
+            id: "6df2224c-4363-470b-a360-facf679c4c54",
+            note: 1.2
+        });
+        expect(res.result).toBe(UpdateCocktailResult.COCKTAIL_NOT_EXIST);
+    });
 });
