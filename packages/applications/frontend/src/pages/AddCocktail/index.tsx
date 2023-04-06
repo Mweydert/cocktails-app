@@ -31,7 +31,8 @@ const AddCocktail = () => {
         mutate: handleCreateCocktail,
         isLoading,
     } = useCreateCocktail({
-        onError: () => {
+        onError: (err: unknown) => {
+            console.error(err);
             toast({
                 title: t("addCocktail.toasters.error.title"),
                 description: t("addCocktail.toasters.error.description"),

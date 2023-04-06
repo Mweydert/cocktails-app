@@ -64,6 +64,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         }
 
         for (const [key, value] of Object.entries(payload)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (cocktail as any)[key] = value;
         }
         this.data.set(id, cocktail);

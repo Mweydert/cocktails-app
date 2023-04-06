@@ -39,7 +39,7 @@ const CocktailDetail = () => {
                 isClosable: true,
             });
         },
-        onError: (err) => {
+        onError: (err: unknown) => {
             console.error(err);
             toast({
                 title: t("cocktailDetail.toasters.error.title"),
