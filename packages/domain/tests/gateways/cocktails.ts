@@ -1,4 +1,4 @@
-import { CocktailGateway } from "../../src/cocktails/cocktails.contract";
+import { CocktailGateway, UpdateCocktailPayload } from "../../src/cocktails/cocktails.contract";
 import Cocktail from "../../src/cocktails/model";
 import { PaginationParams } from "../../src/utils/pagination.model";
 
@@ -24,7 +24,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         if (!cocktail) {
             return null
         }
-        return cocktail;
+        return new Cocktail(cocktail);
     }
 
     async getCocktailList(pagination?: PaginationParams) {
@@ -44,7 +44,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         const total = allItems.length;
         const pageCount = total ? Math.ceil(total / itemPerPage) : 1;
         return {
-            data: res,
+            data: res.map(item => new Cocktail(item)),
             meta: {
                 total: total,
                 page: page,
@@ -52,5 +52,21 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
                 pageCount: pageCount
             }
         }
+    }
+
+    async updateCocktail(
+        id: string,
+        payload: UpdateCocktailPayload
+    ): Promise<void> {
+        const cocktail = this.data.get(id);
+        if (!cocktail) {
+            throw new Error("No cocktail to update");
+        }
+
+        for (const [key, value] of Object.entries(payload)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (cocktail as any)[key] = value;
+        }
+        this.data.set(id, cocktail);
     }
 }

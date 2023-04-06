@@ -3,10 +3,19 @@ import Router from "@koa/router";
 import {
     CreateCocktail,
     GetCocktail,
-    GetCocktailList
+    GetCocktailList,
+    UpdateCocktail
 } from "app-domain";
 import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
-import { CreateCocktailScheme, fileScheme, GetCocktailListScheme, GetCocktailScheme } from "./contract";
+import {
+    CreateCocktailFileScheme,
+    CreateCocktailScheme,
+    GetCocktailListScheme,
+    GetCocktailScheme,
+    UpdateCocktailBodyScheme,
+    UpdateCocktailIdScheme,
+    UpdateCocktailPictureScheme
+} from "./contract";
 import multer from "@koa/multer";
 import dataSource from "@/utils/dbConfig";
 import s3Client from "@/utils/s3Config";
@@ -33,6 +42,10 @@ const getCocktailListUC = new GetCocktailList(
     cocktailGateway,
     mediaGateway
 );
+const updateCocktailUC = new UpdateCocktail(
+    cocktailGateway,
+    mediaGateway
+);
 
 
 router.post("/", upload.single("picture"), async (ctx, next) => {
@@ -43,7 +56,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         ctx.body = commandBody.error;
         return;
     }
-    const commandPicture = fileScheme.safeParse(ctx.request.file);
+    const commandPicture = CreateCocktailFileScheme.safeParse(ctx.request.file);
     if (!commandPicture.success) {
         logger.warn("CocktailRouter - POST / - Invalid picture", commandPicture.error);
         ctx.status = 400;
@@ -72,7 +85,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
 })
 
 router.get("/:id", async (ctx, next) => {
-    logger.debug("id", ctx.params.id);
+    logger.debug("Get cocktail", ctx.params.id);
     const query = GetCocktailScheme.safeParse(ctx.params);
 
     if (!query.success) {
@@ -89,11 +102,7 @@ router.get("/:id", async (ctx, next) => {
     }
 
     ctx.status = 200;
-    ctx.body = {
-        id: res.id,
-        name: res.name,
-        note: res.note,
-    }
+    ctx.body = res;
 
     next();
 })
@@ -120,5 +129,49 @@ router.get("/", async (ctx, next) => {
     next();
 })
 
+router.put("/:id", upload.single("picture"), async (ctx, next) => {
+    logger.debug("update cocktail", ctx.params.id);
+
+    const parsedId = UpdateCocktailIdScheme.safeParse({
+        id: ctx.params.id,
+    });
+    const parsedBody = UpdateCocktailBodyScheme.safeParse(ctx.request.body)
+    const parsedPicture = UpdateCocktailPictureScheme.safeParse(ctx.request.file)
+    if (!parsedId.success) {
+        ctx.status = 400;
+        ctx.body = parsedId.error;
+        return;
+    }
+    if (!parsedBody.success) {
+        ctx.status = 400;
+        ctx.body = parsedBody.error;
+        return;
+    }
+    if (!parsedPicture.success) {
+        ctx.status = 400;
+        ctx.body = parsedPicture.error;
+        return;
+    }
+
+    const command = {
+        ...parsedId.data,
+        ...parsedBody.data,
+        picture: parsedPicture.data && {
+            fileName: parsedPicture.data.originalname,
+            encoding: parsedPicture.data.encoding,
+            mimetype: parsedPicture.data.mimetype,
+            buffer: parsedPicture.data.buffer,
+            size: parsedPicture.data.size,
+        }
+    }
+
+    await updateCocktailUC.execute(command);
+    const res = await getCocktailUC.execute({ id: command.id });
+
+    ctx.status = 200;
+    ctx.body = res;
+
+    next();
+})
 
 export default router;

@@ -1,14 +1,14 @@
-import { GetCocktail as GetCocktailUC } from "../../src/cocktails";
+import { Cocktail, GetCocktail as GetCocktailUC } from "../../src/cocktails";
 import CocktailInMemoryGateway from "../gateways/cocktails";
 import MediaInMemoryGateway from "../gateways/medias";
 
-describe("create cocktails UC", () => {
+describe("get cocktail UC", () => {
     test("should succeed to get cocktail", async () => {
-        const existingCocktail = {
+        const existingCocktail = new Cocktail({
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
             note: 4.5
-        }
+        })
         const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
         const mediaGateway = new MediaInMemoryGateway();
         const cocktail = await new GetCocktailUC(
@@ -28,12 +28,12 @@ describe("create cocktails UC", () => {
             buffer: Buffer.from("azerty"),
             size: 122332
         }
-        const existingCocktail = {
+        const existingCocktail = new Cocktail({
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
             note: 4.5,
-            pictureKey: existingMedia.fileName
-        }
+            pictureKey: MediaInMemoryGateway.computeMediaKey(existingMedia)
+        });
         const cocktailGateway = new CocktailInMemoryGateway([existingCocktail]);
         const mediaGateway = new MediaInMemoryGateway([existingMedia]);
         const cocktail = await new GetCocktailUC(
@@ -46,7 +46,7 @@ describe("create cocktails UC", () => {
             id: "ad04696c-db5c-41b6-9547-dc51d6dbff87",
             name: "Awesome cocktail",
             note: 4.5,
-            pictureUrl: `http://fakeUrl/${existingMedia.fileName}?abcsd`
+            pictureUrl: `http://fakeUrl/${existingCocktail.pictureKey}?abcsd`
         });
     });
 

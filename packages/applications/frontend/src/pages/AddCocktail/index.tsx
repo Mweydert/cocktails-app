@@ -25,14 +25,17 @@ const AddCocktail = () => {
 
     const navigate = useNavigate();
 
+    const toast = useToast();
+
     const {
         mutate: handleCreateCocktail,
         isLoading,
     } = useCreateCocktail({
-        onError: () => {
+        onError: (err: unknown) => {
+            console.error(err);
             toast({
-                title: "Ajout d'un cocktail",
-                description: "Une erreur est survenue lors de l'ajout du cocktail",
+                title: t("addCocktail.toasters.error.title"),
+                description: t("addCocktail.toasters.error.description"),
                 status: "error",
                 duration: 5000,
                 isClosable: true,
@@ -40,8 +43,8 @@ const AddCocktail = () => {
         },
         onSuccess: () => {
             toast({
-                title: "Ajout d'un cocktail",
-                description: "Cocktail ajouté avec succès",
+                title: t("addCocktail.toasters.success.title"),
+                description: t("addCocktail.toasters.success.description"),
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -53,8 +56,6 @@ const AddCocktail = () => {
     const onSubmit = (data: CreateCocktailPayload) => {
         handleCreateCocktail(data);
     }
-
-    const toast = useToast()
 
     const { t } = useTranslation();
 

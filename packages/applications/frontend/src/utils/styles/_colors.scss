@@ -1,6 +1,7 @@
 $color: (
     primary: #F6AD55,
-    gray: #4A5568
+    gray: #4A5568,
+    light_gray: #EDF2F7,
 );
 
 @function get-color($elem) {

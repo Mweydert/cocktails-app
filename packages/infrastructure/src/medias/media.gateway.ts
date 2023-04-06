@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuid } from "uuid";
 import logger from "../utils/logger";
@@ -51,5 +51,15 @@ export default class S3MediaGateway implements MediaGateway {
             { expiresIn: S3MediaGateway.URL_TTL }
         );
         return signedUrl;
+    }
+
+    async deleteMedia(key: string): Promise<void> {
+        logger.debug("Delete file", key);
+
+        const command = new DeleteObjectCommand({
+            Bucket: this.#bucketName,
+            Key: key,
+        });
+        await this.#s3Client.send(command);
     }
 }
