@@ -1,7 +1,7 @@
-import { MediaGateway, StoreMediaGatewayResult } from "../medias";
+import { DeleteMediaGatewayResult, MediaGateway, StoreMediaGatewayResult } from "../medias";
 import { ResultObject } from "../utils";
 import logger from "../utils/logger";
-import { CocktailGateway, GetCocktailGatewayResult } from "./cocktails.contract";
+import { CocktailGateway, GetCocktailGatewayResult, UpdateCocktailGatewayResult } from "./cocktails.contract";
 import { UpdateCocktailCommand, UpdateCocktailResult } from "./updateCocktail.contract";
 
 export default class UpdateCocktail {
@@ -31,7 +31,6 @@ export default class UpdateCocktail {
         let payload = {};
         if (command.picture) {
             oldPictureKey = cocktail.pictureKey;
-            logger.debug("Update new media for cocktail", cocktail.id);
 
             const storeMediaRes = await this.#mediaGateway.storeMedia(command.picture);
             if (storeMediaRes.result !== StoreMediaGatewayResult.SUCCESS || !storeMediaRes.data) {
@@ -53,15 +52,18 @@ export default class UpdateCocktail {
             }
         }
 
-        await this.#cocktailGateway.updateCocktail(command.id, payload);
-
-        if (oldPictureKey) {
-            logger.debug("Delete old media", oldPictureKey, "of cocktail", cocktail.id);
-            await this.#mediaGateway.deleteMedia(oldPictureKey);
+        const updateCocktailRes = await this.#cocktailGateway.updateCocktail(command.id, payload);
+        if (updateCocktailRes.result !== UpdateCocktailGatewayResult.SUCCESS) {
+            return new ResultObject(UpdateCocktailResult.UNHANDLED_ERROR);
         }
 
-        return new ResultObject(
-            UpdateCocktailResult.SUCCESS
-        );
+        if (oldPictureKey) {
+            const deleteMediaRes = await this.#mediaGateway.deleteMedia(oldPictureKey);
+            if (deleteMediaRes.result !== DeleteMediaGatewayResult.SUCCESS) {
+                logger.error(`Fail to clean picture ${oldPictureKey} of cocktail ${cocktail.id}`);
+            }
+        }
+
+        return new ResultObject(UpdateCocktailResult.SUCCESS);
     }
 }

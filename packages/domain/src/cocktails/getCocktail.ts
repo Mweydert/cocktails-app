@@ -32,8 +32,6 @@ export default class GetCocktail {
     async execute({
         id
     }: GetCocktailQuery): Promise<ResultObject<GetCocktailResult, GetCocktailData>> {
-        logger.debug(`Get cocktail ${id}`);
-
         const cocktailRes = await this.#cocktailGateway.getCocktail(id);
         if (cocktailRes.result === GetCocktailGatewayResult.NOT_FOUND) {
             return new ResultObject(GetCocktailResult.NOT_FOUNT);
@@ -51,8 +49,6 @@ export default class GetCocktail {
 
             signedUrl = signedUrlRes.data;
         }
-
-        logger.debug(`Successfully got cocktail ${id}`);
 
         return new ResultObject(
             GetCocktailResult.SUCCESS,

@@ -32,8 +32,6 @@ export default class GetCocktailList {
     async execute({
         pagination
     }: GetCocktailListQuery): Promise<ResultObject<GetCocktaiListResult, CocktailListData>> {
-        logger.info("GetCocktailList", pagination);
-
         const cocktailListRes = await this.#cocktailGateway.getCocktailList(pagination);
         if (cocktailListRes.result !== GetCocktailListGatewayResult.SUCCESS || !cocktailListRes.data) {
             return new ResultObject(GetCocktaiListResult.UNHANDLED_ERROR);

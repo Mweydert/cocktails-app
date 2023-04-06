@@ -28,6 +28,7 @@ import config from "@/config";
 const upload = multer();
 
 // TODO: dependency injection
+// TODO: better logs
 
 const router = new Router();
 

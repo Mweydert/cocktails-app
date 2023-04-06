@@ -22,8 +22,6 @@ export default class CreateCocktail {
         note,
         picture
     }: CreateCocktailCommand): Promise<ResultObject<CreateCocktailResult, Cocktail>> {
-        logger.debug("Create new cocktail");
-
         const cocktailWithSameNameRes = await this.#cocktailGateway.getCocktailByName(name);
         if (cocktailWithSameNameRes.result !== GetCocktailGatewayResult.NOT_FOUND) {
             return new ResultObject(CreateCocktailResult.COCKTAIL_ALREADY_EXIST);
@@ -56,7 +54,6 @@ export default class CreateCocktail {
             return new ResultObject(CreateCocktailResult.UNHANDLED_ERROR);
         }
 
-        logger.debug(`Successfully created new cocktail ${cocktail.id}`);
         return new ResultObject(CreateCocktailResult.SUCCESS, cocktail);
     }
 }
