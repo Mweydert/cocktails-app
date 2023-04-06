@@ -6,7 +6,9 @@ const Header = () => {
 
     return (
         <div className={styles.container}>
-            <span className={styles.content}>{t("header.label")}</span>
+            <a href="/">
+                <span className={styles.content}>{t("header.label")}</span>
+            </a>
         </div>
     )
 };
