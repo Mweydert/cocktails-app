@@ -4,7 +4,11 @@ import {
     CreateCocktail,
     GetCocktail,
     GetCocktailList,
-    UpdateCocktail
+    UpdateCocktail,
+    CreateCocktailResult,
+    GetCocktailResult,
+    GetCocktaiListResult,
+    UpdateCocktailResult
 } from "app-domain";
 import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
 import {
@@ -75,12 +79,21 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
     }
 
     const res = await createCocktailUC.execute(command);
-    ctx.status = 200;
-    ctx.body = {
-        id: res.id,
-        name: res.name,
-        note: res.note,
+    if (res.result === CreateCocktailResult.COCKTAIL_ALREADY_EXIST) {
+        ctx.status = 409;
+        return;
+    } else if (!res.data) {
+        ctx.status = 500;
+    } else if (res.result === CreateCocktailResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = {
+            id: res.data.id,
+            name: res.data.name,
+            note: res.data.note,
+        }
+        return;
     }
+
     next();
 })
 
@@ -96,13 +109,16 @@ router.get("/:id", async (ctx, next) => {
 
     const res = await getCocktailUC.execute(query.data);
 
-    if (!res) {
+    if (res.result === GetCocktailResult.NOT_FOUNT) {
         ctx.status = 404
         return;
+    } else if (!res.data) {
+        ctx.status = 500;
+    } else if (res.result === GetCocktailResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = res.data;
+        return;
     }
-
-    ctx.status = 200;
-    ctx.body = res;
 
     next();
 })
@@ -123,8 +139,13 @@ router.get("/", async (ctx, next) => {
         }
     });
 
-    ctx.status = 200;
-    ctx.body = res
+    if (!res.data) {
+        ctx.status = 500;
+    } else if (res.result === GetCocktaiListResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = res.data;
+        return;
+    }
 
     next();
 })
@@ -165,11 +186,23 @@ router.put("/:id", upload.single("picture"), async (ctx, next) => {
         }
     }
 
-    await updateCocktailUC.execute(command);
-    const res = await getCocktailUC.execute({ id: command.id });
+    const updateRes = await updateCocktailUC.execute(command);
+    if (updateRes.result === UpdateCocktailResult.COCKTAIL_NOT_EXIST) {
+        ctx.status = 422;
+        return;
+    } else if (updateRes.result !== UpdateCocktailResult.SUCCESS) {
+        ctx.status = 500;
+        return next();
+    }
 
-    ctx.status = 200;
-    ctx.body = res;
+    const res = await getCocktailUC.execute({ id: command.id });
+    if (res.result === GetCocktailResult.NOT_FOUNT || !res.data) {
+        ctx.status = 500;
+    } else if (res.result === GetCocktailResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = res.data;
+        return;
+    }
 
     next();
 })

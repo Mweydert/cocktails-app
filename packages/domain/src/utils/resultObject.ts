@@ -1,11 +1,11 @@
-export default class ResultObject<T, G> {
-    #result: T;
-    #data?: G;
+export default class ResultObject<ResType, DataType> {
+    #result: ResType;
+    #data?: DataType;
     #message?: string;
 
     constructor(
-        result: T,
-        data?: G,
+        result: ResType,
+        data?: DataType,
         message?: string,
     ) {
         this.#result = result;

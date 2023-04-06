@@ -2,7 +2,8 @@ import { ResultObject } from "../utils";
 import { File } from "./medias.model";
 
 export enum StoreMediaGatewayResult {
-    SUCCESS = "success"
+    SUCCESS = "success",
+    FAIL_TO_STORE_MEDIA = "fail_to_store_media"
 }
 
 export enum GetMediaSignedUrlGatewayResult {

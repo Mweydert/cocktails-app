@@ -2,7 +2,7 @@ import { GetObjectCommand, PutObjectCommand, DeleteObjectCommand, S3Client } fro
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuid } from "uuid";
 import logger from "../utils/logger";
-import { File, MediaGateway } from "app-domain";
+import { DeleteMediaGatewayResult, File, GetMediaSignedUrlGatewayResult, MediaGateway, ResultObject, StoreMediaGatewayResult } from "app-domain";
 
 export default class S3MediaGateway implements MediaGateway {
     #s3Client: S3Client;
@@ -19,12 +19,18 @@ export default class S3MediaGateway implements MediaGateway {
 
     private static URL_TTL = 60 * 60; // 1 hour validity
 
-    async storeMedia(file: File): Promise<string> {
+    async storeMedia(
+        file: File
+    ): Promise<ResultObject<StoreMediaGatewayResult, string>> {
         logger.debug("Store file", file.fileName);
 
         const fileExtension = file.fileName.match(/\.[0-9a-z]+$/i)?.[0];
         if (!fileExtension) {
-            throw new Error(`Unable to found extension in file ${file.fileName}`);
+            return new ResultObject<StoreMediaGatewayResult, string>(
+                StoreMediaGatewayResult.FAIL_TO_STORE_MEDIA,
+                undefined,
+                "No file extension"
+            );
         }
 
         const key = `${uuid()}${fileExtension}`;
@@ -35,10 +41,13 @@ export default class S3MediaGateway implements MediaGateway {
             Body: file.buffer
         });
         await this.#s3Client.send(command);
-        return key;
+
+        return new ResultObject(StoreMediaGatewayResult.SUCCESS, key);
     }
 
-    async getMediaSignedUrl(key: string): Promise<string> {
+    async getMediaSignedUrl(
+        key: string
+    ): Promise<ResultObject<GetMediaSignedUrlGatewayResult, string>> {
         logger.debug("Get signed URL for file", key);
 
         const command = new GetObjectCommand({
@@ -50,10 +59,12 @@ export default class S3MediaGateway implements MediaGateway {
             command,
             { expiresIn: S3MediaGateway.URL_TTL }
         );
-        return signedUrl;
+        return new ResultObject(GetMediaSignedUrlGatewayResult.SUCCESS, signedUrl);
     }
 
-    async deleteMedia(key: string): Promise<void> {
+    async deleteMedia(
+        key: string
+    ): Promise<ResultObject<DeleteMediaGatewayResult, undefined>> {
         logger.debug("Delete file", key);
 
         const command = new DeleteObjectCommand({
@@ -61,5 +72,7 @@ export default class S3MediaGateway implements MediaGateway {
             Key: key,
         });
         await this.#s3Client.send(command);
+
+        return new ResultObject(DeleteMediaGatewayResult.SUCCESS);
     }
 }
