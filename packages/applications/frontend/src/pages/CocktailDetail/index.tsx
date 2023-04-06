@@ -26,7 +26,10 @@ const CocktailDetail = () => {
     
     const toast = useToast();
 
-    const { mutate } = useUpdateCocktail(cocktailId, {
+    const {
+        isLoading: mutateLoading,
+        mutate
+    } = useUpdateCocktail(cocktailId, {
         onSuccess: () => {
             toast({
                 title: t("cocktailDetail.toasters.success.title"),
@@ -53,8 +56,6 @@ const CocktailDetail = () => {
             note: newNote
         });
     }
-
-    // TODO: manage loading
 
     const handleFileSelected = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
@@ -112,6 +113,11 @@ const CocktailDetail = () => {
                             )}
                         </div>
                     </div>
+                    {mutateLoading && (
+                        <div className={styles["update-loader"]}>
+                            <CircularProgress isIndeterminate />
+                        </div>
+                    )}
                 </>
             )}
         </div>
