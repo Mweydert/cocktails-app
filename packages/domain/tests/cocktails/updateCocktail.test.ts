@@ -48,7 +48,7 @@ describe("Update cocktail UC", () => {
             buffer: Buffer.from("ytreza"),
             size: 43243
         };
-        const res = await uc.execute({
+        await uc.execute({
             id: existingCocktail.id,
             picture: newPicture
         });
@@ -62,14 +62,6 @@ describe("Update cocktail UC", () => {
         expect(
             mediaGateway.data.has(MediaInMemoryGateway.computeMediaKey(existingMedia))
         ).toBeFalsy();
-
-        expect(res).toEqual({
-            id: existingCocktail.id,
-            name: existingCocktail.name,
-            note: existingCocktail.note,
-            pictureUrl: `http://fakeUrl/${updatedCocktail?.pictureKey}?abcsd`
-        });
-
     });
 
     // should manage non existing cocktail

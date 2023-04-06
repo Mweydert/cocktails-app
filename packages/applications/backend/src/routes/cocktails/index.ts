@@ -165,12 +165,11 @@ router.put("/:id", upload.single("picture"), async (ctx, next) => {
         }
     }
 
-    const res = await updateCocktailUC.execute(command);
+    await updateCocktailUC.execute(command);
+    const res = await getCocktailUC.execute({ id: command.id });
 
     ctx.status = 200;
     ctx.body = res;
-
-    // TODO: return updated object
 
     next();
 })

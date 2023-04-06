@@ -1,8 +1,7 @@
 import { MediaGateway } from "../medias";
 import logger from "../utils/logger";
 import { CocktailGateway } from "./cocktails.contract";
-import Cocktail from "./model";
-import { UpdateCocktailCommand, UpdateCocktailResult } from "./updateCocktail.contract";
+import { UpdateCocktailCommand } from "./updateCocktail.contract";
 
 // TODO: introduce result type to manage errors
 
@@ -18,26 +17,13 @@ export default class UpdateCocktail {
         this.#mediaGateway = mediaGateway;
     }
 
-    private static mapCocktailToUpdateCocktailResult(
-        cocktail: Cocktail,
-        signedUrl?: string
-    ): UpdateCocktailResult {
-        return {
-            id: cocktail.id,
-            name: cocktail.name,
-            note: cocktail.note,
-            pictureUrl: signedUrl,
-        }
-    }
-
     async execute(
         command: UpdateCocktailCommand
-    ): Promise<UpdateCocktailResult> {
+    ): Promise<void> {
         const cocktail = await this.#cocktailGateway.getCocktail(command.id);
         if (!cocktail) {
             throw new Error(`Cocktail ${command.id} not found`);
         }
-
 
         let oldPictureKey;
         let payload = {};
@@ -66,11 +52,5 @@ export default class UpdateCocktail {
             logger.debug("Delete old media", oldPictureKey, "of cocktail", cocktail.id);
             await this.#mediaGateway.deleteMedia(oldPictureKey);
         }
-
-        const signedUrl = cocktail.pictureKey
-            ? await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey)
-            : undefined;
-
-        return UpdateCocktail.mapCocktailToUpdateCocktailResult(cocktail, signedUrl);
     }
 }
