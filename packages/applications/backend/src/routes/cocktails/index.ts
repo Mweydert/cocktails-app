@@ -86,6 +86,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
     const res = await createCocktailUC.execute(command);
     if (res.result === CreateCocktailResult.COCKTAIL_ALREADY_EXIST) {
         ctx.status = 409;
+        ctx.body = res.result;
         return;
     } else if (!res.data) {
         ctx.status = 500;
@@ -117,6 +118,7 @@ router.get("/:id", async (ctx, next) => {
 
     if (res.result === GetCocktailResult.NOT_FOUNT) {
         ctx.status = 404
+        ctx.body = res.result;
         return;
     } else if (!res.data) {
         ctx.status = 500;
@@ -196,15 +198,18 @@ router.put("/:id", upload.single("picture"), async (ctx, next) => {
     const updateRes = await updateCocktailUC.execute(command);
     if (updateRes.result === UpdateCocktailResult.COCKTAIL_NOT_EXIST) {
         ctx.status = 422;
+        ctx.body = updateRes.result;
         return;
     } else if (updateRes.result !== UpdateCocktailResult.SUCCESS) {
         ctx.status = 500;
+        ctx.body = updateRes.result;
         return next();
     }
 
     const res = await getCocktailUC.execute({ id: command.id });
     if (res.result === GetCocktailResult.NOT_FOUNT || !res.data) {
         ctx.status = 500;
+        ctx.body = res.result;
     } else if (res.result === GetCocktailResult.SUCCESS) {
         ctx.status = 200;
         ctx.body = res.data;
@@ -212,6 +217,6 @@ router.put("/:id", upload.single("picture"), async (ctx, next) => {
     }
 
     next();
-})
+});
 
 export default router;
