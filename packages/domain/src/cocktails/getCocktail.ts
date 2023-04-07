@@ -1,8 +1,9 @@
-import { CocktailGateway } from "./cocktails.contract";
-import { GetCocktailQuery, GetCocktailResult } from "./getCocktail.contract";
+import { CocktailGateway, GetCocktailGatewayResult } from "./cocktails.contract";
+import { GetCocktailData, GetCocktailQuery, GetCocktailResult } from "./getCocktail.contract";
 import Cocktail from "./model";
 import logger from "../utils/logger";
-import { MediaGateway } from "../medias/medias.contract";
+import { GetMediaSignedUrlGatewayResult, MediaGateway } from "../medias/medias.contract";
+import { ResultObject } from "../utils";
 
 export default class GetCocktail {
     #cocktailGateway: CocktailGateway;
@@ -19,7 +20,7 @@ export default class GetCocktail {
     private static mapCocktailToGetCocktailResult(
         cocktail: Cocktail,
         signedUrl?: string
-    ): GetCocktailResult {
+    ): GetCocktailData {
         return {
             id: cocktail.id,
             name: cocktail.name,
@@ -28,21 +29,30 @@ export default class GetCocktail {
         }
     }
 
-    async execute({ id }: GetCocktailQuery): Promise<GetCocktailResult | null> {
-        logger.debug(`Get cocktail ${id}`);
+    async execute({
+        id
+    }: GetCocktailQuery): Promise<ResultObject<GetCocktailResult, GetCocktailData>> {
+        const cocktailRes = await this.#cocktailGateway.getCocktail(id);
+        if (cocktailRes.result === GetCocktailGatewayResult.NOT_FOUND) {
+            return new ResultObject(GetCocktailResult.NOT_FOUNT);
+        } else if (!cocktailRes.data) {
+            return new ResultObject(GetCocktailResult.UNHANDLED_ERROR);
+        }
+        const cocktail = cocktailRes.data;
 
-        const cocktail = await this.#cocktailGateway.getCocktail(id);
+        let signedUrl;
+        if (cocktail?.pictureKey) {
+            const signedUrlRes = await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey);
+            if (signedUrlRes.result !== GetMediaSignedUrlGatewayResult.SUCCESS) {
+                return new ResultObject(GetCocktailResult.UNHANDLED_ERROR);
+            }
 
-        if (!cocktail) {
-            return null;
+            signedUrl = signedUrlRes.data;
         }
 
-        const signedUrl = cocktail?.pictureKey
-            ? await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey)
-            : undefined;
-
-        logger.debug(`Successfully got cocktail ${id}`);
-
-        return GetCocktail.mapCocktailToGetCocktailResult(cocktail, signedUrl);
+        return new ResultObject(
+            GetCocktailResult.SUCCESS,
+            GetCocktail.mapCocktailToGetCocktailResult(cocktail, signedUrl)
+        );
     }
 }

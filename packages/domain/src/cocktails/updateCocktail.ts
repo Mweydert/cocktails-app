@@ -1,9 +1,8 @@
-import { MediaGateway } from "../medias";
+import { DeleteMediaGatewayResult, MediaGateway, StoreMediaGatewayResult } from "../medias";
+import { ResultObject } from "../utils";
 import logger from "../utils/logger";
-import { CocktailGateway } from "./cocktails.contract";
-import { UpdateCocktailCommand } from "./updateCocktail.contract";
-
-// TODO: introduce result type to manage errors
+import { CocktailGateway, GetCocktailGatewayResult, UpdateCocktailGatewayResult } from "./cocktails.contract";
+import { UpdateCocktailCommand, UpdateCocktailResult } from "./updateCocktail.contract";
 
 export default class UpdateCocktail {
     #cocktailGateway: CocktailGateway;
@@ -19,18 +18,25 @@ export default class UpdateCocktail {
 
     async execute(
         command: UpdateCocktailCommand
-    ): Promise<void> {
-        const cocktail = await this.#cocktailGateway.getCocktail(command.id);
-        if (!cocktail) {
-            throw new Error(`Cocktail ${command.id} not found`);
+    ): Promise<ResultObject<UpdateCocktailResult, undefined>> {
+        const cocktailRes = await this.#cocktailGateway.getCocktail(command.id);
+        if (cocktailRes.result === GetCocktailGatewayResult.NOT_FOUND) {
+            return new ResultObject(UpdateCocktailResult.COCKTAIL_NOT_EXIST);
+        } else if (!cocktailRes.data) {
+            return new ResultObject(UpdateCocktailResult.UNHANDLED_ERROR);
         }
+        const cocktail = cocktailRes.data;
 
         let oldPictureKey;
         let payload = {};
         if (command.picture) {
             oldPictureKey = cocktail.pictureKey;
-            logger.debug("Update new media for cocktail", cocktail.id);
-            const mediaKey = await this.#mediaGateway.storeMedia(command.picture);
+
+            const storeMediaRes = await this.#mediaGateway.storeMedia(command.picture);
+            if (storeMediaRes.result !== StoreMediaGatewayResult.SUCCESS || !storeMediaRes.data) {
+                return new ResultObject(UpdateCocktailResult.UNHANDLED_ERROR);
+            }
+            const mediaKey = storeMediaRes.data;
 
             cocktail.pictureKey = mediaKey;
             payload = {
@@ -46,11 +52,18 @@ export default class UpdateCocktail {
             }
         }
 
-        await this.#cocktailGateway.updateCocktail(command.id, payload);
+        const updateCocktailRes = await this.#cocktailGateway.updateCocktail(command.id, payload);
+        if (updateCocktailRes.result !== UpdateCocktailGatewayResult.SUCCESS) {
+            return new ResultObject(UpdateCocktailResult.UNHANDLED_ERROR);
+        }
 
         if (oldPictureKey) {
-            logger.debug("Delete old media", oldPictureKey, "of cocktail", cocktail.id);
-            await this.#mediaGateway.deleteMedia(oldPictureKey);
+            const deleteMediaRes = await this.#mediaGateway.deleteMedia(oldPictureKey);
+            if (deleteMediaRes.result !== DeleteMediaGatewayResult.SUCCESS) {
+                logger.warn(`Fail to clean picture ${oldPictureKey} of cocktail ${cocktail.id}`);
+            }
         }
+
+        return new ResultObject(UpdateCocktailResult.SUCCESS);
     }
 }

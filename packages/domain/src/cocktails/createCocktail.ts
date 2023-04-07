@@ -1,10 +1,9 @@
-import { CocktailGateway } from "./cocktails.contract";
+import { CocktailGateway, CreateCocktailGatewayResult, GetCocktailGatewayResult } from "./cocktails.contract";
 import Cocktail from "./model";
 import logger from "../utils/logger";
-import { CreateCocktailCommand } from "./createCocktail.contract";
-import { MediaGateway } from "./../medias/medias.contract";
-
-// TODO: manage conflict in cocktail name
+import { CreateCocktailCommand, CreateCocktailResult } from "./createCocktail.contract";
+import { DeleteMediaGatewayResult, MediaGateway, StoreMediaGatewayResult } from "./../medias/medias.contract";
+import ResultObject from "../utils/resultObject";
 
 export default class CreateCocktail {
     #cocktailGateway: CocktailGateway;
@@ -22,23 +21,39 @@ export default class CreateCocktail {
         name,
         note,
         picture
-    }: CreateCocktailCommand): Promise<Cocktail> {
-        logger.debug("Create new cocktail");
+    }: CreateCocktailCommand): Promise<ResultObject<CreateCocktailResult, Cocktail>> {
+        const cocktailWithSameNameRes = await this.#cocktailGateway.getCocktailByName(name);
+        if (cocktailWithSameNameRes.result !== GetCocktailGatewayResult.NOT_FOUND) {
+            return new ResultObject(CreateCocktailResult.COCKTAIL_ALREADY_EXIST);
+        }
 
-        const pictureKey = picture
-            ? await this.#mediaGateway.storeMedia(picture)
-            : undefined;
+        let pictureKey;
+        if (picture) {
+            const storeMediaRes = await this.#mediaGateway.storeMedia(picture);
+            if (storeMediaRes.result !== StoreMediaGatewayResult.SUCCESS) {
+                return new ResultObject(CreateCocktailResult.UNHANDLED_ERROR);
+            }
+            pictureKey = storeMediaRes.data;
+        }
 
         const cocktail = new Cocktail({
             name,
             note,
             pictureKey
         })
-        await this.#cocktailGateway.createCocktail(cocktail);
 
-        // TODO when time: delete picture if fail to create Cocktail
+        const createCocktailRes = await this.#cocktailGateway.createCocktail(cocktail);
+        if (createCocktailRes.result !== CreateCocktailGatewayResult.SUCCESS) {
+            if (pictureKey) {
+                const deleteMediaRes = await this.#mediaGateway.deleteMedia(pictureKey);
+                if (deleteMediaRes.result !== DeleteMediaGatewayResult.SUCCESS) {
+                    logger.warn(`Fail to clean picture ${pictureKey}`);
+                }
+            }
 
-        logger.debug(`Successfully created new cocktail ${cocktail.id}`);
-        return cocktail;
+            return new ResultObject(CreateCocktailResult.UNHANDLED_ERROR);
+        }
+
+        return new ResultObject(CreateCocktailResult.SUCCESS, cocktail);
     }
 }

@@ -4,6 +4,11 @@ export interface GetCocktailListQuery {
     pagination?: PaginationParams;
 }
 
+export enum GetCocktaiListResult {
+    SUCCESS = "success",
+    UNHANDLED_ERROR = "unhandled_error"
+}
+
 export interface GetCocktailListItem {
     id: string;
     name: string;
@@ -11,7 +16,7 @@ export interface GetCocktailListItem {
     pictureUrl?: string;
 }
 
-export interface CocktailListResult {
+export interface CocktailListData {
     data: GetCocktailListItem[];
     meta: PaginationResult;
 }

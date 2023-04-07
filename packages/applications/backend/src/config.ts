@@ -13,7 +13,7 @@ export interface Config {
 }
 
 const config: Config = {
-    LOG_LEVEL: process.env.LOG_LEVEL || "info",
+    LOG_LEVEL: process.env.LOG_LEVEL || "http",
     DB_HOST: process.env.DB_HOST || "localhost",
     DB_PORT: parseInt(process.env.DB_PORT || "5432"),
     DB_USER: process.env.DB_USER || "root",

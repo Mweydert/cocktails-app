@@ -4,7 +4,11 @@ import {
     CreateCocktail,
     GetCocktail,
     GetCocktailList,
-    UpdateCocktail
+    UpdateCocktail,
+    CreateCocktailResult,
+    GetCocktailResult,
+    GetCocktaiListResult,
+    UpdateCocktailResult
 } from "app-domain";
 import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
 import {
@@ -49,6 +53,11 @@ const updateCocktailUC = new UpdateCocktail(
 
 
 router.post("/", upload.single("picture"), async (ctx, next) => {
+    logger.debug("POST /cocktails/ body", ctx.request.body);
+    if (ctx.request.file) {
+        logger.debug("POST /cocktails/ file", ctx.request.file.originalname);
+    }
+
     const commandBody = CreateCocktailScheme.safeParse(ctx.request.body);
     if (!commandBody.success) {
         logger.warn("CocktailRouter - POST / - Invalid body", commandBody.error);
@@ -75,17 +84,28 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
     }
 
     const res = await createCocktailUC.execute(command);
-    ctx.status = 200;
-    ctx.body = {
-        id: res.id,
-        name: res.name,
-        note: res.note,
+    if (res.result === CreateCocktailResult.COCKTAIL_ALREADY_EXIST) {
+        ctx.status = 409;
+        ctx.body = res.result;
+        return;
+    } else if (!res.data) {
+        ctx.status = 500;
+    } else if (res.result === CreateCocktailResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = {
+            id: res.data.id,
+            name: res.data.name,
+            note: res.data.note,
+        }
+        return;
     }
+
     next();
 })
 
 router.get("/:id", async (ctx, next) => {
-    logger.debug("Get cocktail", ctx.params.id);
+    logger.debug("GET /cocktails/:id", ctx.params.id);
+
     const query = GetCocktailScheme.safeParse(ctx.params);
 
     if (!query.success) {
@@ -96,19 +116,24 @@ router.get("/:id", async (ctx, next) => {
 
     const res = await getCocktailUC.execute(query.data);
 
-    if (!res) {
+    if (res.result === GetCocktailResult.NOT_FOUNT) {
         ctx.status = 404
+        ctx.body = res.result;
+        return;
+    } else if (!res.data) {
+        ctx.status = 500;
+    } else if (res.result === GetCocktailResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = res.data;
         return;
     }
-
-    ctx.status = 200;
-    ctx.body = res;
 
     next();
 })
 
 router.get("/", async (ctx, next) => {
-    logger.debug("query", ctx.query);
+    logger.debug("GET /cocktails/ query", ctx.query);
+
     const query = GetCocktailListScheme.safeParse(ctx.query);
     if (!query.success) {
         ctx.status = 400;
@@ -123,8 +148,13 @@ router.get("/", async (ctx, next) => {
         }
     });
 
-    ctx.status = 200;
-    ctx.body = res
+    if (!res.data) {
+        ctx.status = 500;
+    } else if (res.result === GetCocktaiListResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = res.data;
+        return;
+    }
 
     next();
 })
@@ -165,13 +195,28 @@ router.put("/:id", upload.single("picture"), async (ctx, next) => {
         }
     }
 
-    await updateCocktailUC.execute(command);
-    const res = await getCocktailUC.execute({ id: command.id });
+    const updateRes = await updateCocktailUC.execute(command);
+    if (updateRes.result === UpdateCocktailResult.COCKTAIL_NOT_EXIST) {
+        ctx.status = 422;
+        ctx.body = updateRes.result;
+        return;
+    } else if (updateRes.result !== UpdateCocktailResult.SUCCESS) {
+        ctx.status = 500;
+        ctx.body = updateRes.result;
+        return next();
+    }
 
-    ctx.status = 200;
-    ctx.body = res;
+    const res = await getCocktailUC.execute({ id: command.id });
+    if (res.result === GetCocktailResult.NOT_FOUNT || !res.data) {
+        ctx.status = 500;
+        ctx.body = res.result;
+    } else if (res.result === GetCocktailResult.SUCCESS) {
+        ctx.status = 200;
+        ctx.body = res.data;
+        return;
+    }
 
     next();
-})
+});
 
 export default router;

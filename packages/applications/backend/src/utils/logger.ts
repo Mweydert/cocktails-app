@@ -28,4 +28,8 @@ const logger = createLogger({
     ]
 })
 
-export default logger;
+const loggerInstance = logger.child({
+    service: "api"
+});
+
+export default loggerInstance;

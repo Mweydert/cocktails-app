@@ -2,7 +2,13 @@ export interface GetCocktailQuery {
     id: string;
 }
 
-export interface GetCocktailResult {
+export enum GetCocktailResult {
+    SUCCESS = "success",
+    NOT_FOUNT = "not_found",
+    UNHANDLED_ERROR = "unhandled_error"
+}
+
+export interface GetCocktailData {
     id: string;
     name: string;
     note?: number;
