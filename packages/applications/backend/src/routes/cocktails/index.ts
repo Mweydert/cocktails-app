@@ -28,7 +28,6 @@ import config from "@/config";
 const upload = multer();
 
 // TODO: dependency injection
-// TODO: better logs
 
 const router = new Router();
 
@@ -54,6 +53,11 @@ const updateCocktailUC = new UpdateCocktail(
 
 
 router.post("/", upload.single("picture"), async (ctx, next) => {
+    logger.debug("POST /cocktails/ body", ctx.request.body);
+    if (ctx.request.file) {
+        logger.debug("POST /cocktails/ file", ctx.request.file.originalname);
+    }
+
     const commandBody = CreateCocktailScheme.safeParse(ctx.request.body);
     if (!commandBody.success) {
         logger.warn("CocktailRouter - POST / - Invalid body", commandBody.error);
@@ -99,7 +103,8 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
 })
 
 router.get("/:id", async (ctx, next) => {
-    logger.debug("Get cocktail", ctx.params.id);
+    logger.debug("GET /cocktails/:id", ctx.params.id);
+
     const query = GetCocktailScheme.safeParse(ctx.params);
 
     if (!query.success) {
@@ -125,7 +130,8 @@ router.get("/:id", async (ctx, next) => {
 })
 
 router.get("/", async (ctx, next) => {
-    logger.debug("query", ctx.query);
+    logger.debug("GET /cocktails/ query", ctx.query);
+
     const query = GetCocktailListScheme.safeParse(ctx.query);
     if (!query.success) {
         ctx.status = 400;

@@ -60,7 +60,7 @@ export default class UpdateCocktail {
         if (oldPictureKey) {
             const deleteMediaRes = await this.#mediaGateway.deleteMedia(oldPictureKey);
             if (deleteMediaRes.result !== DeleteMediaGatewayResult.SUCCESS) {
-                logger.error(`Fail to clean picture ${oldPictureKey} of cocktail ${cocktail.id}`);
+                logger.warn(`Fail to clean picture ${oldPictureKey} of cocktail ${cocktail.id}`);
             }
         }
 

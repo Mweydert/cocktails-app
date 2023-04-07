@@ -42,7 +42,7 @@ export default class CocktailGatewayImpl implements CocktailGateway {
     async createCocktail(
         cocktail: Cocktail
     ): Promise<ResultObject<CreateCocktailGatewayResult, undefined>> {
-        logger.debug("Create new cocktail")
+        logger.verbose("Create new cocktail")
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
         const psqlCocktail = CocktailGatewayImpl.cocktailToPSQLCocktail(cocktail);
@@ -55,7 +55,7 @@ export default class CocktailGatewayImpl implements CocktailGateway {
     async getCocktail(
         id: string
     ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
-        logger.debug(`Get cocktail ${id}`);
+        logger.verbose(`Get cocktail ${id}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
         const psqlCocktail = await repository.findOneBy({ id });
@@ -75,7 +75,7 @@ export default class CocktailGatewayImpl implements CocktailGateway {
     async getCocktailByName(
         name: string
     ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
-        logger.debug(`Get cocktail by name ${name}`);
+        logger.verbose(`Get cocktail by name ${name}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
         const psqlCocktail = await repository.findOneBy({ name });
@@ -95,7 +95,7 @@ export default class CocktailGatewayImpl implements CocktailGateway {
     async getCocktailList(
         pagination?: PaginationParams
     ): Promise<ResultObject<GetCocktailListGatewayResult, PaginatedListResult<Cocktail>>> {
-        logger.debug("Get cocktail list");
+        logger.verbose("Get cocktail list");
 
         const {
             page = 1,
@@ -131,10 +131,9 @@ export default class CocktailGatewayImpl implements CocktailGateway {
         id: string,
         payload: UpdateCocktailPayload
     ): Promise<ResultObject<UpdateCocktailGatewayResult, undefined>> {
-        logger.debug(`Update cocktail ${id}`);
+        logger.verbose(`Update cocktail ${id}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
-        // TODO: try catch and generic type error ?
         await repository.update(id, payload);
 
         logger.debug(`Successfully updated cocktail ${id}`);

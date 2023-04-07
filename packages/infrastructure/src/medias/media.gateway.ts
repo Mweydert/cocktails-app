@@ -22,7 +22,7 @@ export default class S3MediaGateway implements MediaGateway {
     async storeMedia(
         file: File
     ): Promise<ResultObject<StoreMediaGatewayResult, string>> {
-        logger.debug("Store file", file.fileName);
+        logger.verbose(`Store file ${file.fileName}`);
 
         const fileExtension = file.fileName.match(/\.[0-9a-z]+$/i)?.[0];
         if (!fileExtension) {
@@ -42,13 +42,14 @@ export default class S3MediaGateway implements MediaGateway {
         });
         await this.#s3Client.send(command);
 
+        logger.debug(`Successfully stored file ${file.fileName} with key ${key}`);
         return new ResultObject(StoreMediaGatewayResult.SUCCESS, key);
     }
 
     async getMediaSignedUrl(
         key: string
     ): Promise<ResultObject<GetMediaSignedUrlGatewayResult, string>> {
-        logger.debug("Get signed URL for file", key);
+        logger.verbose(`Get signed URL for file ${key}`);
 
         const command = new GetObjectCommand({
             Bucket: this.#bucketName,
@@ -59,13 +60,15 @@ export default class S3MediaGateway implements MediaGateway {
             command,
             { expiresIn: S3MediaGateway.URL_TTL }
         );
+
+        logger.debug(`Successfully get signed URL for file ${key}`);
         return new ResultObject(GetMediaSignedUrlGatewayResult.SUCCESS, signedUrl);
     }
 
     async deleteMedia(
         key: string
     ): Promise<ResultObject<DeleteMediaGatewayResult, undefined>> {
-        logger.debug("Delete file", key);
+        logger.verbose(`Delete file ${key}`);
 
         const command = new DeleteObjectCommand({
             Bucket: this.#bucketName,
@@ -73,6 +76,7 @@ export default class S3MediaGateway implements MediaGateway {
         });
         await this.#s3Client.send(command);
 
+        logger.debug(`Successfully delete file ${key}`);
         return new ResultObject(DeleteMediaGatewayResult.SUCCESS);
     }
 }

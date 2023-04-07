@@ -9,11 +9,14 @@ import cors from "@koa/cors";
 import bodyParser from "koa-bodyparser";
 import apiRouter from "@/routes";
 import dataSource from "@/utils/dbConfig";
+import logger from "@/utils/logger";
+
+const API_PORT = 3000;
 
 (async () => {
-    console.debug("Initialize DB");
+    logger.debug("Initialize DB");
     await dataSource.initialize();
-    console.debug("DB initialized");
+    logger.info("DB initialized");
 
     const app = new Koa();
 
@@ -23,10 +26,12 @@ import dataSource from "@/utils/dbConfig";
     app.use(async (ctx, next) => {
         await next();
         const rt = ctx.response.get("X-Response-Time");
-        console.log(`${ctx.method} ${ctx.url} - ${rt}`);
+        const resStatus = ctx.response.status;
+        logger.http(`Response to ${ctx.method} ${ctx.url} - ${resStatus} - ${rt}`);
     });
 
     app.use(async (ctx, next) => {
+        logger.debug(`${ctx.method} ${ctx.url}`);
         const start = Date.now();
         await next();
         const ms = Date.now() - start;
@@ -35,7 +40,8 @@ import dataSource from "@/utils/dbConfig";
 
     app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
 
-    app.listen(3000);
+    app.listen(API_PORT);
+    logger.info(`API listenning on port ${API_PORT}`);
 })().catch((error: unknown) => {
     console.error(error);
     process.exitCode = 1;

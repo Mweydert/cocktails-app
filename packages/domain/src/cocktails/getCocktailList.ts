@@ -33,6 +33,7 @@ export default class GetCocktailList {
         pagination
     }: GetCocktailListQuery): Promise<ResultObject<GetCocktaiListResult, CocktailListData>> {
         const cocktailListRes = await this.#cocktailGateway.getCocktailList(pagination);
+
         if (cocktailListRes.result !== GetCocktailListGatewayResult.SUCCESS || !cocktailListRes.data) {
             return new ResultObject(GetCocktaiListResult.UNHANDLED_ERROR);
         }
@@ -42,7 +43,7 @@ export default class GetCocktailList {
             if (cocktail.pictureKey) {
                 const pictureSignedUrlRes = await this.#mediaGateway.getMediaSignedUrl(cocktail.pictureKey);
                 if (pictureSignedUrlRes.result !== GetMediaSignedUrlGatewayResult.SUCCESS) {
-                    logger.warn(`Fail to get signed URL for picture ${cocktail.pictureKey} of cocktail ${cocktail.id}`);
+                    logger.error(`Fail to get signed URL for picture ${cocktail.pictureKey} of cocktail ${cocktail.id}`);
                 }
 
                 signedUrl = pictureSignedUrlRes.data;
