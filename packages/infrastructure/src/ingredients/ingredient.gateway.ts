@@ -4,6 +4,7 @@ import {
     IngredientGateway,
     CREATE_INGREDIENT_RESULT,
     GET_INGREDIENT_RESULT,
+    GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT,
 } from "app-domain";
 import { DataSource, Like, Raw } from "typeorm";
 
@@ -72,6 +73,31 @@ export default class IngredientGatewayImpl implements IngredientGateway {
         return new ResultObject(
             GET_INGREDIENT_RESULT.SUCCESS,
             IngredientGatewayImpl.psqlIngredientToIngredient(psqlIngredient)
+        )
+    }
+
+    async getIngredienstWithNameMatching(
+        value: string
+    ): Promise<ResultObject<GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT, Ingredient[]>> {
+        logger.verbose(`Get ingredients with name matching ${value}`);
+
+        const repository = this.#dataSource.getRepository(PSQLIngredient);
+        const psqlIngredients = await repository.find({
+            where: {
+                name: Raw(
+                    (alias) => `LOWER(${alias}) LIKE LOWER(:value)`,
+                    { value: `%${value}%` }
+                )
+            }
+        });
+
+        logger.debug(`Successfully got ${psqlIngredients.length} ingredients named ${value}`);
+
+        return new ResultObject(
+            GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT.SUCCESS,
+            psqlIngredients.map(
+                psqlIngredient => IngredientGatewayImpl.psqlIngredientToIngredient(psqlIngredient)
+            )
         )
     }
 }

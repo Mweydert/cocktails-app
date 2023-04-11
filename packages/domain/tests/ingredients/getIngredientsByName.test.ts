@@ -1,5 +1,5 @@
 import {
-    GetIngredientsByNameUC,
+    GetIngredientsByName as GetIngredientsByNameUC,
     GetIngredientsByNameResult,
     Ingredient,
 } from "./../../src/ingredients";
