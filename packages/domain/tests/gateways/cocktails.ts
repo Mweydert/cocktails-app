@@ -6,7 +6,7 @@ import ResultObject from "../../src/utils/resultObject";
 
 export default class CocktailInMemoryGateway implements CocktailGateway {
     data: Map<string, Cocktail>
-    cocktailIngredients: Map<string, Ingredient>
+    cocktailIngredients: Map<string, Ingredient[]>
 
     constructor(initialData?: Cocktail[]) {
         this.data = new Map<string, Cocktail>(
@@ -14,7 +14,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
                 cocktail => ([cocktail.id, cocktail])
             ) || []
         );
-        this.cocktailIngredients = new Map<string, Ingredient>();
+        this.cocktailIngredients = new Map<string, Ingredient[]>();
     }
 
     async createCocktail(
@@ -24,6 +24,11 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
             throw new Error("Cocktail already exist");
         }
         this.data.set(cocktail.id, cocktail);
+
+        if (cocktail.ingredients?.length) {
+            this.cocktailIngredients.set(cocktail.id, cocktail.ingredients)
+        }
+
         return new ResultObject(CreateCocktailGatewayResult.SUCCESS);
     }
 

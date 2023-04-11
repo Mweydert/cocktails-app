@@ -8,6 +8,7 @@ export interface CreateCocktailCommand {
         buffer: Buffer;
         size: number;
     };
+    ingredientIds?: string[]
 }
 
 export enum CreateCocktailResult {
