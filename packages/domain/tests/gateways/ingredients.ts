@@ -1,5 +1,5 @@
 import { Ingredient } from "../../src/ingredients";
-import { CREATE_INGREDIENT_RESULT, GET_INGREDIENT_RESULT, IngredientGateway } from "../../src/ingredients/ingredients.contract";
+import { CREATE_INGREDIENT_RESULT, GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT, GET_INGREDIENT_RESULT, IngredientGateway } from "../../src/ingredients/ingredients.contract";
 import { ResultObject } from "../../src/utils";
 
 export default class InMemoryIngredientGateway implements IngredientGateway {
@@ -33,5 +33,21 @@ export default class InMemoryIngredientGateway implements IngredientGateway {
             }
         }
         return new ResultObject(GET_INGREDIENT_RESULT.NOT_FOUND);
+    }
+
+    async getIngredienstWithNameMatching(
+        value: string
+    ): Promise<ResultObject<GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT, Ingredient[]>> {
+        const res: Ingredient[] = [];
+        for (const [_, item] of this.data) {
+            if (item.name.toLowerCase().includes(value.toLowerCase())) {
+                res.push(item);
+            }
+        }
+
+        return new ResultObject(
+            GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT.SUCCESS,
+            res
+        );
     }
 }

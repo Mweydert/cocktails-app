@@ -10,6 +10,10 @@ export enum GET_INGREDIENT_RESULT {
     NOT_FOUND = "not_found"
 }
 
+export enum GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT {
+    SUCCESS = "success"
+}
+
 export interface IngredientGateway {
     createIngredient: (
         ingredient: Ingredient
@@ -17,4 +21,7 @@ export interface IngredientGateway {
     getIngredientByName: (
         name: string
     ) => Promise<ResultObject<GET_INGREDIENT_RESULT, Ingredient>>
+    getIngredienstWithNameMatching: (
+        value: string
+    ) => Promise<ResultObject<GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT, Ingredient[]>>
 }
