@@ -23,7 +23,8 @@ export enum GetCocktailListGatewayResult {
 }
 
 export enum UpdateCocktailGatewayResult {
-    SUCCESS = "success"
+    SUCCESS = "success",
+    UNHANDLED_ERROR = "unhandled_error"
 }
 
 export interface CocktailGateway {

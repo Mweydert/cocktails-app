@@ -10,7 +10,7 @@ import {
     GetCocktaiListResult,
     UpdateCocktailResult
 } from "app-domain";
-import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
+import { CocktailPSQLGateway, IngredientPSQLGateway, S3MediaGateway } from "infrastructure";
 import {
     CreateCocktailFileScheme,
     CreateCocktailScheme,
@@ -33,6 +33,7 @@ const router = new Router();
 
 const cocktailGateway = new CocktailPSQLGateway(dataSource);
 const mediaGateway = new S3MediaGateway(s3Client, config.S3_BUCKET);
+const ingredientGateway = new IngredientPSQLGateway(dataSource);
 
 const createCocktailUC = new CreateCocktail(
     cocktailGateway,
@@ -48,7 +49,8 @@ const getCocktailListUC = new GetCocktailList(
 );
 const updateCocktailUC = new UpdateCocktail(
     cocktailGateway,
-    mediaGateway
+    mediaGateway,
+    ingredientGateway
 );
 
 

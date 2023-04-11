@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm"
+import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from "typeorm"
+import { Ingredient } from "../schemas";
 
 @Entity()
 export class Cocktail {
@@ -10,15 +11,21 @@ export class Cocktail {
 
     @Column({ nullable: true }) pictureKey?: string;
 
+    @ManyToMany(() => Ingredient)
+    @JoinTable()
+    ingredients?: Ingredient[]
+
     constructor(
         id: string,
         name: string,
         note?: number,
         pictureKey?: string,
+        ingredients?: Ingredient[]
     ) {
         this.id = id;
         this.name = name;
         this.note = note;
         this.pictureKey = pictureKey;
+        this.ingredients = ingredients;
     }
 }

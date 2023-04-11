@@ -8,7 +8,7 @@ export class Ingredient {
 
     constructor(
         id: string,
-        name: string
+        name: string,
     ) {
         this.id = id;
         this.name = name;

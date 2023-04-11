@@ -18,7 +18,7 @@ export default class IngredientGatewayImpl implements IngredientGateway {
         this.#dataSource = dataSource;
     }
 
-    private static ingredientToPSQLIngredient(
+    static ingredientToPSQLIngredient(
         ingredient: Ingredient
     ): PSQLIngredient {
         return new PSQLIngredient(
@@ -27,7 +27,7 @@ export default class IngredientGatewayImpl implements IngredientGateway {
         )
     }
 
-    private static psqlIngredientToIngredient(
+    static psqlIngredientToIngredient(
         psqlIngredient: PSQLIngredient
     ): Ingredient {
         return new Ingredient({
@@ -98,6 +98,28 @@ export default class IngredientGatewayImpl implements IngredientGateway {
             psqlIngredients.map(
                 psqlIngredient => IngredientGatewayImpl.psqlIngredientToIngredient(psqlIngredient)
             )
+        )
+    }
+
+    async getIngredient(
+        id: string
+    ): Promise<ResultObject<GET_INGREDIENT_RESULT, Ingredient>> {
+        logger.verbose(`Get ingredient ${id}`);
+
+        const repository = this.#dataSource.getRepository(PSQLIngredient);
+        const psqlIngredient = await repository.findOneBy({
+            id
+        });
+
+        if (!psqlIngredient) {
+            return new ResultObject(GET_INGREDIENT_RESULT.NOT_FOUND);
+        }
+
+        logger.debug(`Successfully got ingredient ${id}`);
+
+        return new ResultObject(
+            GET_INGREDIENT_RESULT.SUCCESS,
+            IngredientGatewayImpl.psqlIngredientToIngredient(psqlIngredient)
         )
     }
 }

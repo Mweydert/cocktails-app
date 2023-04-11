@@ -30,6 +30,7 @@ export const UpdateCocktailIdScheme = z.object({
 });
 export const UpdateCocktailBodyScheme = z.object({
     note: z.coerce.number().optional(),
-    picture: fileScheme.optional()
+    picture: fileScheme.optional(),
+    ingredients: z.array(z.string()).optional()
 });
 export const UpdateCocktailPictureScheme = fileScheme.optional();
