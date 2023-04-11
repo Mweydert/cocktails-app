@@ -37,7 +37,8 @@ const ingredientGateway = new IngredientPSQLGateway(dataSource);
 
 const createCocktailUC = new CreateCocktail(
     cocktailGateway,
-    mediaGateway
+    mediaGateway,
+    ingredientGateway
 );
 const getCocktailUC = new GetCocktail(
     cocktailGateway,
@@ -74,6 +75,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         ctx.body = commandPicture.error;
         return;
     }
+
     const command = {
         ...commandBody.data,
         picture: commandPicture.data && {
@@ -94,11 +96,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         ctx.status = 500;
     } else if (res.result === CreateCocktailResult.SUCCESS) {
         ctx.status = 200;
-        ctx.body = {
-            id: res.data.id,
-            name: res.data.name,
-            note: res.data.note,
-        }
+        ctx.body = res.data
         return;
     }
 

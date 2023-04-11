@@ -13,7 +13,8 @@ export const CreateCocktailFileScheme = fileScheme.optional();
 
 export const CreateCocktailScheme = z.object({
     name: z.string(),
-    note: z.coerce.number().optional()
+    note: z.coerce.number().optional(),
+    ingredientIds: z.array(z.string()).optional()
 });
 
 export const GetCocktailScheme = z.object({
