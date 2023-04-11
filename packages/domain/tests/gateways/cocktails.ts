@@ -33,7 +33,8 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
     }
 
     async getCocktail(
-        id: string
+        id: string,
+        includeIngredients = false
     ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
         const cocktail = this.data.get(id);
         if (!cocktail) {
@@ -41,6 +42,12 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         }
 
         const data = new Cocktail(cocktail);
+
+        if (includeIngredients) {
+            const ingredients = this.cocktailIngredients.get(cocktail.id);
+            cocktail.ingredients = ingredients;
+        }
+
         return new ResultObject(GetCocktailGatewayResult.SUCCESS, data);
     }
 

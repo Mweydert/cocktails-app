@@ -1,3 +1,5 @@
+import { Ingredient } from "../ingredients";
+
 export interface GetCocktailQuery {
     id: string;
 }
@@ -13,4 +15,5 @@ export interface GetCocktailData {
     name: string;
     note?: number;
     pictureUrl?: string;
+    ingredients?: Ingredient[];
 }

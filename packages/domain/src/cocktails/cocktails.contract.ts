@@ -32,7 +32,8 @@ export interface CocktailGateway {
         cocktail: Cocktail
     ) => Promise<ResultObject<CreateCocktailGatewayResult, undefined>>;
     getCocktail: (
-        id: string
+        id: string,
+        includeIngredients?: boolean
     ) => Promise<ResultObject<GetCocktailGatewayResult, Cocktail>>;
     getCocktailByName: (
         name: string

@@ -28,16 +28,24 @@ export default class CocktailGatewayImpl implements CocktailGateway {
             cocktail.name,
             cocktail.note,
             cocktail.pictureKey,
+            cocktail.ingredients && cocktail.ingredients
         )
     }
 
-    private static psqlCocktailToCocktail({ id, name, note, pictureKey }: PSQLCocktail): Cocktail {
+    private static psqlCocktailToCocktail(
+        psqlCocktail: PSQLCocktail,
+    ): Cocktail {
+        const ingredients = psqlCocktail.ingredients
+            ? psqlCocktail.ingredients.map(
+                IngredientPSQLGateway.psqlIngredientToIngredient
+            ) : undefined;
+
         return new Cocktail({
-            id,
-            name,
-            note,
-            pictureKey,
-        })
+            id: psqlCocktail.id,
+            name: psqlCocktail.name,
+            note: psqlCocktail.note,
+            pictureKey: psqlCocktail.pictureKey
+        }, ingredients);
     }
 
     async createCocktail(
@@ -54,12 +62,20 @@ export default class CocktailGatewayImpl implements CocktailGateway {
     }
 
     async getCocktail(
-        id: string
+        id: string,
+        includeIngredients = false
     ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
         logger.verbose(`Get cocktail ${id}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
-        const psqlCocktail = await repository.findOneBy({ id });
+        const psqlCocktail = await repository.findOne({
+            where: {
+                id
+            },
+            relations: {
+                ingredients: includeIngredients
+            }
+        });
 
         if (!psqlCocktail) {
             return new ResultObject(GetCocktailGatewayResult.NOT_FOUND);
