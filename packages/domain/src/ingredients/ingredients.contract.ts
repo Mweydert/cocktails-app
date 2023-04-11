@@ -24,4 +24,7 @@ export interface IngredientGateway {
     getIngredienstWithNameMatching: (
         value: string
     ) => Promise<ResultObject<GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT, Ingredient[]>>
+    getIngredient: (
+        id: string
+    ) => Promise<ResultObject<GET_INGREDIENT_RESULT, Ingredient>>
 }

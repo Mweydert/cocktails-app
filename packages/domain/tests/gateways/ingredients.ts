@@ -35,6 +35,18 @@ export default class InMemoryIngredientGateway implements IngredientGateway {
         return new ResultObject(GET_INGREDIENT_RESULT.NOT_FOUND);
     }
 
+    async getIngredient(
+        id: string
+    ): Promise<ResultObject<GET_INGREDIENT_RESULT, Ingredient>> {
+        const ingredient = this.data.get(id);
+        if (!ingredient) {
+            return new ResultObject(GET_INGREDIENT_RESULT.NOT_FOUND);
+        }
+
+        const data = new Ingredient(ingredient);
+        return new ResultObject(GET_INGREDIENT_RESULT.SUCCESS, data);
+    }
+
     async getIngredienstWithNameMatching(
         value: string
     ): Promise<ResultObject<GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT, Ingredient[]>> {

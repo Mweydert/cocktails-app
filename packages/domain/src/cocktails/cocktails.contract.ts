@@ -1,3 +1,4 @@
+import { Ingredient } from "../ingredients";
 import { PaginatedListResult, PaginationParams } from "../utils/pagination.model";
 import ResultObject from "../utils/resultObject";
 import Cocktail from "./model";
@@ -5,6 +6,7 @@ import Cocktail from "./model";
 export interface UpdateCocktailPayload {
     note?: number;
     pictureKey?: string;
+    ingredients?: Ingredient[];
 }
 
 export enum CreateCocktailGatewayResult {

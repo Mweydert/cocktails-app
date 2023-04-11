@@ -1,10 +1,12 @@
 import { CocktailGateway, CreateCocktailGatewayResult, GetCocktailGatewayResult, GetCocktailListGatewayResult, UpdateCocktailGatewayResult, UpdateCocktailPayload } from "../../src/cocktails/cocktails.contract";
 import Cocktail from "../../src/cocktails/model";
+import { Ingredient } from "../../src/ingredients";
 import { PaginatedListResult, PaginationParams } from "../../src/utils/pagination.model";
 import ResultObject from "../../src/utils/resultObject";
 
 export default class CocktailInMemoryGateway implements CocktailGateway {
     data: Map<string, Cocktail>
+    cocktailIngredients: Map<string, Ingredient>
 
     constructor(initialData?: Cocktail[]) {
         this.data = new Map<string, Cocktail>(
@@ -12,6 +14,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
                 cocktail => ([cocktail.id, cocktail])
             ) || []
         );
+        this.cocktailIngredients = new Map<string, Ingredient>();
     }
 
     async createCocktail(
@@ -89,8 +92,12 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         }
 
         for (const [key, value] of Object.entries(payload)) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (cocktail as any)[key] = value;
+            if (key === "ingredients") {
+                this.cocktailIngredients.set(id, value);
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (cocktail as any)[key] = value;
+            }
         }
         this.data.set(id, cocktail);
         return new ResultObject(UpdateCocktailGatewayResult.SUCCESS)
