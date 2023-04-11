@@ -1,0 +1,1 @@
+export { default as IngredientPSQLGateway } from "./ingredient.gateway";
