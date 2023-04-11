@@ -14,14 +14,15 @@ describe("create cocktails UC", () => {
             buffer: Buffer.from("xyz"),
             size: 1844317
         };
-        const res = await new CreateCocktailUC(
-            cocktailGateway,
-            mediaGateway
-        ).execute({
+        const payload = {
             name: "awesome cocktail",
             note: 2.5,
             picture
-        });
+        };
+        const res = await new CreateCocktailUC(
+            cocktailGateway,
+            mediaGateway
+        ).execute(payload);
 
         expect(res.result).toBe(CreateCocktailResult.SUCCESS);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -30,6 +31,8 @@ describe("create cocktails UC", () => {
         const storedCocktail = cocktailGateway.data.get(cocktail.id);
         expect(storedCocktail).toEqual(cocktail);
 
+        expect(cocktail.name).toBe(payload.name);
+        expect(cocktail.note).toBe(payload.note);
         expect(cocktail.pictureKey).toBeDefined();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const storedMedia = mediaGateway.data.get(cocktail.pictureKey!);
