@@ -1,6 +1,6 @@
 import { ResultObject } from "../utils";
 import { CreateIngredientCommand, CreateIngredientResult } from "./createIngredient.contract";
-import { CREATE_INGREDIENT_RESULT, IngredientGateway } from "./ingredients.contract";
+import { CREATE_INGREDIENT_RESULT, GET_INGREDIENT_RESULT, IngredientGateway } from "./ingredients.contract";
 import Ingredient from "./ingredients.model";
 
 export default class CreateIngredient {
@@ -13,6 +13,11 @@ export default class CreateIngredient {
     async execute(
         command: CreateIngredientCommand
     ): Promise<ResultObject<CreateIngredientResult, Ingredient>> {
+        const existingIngredient = await this.#ingredientGateway.getIngredientByName(command.name);
+        if (existingIngredient.result !== GET_INGREDIENT_RESULT.NOT_FOUND) {
+            return new ResultObject(CreateIngredientResult.INGREDIENT_ALREADY_EXIST);
+        }
+
         const ingredient = new Ingredient({
             name: command.name
         });
