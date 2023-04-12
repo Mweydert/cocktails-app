@@ -1,10 +1,10 @@
 import { CircularProgress, Input } from "@chakra-ui/react"
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDebounce } from "../../../../utils/hooks/useDebounce";
+import {
+    useClickAway,
+    useDebounce
+} from "../../../../utils/hooks";
 import styles from "./Autocomplete.module.scss";
-
-
-// TODO: index for common components
 
 interface Option {
     key: string;
@@ -29,14 +29,16 @@ const Autocomplete = ({
     isLoading,
     options
 }: AutocompleteProps) => {
-    // TODO: Hide options on click away from options
-
     const [displayOptions, setDisplayOptions] = useState<boolean>(false);
-
+    const { ref } = useClickAway(() => {
+        if (displayOptions) {
+            setDisplayOptions(false);
+        }
+    });
 
     const [searchRawValue, setSearchRawValue] = useState<string>("");
     const searchValue = useDebounce<string>(searchRawValue, 300);
-    const handleInputChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchRawValue(event.target.value);
     }
     useEffect(() => {
@@ -49,7 +51,7 @@ const Autocomplete = ({
     }, [searchValue]);
 
 
-    const handleClick = () => {
+    const handleToggleOptions = () => {
         setDisplayOptions(val => !val);
     }
 
@@ -61,8 +63,8 @@ const Autocomplete = ({
     }
 
     return (
-        <div className={styles.container}>
-            <Input placeholder={placeholder} onChange={handleInputChange} onClick={handleClick} />
+        <div className={styles.container} ref={ref}>
+            <Input placeholder={placeholder} onChange={handleInputChange} onClick={handleToggleOptions} />
             {displayOptions && searchValue !== "" && (
                 <div className={styles["options-container"]}>
                     {isLoading ? (
