@@ -4,23 +4,30 @@ import {
     FormErrorMessage,
     FormLabel,
     Input,
+    Tag,
+    TagCloseButton,
+    TagLabel,
     useToast
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import Autocomplete from "../../components/common/Form/Autocomplete";
 import RatingInput from "../../components/common/Form/RatingInput";
 import { useCreateCocktail } from "../../data/useCreateCocktail";
+import { Ingredient } from "../../models/ingredients";
 import { CreateCocktailPayload } from "../../models/payloads";
 import { ROUTE_PATH } from "../../router";
 import styles from "./AddCocktail.module.scss";
+import { useCocktailIngredients } from "./useCocktailIngredients";
 
 const AddCocktail = () => {
     const {
         register,
         handleSubmit,
         control,
-        formState: { errors }
+        formState: { errors },
+        watch
     } = useForm<CreateCocktailPayload>();
 
     const navigate = useNavigate();
@@ -58,6 +65,27 @@ const AddCocktail = () => {
     }
 
     const { t } = useTranslation();
+    
+    const selectedIngredients = watch("ingredients");
+    const {
+        handleIngredientNameSearch,
+        selectableIngredients,
+        isLoading: isLoadingSelectaleIngredients,
+    } = useCocktailIngredients(
+        selectedIngredients,
+        {
+            onError: (err: unknown) => {
+                console.error(err);
+                toast({
+                    title: t("addCocktail.toasters.errorGetIngredients.title"),
+                    description: t("addCocktail.toasters.errorGetIngredients.description"),
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        }
+    );
 
     return (
         <div className={styles.container}>
@@ -115,6 +143,60 @@ const AddCocktail = () => {
                         />
                         <FormErrorMessage>
                             {errors?.pictures?.message}
+                        </FormErrorMessage>
+                    </FormControl>
+                </div>
+
+                <div className={styles["form-group"]}>
+                    <FormControl isInvalid={!!errors.pictures}>
+                        <FormLabel htmlFor="ingredients">{t("addCocktail.form.ingredients.title")}</FormLabel>
+                        <Controller
+                            control={control}
+                            name="ingredients"
+                            render={({
+                                field: { onChange, value },
+                            }) => {
+                                const handleAddIngredient = (ingredient: Ingredient) => {
+                                    const newValue = value ? [...value, ingredient] : [ingredient];
+                                    onChange(newValue);
+                                };
+                                const handleRemoveIngredient = (ingredient: Ingredient) => {
+                                    const newVal = value?.filter(item => item.id !== ingredient.id);
+                                    onChange(newVal);
+                                }
+
+                                return (
+                                    <>
+                                        <div className={styles["selected-ingredients"]}>
+                                            {value?.map(ingredient => (
+                                                <div className={styles["selected-ingredient"]}>
+                                                    <Tag
+                                                        key={ingredient.id}
+                                                        onClick={() => handleRemoveIngredient(ingredient)}
+                                                    >
+                                                        <TagLabel>{ingredient.name}</TagLabel>
+                                                        <TagCloseButton />
+                                                    </Tag>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <Autocomplete
+                                            onSelect={(option) => handleAddIngredient({
+                                                id: option.key,
+                                                name: option.label
+                                            })}
+                                            placeholder={t("addCocktail.form.ingredients.placeholder") || ""}
+                                            noContentLabel={t("addCocktail.form.ingredients.noMatch") || ""}
+                                            onSearch={handleIngredientNameSearch}
+                                            options={selectableIngredients}
+                                            isLoading={isLoadingSelectaleIngredients}
+                                        />
+                                    </>
+                                );
+                            }}
+                        />
+                        <FormErrorMessage>
+                            {errors?.ingredients?.message}
                         </FormErrorMessage>
                     </FormControl>
                 </div>

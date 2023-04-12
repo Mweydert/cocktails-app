@@ -15,6 +15,11 @@
             "rate": "Rate",
             "pictures": "Picture",
             "cta": "Add",
+            "ingredients": {
+                "title": "Ingredients",
+                "placeholder": "Search ingredients",
+                "noMatch": "No ingredients matching your research"
+            },
             "errors": {
                 "required": "Please enter a value"
             }
@@ -27,6 +32,10 @@
             "error": {
                 "title": "Add cocktail",
                 "description": "An error occured when adding cocktail"
+            },
+            "errorGetIngredients": {
+                "title": "Get ingredients",
+                "description": "An error occured when getting available ingredients"
             }
         }
     },

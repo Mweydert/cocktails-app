@@ -1,0 +1,28 @@
+.container {
+    .options-container {
+        margin-top: 3px;
+        border: solid 1px rgb(226, 232, 240);
+        border-radius: 0.375rem;
+
+        .loader-container,
+        .no-options-container {
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .option {
+            padding: 10px;
+            cursor: pointer;
+
+            @media screen and (min-width: breakpoint("desktop")) {
+                padding: 5px;
+            }
+
+            &:hover {
+                background-color: #86b4f9;
+            }
+        }
+    }
+}

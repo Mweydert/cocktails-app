@@ -16,6 +16,7 @@ import {
     CreateCocktailScheme,
     GetCocktailListScheme,
     GetCocktailScheme,
+    StringifiedJsonScheme,
     UpdateCocktailBodyScheme,
     UpdateCocktailIdScheme,
     UpdateCocktailPictureScheme
@@ -61,6 +62,21 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         logger.debug("POST /cocktails/ file", ctx.request.file.originalname);
     }
 
+    if (
+        ctx.request.body
+        && typeof ctx.request.body === "object"
+        && "ingredientIds" in ctx.request.body
+    ) {
+        const parsedIngredients = StringifiedJsonScheme.safeParse(ctx.request.body.ingredientIds);
+        if (!parsedIngredients.success) {
+            logger.warn("CocktailRouter - POST / - Invalid body[ingredients]", parsedIngredients.error);
+            ctx.status = 400;
+            ctx.body = parsedIngredients.error;
+            return;
+        }
+
+        ctx.request.body.ingredientIds = parsedIngredients.data;
+    }
     const commandBody = CreateCocktailScheme.safeParse(ctx.request.body);
     if (!commandBody.success) {
         logger.warn("CocktailRouter - POST / - Invalid body", commandBody.error);
