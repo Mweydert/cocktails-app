@@ -14,6 +14,7 @@ interface Option {
 
 interface AutocompleteProps {
     placeholder?: string;
+    noContentLabel?: string;
     options: Option[];
     isLoading?: boolean;
     onSearch: (value: string) => void;
@@ -22,6 +23,7 @@ interface AutocompleteProps {
 
 const Autocomplete = ({
     placeholder,
+    noContentLabel,
     onSelect,
     onSearch,
     isLoading,
@@ -56,27 +58,34 @@ const Autocomplete = ({
         onSelect(option);
     }
 
-    // Display no options if search and no options
     return (
         <div className={styles.container}>
             <Input placeholder={placeholder} onChange={handleInputChange} onClick={handleClick} />
-            {displayOptions && (
-                <div className={styles.options}>
+            {displayOptions && searchValue !== "" && (
+                <div className={styles["options-container"]}>
                     {isLoading ? (
                         <div className={styles["loader-container"]}>
                             <CircularProgress isIndeterminate size="40px" />
                         </div>
                     ) : (
                         <>
-                            {options.map(option => !option.isSelected && (
-                                <div
-                                    key={option.key}
-                                    onClick={() => handleSelectOption(option)}
-                                    className={styles.option}
-                                >
-                                    <span>{option.label}</span>
+                            {options?.length <= 0 ? (
+                                <div className={styles["no-options-container"]}>
+                                    <p>{noContentLabel}</p>
                                 </div>
-                            ))}
+                            ) : (
+                                <>
+                                    {options.map(option => !option.isSelected && (
+                                        <div
+                                            key={option.key}
+                                            onClick={() => handleSelectOption(option)}
+                                            className={styles.option}
+                                        >
+                                            <span>{option.label}</span>
+                                        </div>
+                                    ))}
+                                </>     
+                            )}
                         </>
                     )}
                 </div>

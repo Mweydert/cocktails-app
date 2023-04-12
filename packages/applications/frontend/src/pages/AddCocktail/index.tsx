@@ -135,7 +135,7 @@ const AddCocktail = () => {
 
                 <div className={styles["form-group"]}>
                     <FormControl isInvalid={!!errors.pictures}>
-                        <FormLabel htmlFor="ingredients">{t("addCocktail.form.ingredients")}</FormLabel>
+                        <FormLabel htmlFor="ingredients">{t("addCocktail.form.ingredients.title")}</FormLabel>
                         <Controller
                             control={control}
                             name="ingredients"
@@ -171,6 +171,8 @@ const AddCocktail = () => {
                                                 id: option.key,
                                                 name: option.label
                                             })}
+                                            placeholder={t("addCocktail.form.ingredients.placeholder") || ""}
+                                            noContentLabel={t("addCocktail.form.ingredients.noMatch") || ""}
                                             onSearch={handleIngredientNameSearch}
                                             options={selectableIngredients}
                                             isLoading={isLoadingSelectaleIngredients}

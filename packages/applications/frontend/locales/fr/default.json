@@ -15,6 +15,11 @@
             "rate": "Note",
             "cta": "Ajouter",
             "pictures": "Photo",
+            "ingredients": {
+                "title": "Ingrédients",
+                "placeholder": "Rechercher des ingrédients",
+                "noMatch": "Pas d'ingrédients correspondant à votre recherche"
+            },
             "errors": {
                 "required": "Merci de renseigner ce champ"
             }
