@@ -4,16 +4,18 @@ import {
     FormErrorMessage,
     FormLabel,
     Input,
+    Tag,
+    TagCloseButton,
+    TagLabel,
     useToast
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Autocomplete from "../../components/common/Form/Autocomplete";
 import RatingInput from "../../components/common/Form/RatingInput";
 import { useCreateCocktail } from "../../data/useCreateCocktail";
-import { useGetIngredientsByName } from "../../data/useGetIngredientsByName";
+import { Ingredient } from "../../models/ingredients";
 import { CreateCocktailPayload } from "../../models/payloads";
 import { ROUTE_PATH } from "../../router";
 import styles from "./AddCocktail.module.scss";
@@ -139,32 +141,41 @@ const AddCocktail = () => {
                             name="ingredients"
                             render={({
                                 field: { onChange, value },
-                            }) => (
-                                <>
-                                    <div>
-                                        {value?.map(item => (
-                                            <div key={item.id} onClick={() => {
-                                                const newVal = value.filter(item2 => item2.id !== item.id);
-                                                onChange(newVal);
-                                            }}>
-                                                {item.name}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <Autocomplete
-                                        onSelect={(option) => {
-                                            const itemToAdd ={
+                            }) => {
+                                const handleAddIngredient = (ingredient: Ingredient) => {
+                                    const newValue = value ? [...value, ingredient] : [ingredient];
+                                    onChange(newValue);
+                                };
+                                const handleRemoveIngredient = (ingredient: Ingredient) => {
+                                    const newVal = value?.filter(item => item.id !== ingredient.id);
+                                    onChange(newVal);
+                                }
+
+                                return (
+                                    <>
+                                        <div>
+                                            {value?.map(ingredient => (
+                                                <Tag
+                                                    key={ingredient.id}
+                                                    onClick={() => handleRemoveIngredient(ingredient)}
+                                                >
+                                                    <TagLabel>{ingredient.name}</TagLabel>
+                                                    <TagCloseButton />
+                                                </Tag>
+                                            ))}
+                                        </div>
+                                        <Autocomplete
+                                            onSelect={(option) => handleAddIngredient({
                                                 id: option.key,
                                                 name: option.label
-                                            };
-                                            const newValue = value ? [...value, itemToAdd] : [itemToAdd];
-                                            onChange(newValue);
-                                        }}
-                                    />
-                                </>
-                            )}
+                                            })}
                                             onSearch={handleIngredientNameSearch}
                                             options={selectableIngredients}
+                                            isLoading={isLoadingSelectaleIngredients}
+                                        />
+                                    </>
+                                );
+                            }}
                         />
                         <FormErrorMessage>
                             {errors?.ingredients?.message}
