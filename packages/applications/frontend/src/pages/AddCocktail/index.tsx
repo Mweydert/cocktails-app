@@ -17,6 +17,7 @@ import { useGetIngredientsByName } from "../../data/useGetIngredientsByName";
 import { CreateCocktailPayload } from "../../models/payloads";
 import { ROUTE_PATH } from "../../router";
 import styles from "./AddCocktail.module.scss";
+import { useCocktailIngredients } from "./useCocktailIngredients";
 
 const AddCocktail = () => {
     const {
@@ -63,25 +64,12 @@ const AddCocktail = () => {
 
     const { t } = useTranslation();
     
-    const [searchValue, setSearchValue] = useState<string>();
-    const handleSearch = (value: string) => {
-        setSearchValue(value);
-    }
-
-    // TODO: extract in custom hook
-    const {
-        // isLoading,
-        // isError,
-        data: ingredients
-    } = useGetIngredientsByName(searchValue);
     const selectedIngredients = watch("ingredients");
-    const selectedIngredientIds = new Set(selectedIngredients?.map(items => items.id));
-    const selectableIngredients = ingredients
-        ?.filter(ingredient => !selectedIngredientIds.has(ingredient.id))
-        ?.map(ingredient => ({
-            key: ingredient.id,
-            label: ingredient.name
-        })) || [];
+    const {
+        handleIngredientNameSearch,
+        selectableIngredients,
+        isLoading: isLoadingSelectaleIngredients,
+    } = useCocktailIngredients(selectedIngredients);
 
     return (
         <div className={styles.container}>
@@ -172,11 +160,11 @@ const AddCocktail = () => {
                                             const newValue = value ? [...value, itemToAdd] : [itemToAdd];
                                             onChange(newValue);
                                         }}
-                                        onSearch={handleSearch}
-                                        options={selectableIngredients}
                                     />
                                 </>
                             )}
+                                            onSearch={handleIngredientNameSearch}
+                                            options={selectableIngredients}
                         />
                         <FormErrorMessage>
                             {errors?.ingredients?.message}
