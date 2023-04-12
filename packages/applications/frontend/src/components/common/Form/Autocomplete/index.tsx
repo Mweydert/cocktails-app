@@ -56,15 +56,19 @@ const Autocomplete = ({
     }
 
     const handleSelectOption = (option: Option) => {
+        setSearchRawValue("");
+        setDisplayOptions(false);
         onSelect(option);
-        if (options.length === 1) {
-            setDisplayOptions(false);
-        } 
     }
 
     return (
         <div className={styles.container} ref={ref}>
-            <Input placeholder={placeholder} onChange={handleInputChange} onClick={handleToggleOptions} />
+            <Input
+                value={searchRawValue}
+                placeholder={placeholder}
+                onChange={handleInputChange}
+                onClick={handleToggleOptions}
+            />
             {displayOptions && searchValue !== "" && (
                 <div className={styles["options-container"]}>
                     {isLoading ? (
