@@ -1,4 +1,5 @@
 import z from "zod";
+import { zu } from "zod_utilz";
 
 const fileScheme = z.object({
     fieldname: z.string(),
@@ -10,6 +11,8 @@ const fileScheme = z.object({
 }).optional();
 
 export const CreateCocktailFileScheme = fileScheme.optional();
+
+export const StringifiedJsonScheme = zu.stringToJSON();
 
 export const CreateCocktailScheme = z.object({
     name: z.string(),
