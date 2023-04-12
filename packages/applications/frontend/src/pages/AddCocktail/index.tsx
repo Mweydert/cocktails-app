@@ -153,15 +153,17 @@ const AddCocktail = () => {
 
                                 return (
                                     <>
-                                        <div>
+                                        <div className={styles["selected-ingredients"]}>
                                             {value?.map(ingredient => (
-                                                <Tag
-                                                    key={ingredient.id}
-                                                    onClick={() => handleRemoveIngredient(ingredient)}
-                                                >
-                                                    <TagLabel>{ingredient.name}</TagLabel>
-                                                    <TagCloseButton />
-                                                </Tag>
+                                                <div className={styles["selected-ingredient"]}>
+                                                    <Tag
+                                                        key={ingredient.id}
+                                                        onClick={() => handleRemoveIngredient(ingredient)}
+                                                    >
+                                                        <TagLabel>{ingredient.name}</TagLabel>
+                                                        <TagCloseButton />
+                                                    </Tag>
+                                                </div>
                                             ))}
                                         </div>
                                         <Autocomplete
