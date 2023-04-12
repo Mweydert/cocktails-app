@@ -44,7 +44,6 @@ const Autocomplete = ({
             setDisplayOptions(true);
         } else {
             setDisplayOptions(false);
-            // TODO: clear options ?
         }
         onSearch(searchValue);
     }, [searchValue]);
@@ -56,6 +55,9 @@ const Autocomplete = ({
 
     const handleSelectOption = (option: Option) => {
         onSelect(option);
+        if (options.length === 1) {
+            setDisplayOptions(false);
+        } 
     }
 
     return (
