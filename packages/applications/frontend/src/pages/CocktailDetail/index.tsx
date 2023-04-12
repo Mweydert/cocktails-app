@@ -2,14 +2,13 @@ import { useTranslation } from "react-i18next";
 import styles from "./CocktailDetail.module.scss";
 import { useParams } from "react-router-dom";
 import { useGetCocktail } from "../../data/useGetCocktail";
-import { Alert, Button, CircularProgress, Divider, IconButton, Tag, TagCloseButton, TagLabel, useToast } from "@chakra-ui/react";
+import { Alert, Button, CircularProgress, Tag, TagLabel, useToast } from "@chakra-ui/react";
 import RatingInput from "../../components/common/Form/RatingInput";
 import { useUpdateCocktail } from "../../data/useUpdateCocktail";
 import { EditIcon } from "@chakra-ui/icons";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Ingredient } from "../../models/ingredients";
-import Autocomplete from "../../components/common/Form/Autocomplete";
-import { useCocktailIngredients } from "../../businessHooks/useCocktailIngredients";
+import SelectCocktailIngredients from "../../components/SelectCocktailIngredients";
 
 const CocktailDetail = () => {
     const { t } = useTranslation();
@@ -69,47 +68,16 @@ const CocktailDetail = () => {
         }
     }
 
-    // TODO: custom hook ?
-
     const [isEditingIngredients, setIsEditingIngredients] = useState<boolean>(false);
     const handleToggleEditIngredients = () => {
         setIsEditingIngredients(!isEditingIngredients);
     }
-
     const [ingredients, setIngredients] = useState<Ingredient[]>(data?.ingredients || []);
     useEffect(() => {
         if (data?.ingredients) {
             setIngredients(data.ingredients);
         }
-    }, [data]);
-    const handleAddIngredient = (ingredient: Ingredient) => {
-        const newValue = ingredients ? [...ingredients, ingredient] : [ingredient];
-        setIngredients(newValue);
-    };
-    const handleRemoveIngredient = (ingredient: Ingredient) => {
-        const newVal = ingredients?.filter(item => item.id !== ingredient.id);
-        setIngredients(newVal);
-    }
-    const {
-        handleIngredientNameSearch,
-        selectableIngredients,
-        isLoading: isLoadingSelectaleIngredients,
-    } = useCocktailIngredients(
-        ingredients,
-        {
-            onError: (err: unknown) => {
-                console.error(err);
-                toast({
-                    title: t("cocktailDetail.toasters.errorGetIngredients.title"),
-                    description: t("cocktailDetail.toasters.errorGetIngredients.description"),
-                    status: "error",
-                    duration: 5000,
-                    isClosable: true,
-                });
-            }
-        }
-    );
-
+    }, [data])
     const handleUpdateIngredients = () => {
         mutate({
             ingredients
@@ -119,7 +87,6 @@ const CocktailDetail = () => {
             }
         });
     }
-
 
     return isLoading ? (
         <div className={styles["loader-container"]}>
@@ -182,35 +149,12 @@ const CocktailDetail = () => {
                             {data.ingredients ? (
                                 <div className={styles["ingredients-list"]}>
                                     {isEditingIngredients ? (
-                                        <>
-                                            <div className={styles["selected-ingredients"]}>
-                                                {ingredients?.map(ingredient => (
-                                                    <div className={styles["selected-ingredient"]}>
-                                                        <Tag
-                                                            key={ingredient.id}
-                                                            onClick={() => handleRemoveIngredient(ingredient)}
-                                                        >
-                                                            <TagLabel>{ingredient.name}</TagLabel>
-                                                            <TagCloseButton />
-                                                        </Tag>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <Autocomplete
-                                                onSelect={(option) => handleAddIngredient({
-                                                    id: option.key,
-                                                    name: option.label
-                                                })}
-                                                placeholder={t("cocktailDetail.ingredients.edit.placeholder") || ""}
-                                                noContentLabel={t("cocktailDetail.ingredients.edit.noMatch") || ""}
-                                                onSearch={handleIngredientNameSearch}
-                                                options={selectableIngredients}
-                                                isLoading={isLoadingSelectaleIngredients}
-                                            />
-                                        </>
+                                        <SelectCocktailIngredients
+                                            value={ingredients}
+                                            onChange={setIngredients}
+                                        />
                                     ) : (
                                         data.ingredients.map(ingredient => (
-                                            // Color ?
                                             <Tag key={ingredient.id}>
                                                 <TagLabel>{ingredient.name}</TagLabel>
                                             </Tag>
