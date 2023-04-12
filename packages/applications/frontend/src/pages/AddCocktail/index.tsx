@@ -6,11 +6,14 @@ import {
     Input,
     useToast
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import Autocomplete from "../../components/common/Form/Autocomplete";
 import RatingInput from "../../components/common/Form/RatingInput";
 import { useCreateCocktail } from "../../data/useCreateCocktail";
+import { useGetIngredientsByName } from "../../data/useGetIngredientsByName";
 import { CreateCocktailPayload } from "../../models/payloads";
 import { ROUTE_PATH } from "../../router";
 import styles from "./AddCocktail.module.scss";
@@ -20,7 +23,8 @@ const AddCocktail = () => {
         register,
         handleSubmit,
         control,
-        formState: { errors }
+        formState: { errors },
+        watch
     } = useForm<CreateCocktailPayload>();
 
     const navigate = useNavigate();
@@ -58,6 +62,26 @@ const AddCocktail = () => {
     }
 
     const { t } = useTranslation();
+    
+    const [searchValue, setSearchValue] = useState<string>();
+    const handleSearch = (value: string) => {
+        setSearchValue(value);
+    }
+
+    // TODO: extract in custom hook
+    const {
+        // isLoading,
+        // isError,
+        data: ingredients
+    } = useGetIngredientsByName(searchValue);
+    const selectedIngredients = watch("ingredients");
+    const selectedIngredientIds = new Set(selectedIngredients?.map(items => items.id));
+    const selectableIngredients = ingredients
+        ?.filter(ingredient => !selectedIngredientIds.has(ingredient.id))
+        ?.map(ingredient => ({
+            key: ingredient.id,
+            label: ingredient.name
+        })) || [];
 
     return (
         <div className={styles.container}>
@@ -115,6 +139,47 @@ const AddCocktail = () => {
                         />
                         <FormErrorMessage>
                             {errors?.pictures?.message}
+                        </FormErrorMessage>
+                    </FormControl>
+                </div>
+
+                <div className={styles["form-group"]}>
+                    <FormControl isInvalid={!!errors.pictures}>
+                        <FormLabel htmlFor="ingredients">{t("addCocktail.form.ingredients")}</FormLabel>
+                        <Controller
+                            control={control}
+                            name="ingredients"
+                            render={({
+                                field: { onChange, value },
+                            }) => (
+                                <>
+                                    <div>
+                                        {value?.map(item => (
+                                            <div key={item.id} onClick={() => {
+                                                const newVal = value.filter(item2 => item2.id !== item.id);
+                                                onChange(newVal);
+                                            }}>
+                                                {item.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <Autocomplete
+                                        onSelect={(option) => {
+                                            const itemToAdd ={
+                                                id: option.key,
+                                                name: option.label
+                                            };
+                                            const newValue = value ? [...value, itemToAdd] : [itemToAdd];
+                                            onChange(newValue);
+                                        }}
+                                        onSearch={handleSearch}
+                                        options={selectableIngredients}
+                                    />
+                                </>
+                            )}
+                        />
+                        <FormErrorMessage>
+                            {errors?.ingredients?.message}
                         </FormErrorMessage>
                     </FormControl>
                 </div>

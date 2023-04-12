@@ -1,7 +1,10 @@
+import { Ingredient } from "./ingredients";
+
 export interface CreateCocktailPayload {
     name: string;
     note?: number;
     pictures?: FileList;
+    ingredients?: Ingredient[];
 }
 
 export interface UpdateCocktailPayload {
