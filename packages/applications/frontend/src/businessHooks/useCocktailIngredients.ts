@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useGetIngredientsByName } from "../../data/useGetIngredientsByName";
-import { Ingredient } from "../../models/ingredients";
+import { useGetIngredientsByName } from "../data/useGetIngredientsByName";
+import { Ingredient } from "../models/ingredients";
 
 interface CocktailIngredientsQueryOptions {
     onError: (err: unknown) => void;
 }
+
+// TODO: custom components for that
 
 export const useCocktailIngredients = (
     selectedIngredients?: Ingredient[],

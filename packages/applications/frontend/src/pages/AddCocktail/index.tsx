@@ -19,7 +19,7 @@ import { Ingredient } from "../../models/ingredients";
 import { CreateCocktailPayload } from "../../models/payloads";
 import { ROUTE_PATH } from "../../router";
 import styles from "./AddCocktail.module.scss";
-import { useCocktailIngredients } from "./useCocktailIngredients";
+import { useCocktailIngredients } from "../../businessHooks/useCocktailIngredients";
 
 const AddCocktail = () => {
     const {
@@ -86,6 +86,8 @@ const AddCocktail = () => {
             }
         }
     );
+
+    // TODO: enable to create new ingredients here
 
     return (
         <div className={styles.container}>

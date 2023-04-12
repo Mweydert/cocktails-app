@@ -79,6 +79,11 @@ export const updateCocktail = async (
     if (payload.picture) {
         form.append("picture", payload.picture);
     }
+    if (payload.ingredients) {
+        form.append("ingredients", JSON.stringify(payload.ingredients.map(
+            ingredient => ingredient.id
+        )));
+    }
 
     const res = await axios.put(`${API_URL}/cocktails/${id}`, form, {
         headers: {
