@@ -32,6 +32,10 @@
             "error": {
                 "title": "Add cocktail",
                 "description": "An error occured when adding cocktail"
+            },
+            "errorGetIngredients": {
+                "title": "Get ingredients",
+                "description": "An error occured when getting available ingredients"
             }
         }
     },

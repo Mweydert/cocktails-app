@@ -2,7 +2,15 @@ import { useQuery } from "@tanstack/react-query"
 import { getIngredientsByName } from "../services/ingredients";
 import QUERY_KEYS from "./keys"
 
-export const useGetIngredientsByName = (search?: string) => {
+export interface UseGetIngredientsByNameOptions {
+    onSuccess?: () => void;
+    onError?: (error: unknown) => void;
+}
+
+export const useGetIngredientsByName = (
+    search?: string,
+    options?: UseGetIngredientsByNameOptions
+) => {
     const {
         isLoading,
         isError,
@@ -11,7 +19,8 @@ export const useGetIngredientsByName = (search?: string) => {
         data
     } = useQuery({
         queryKey: [QUERY_KEYS.INGREDIENTS, search],
-        queryFn: () => getIngredientsByName(search)
+        queryFn: () => getIngredientsByName(search),
+        ...options
     });
     return {
         isLoading,

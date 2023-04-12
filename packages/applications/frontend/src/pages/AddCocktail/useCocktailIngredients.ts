@@ -2,12 +2,15 @@ import { useState } from "react";
 import { useGetIngredientsByName } from "../../data/useGetIngredientsByName";
 import { Ingredient } from "../../models/ingredients";
 
-export const useCocktailIngredients = (
-    selectedIngredients?: Ingredient[]
-) => {
-    // TODO: display error ?
-    const [search, setSearch] = useState<string>();
+interface CocktailIngredientsQueryOptions {
+    onError: (err: unknown) => void;
+}
 
+export const useCocktailIngredients = (
+    selectedIngredients?: Ingredient[],
+    queryOptions?: CocktailIngredientsQueryOptions
+) => {
+    const [search, setSearch] = useState<string>();
     const handleIngredientNameSearch = (value: string) => {
         setSearch(value);
     }
@@ -16,7 +19,7 @@ export const useCocktailIngredients = (
         isLoading,
         isError,
         data
-    } = useGetIngredientsByName(search);
+    } = useGetIngredientsByName(search, queryOptions);
     const selectedIngredientIds = new Set(selectedIngredients?.map(items => items.id));
     const selectableIngredients = data
         ?.filter(ingredient => !selectedIngredientIds.has(ingredient.id))

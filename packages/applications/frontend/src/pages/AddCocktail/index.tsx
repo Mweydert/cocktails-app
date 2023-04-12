@@ -71,7 +71,21 @@ const AddCocktail = () => {
         handleIngredientNameSearch,
         selectableIngredients,
         isLoading: isLoadingSelectaleIngredients,
-    } = useCocktailIngredients(selectedIngredients);
+    } = useCocktailIngredients(
+        selectedIngredients,
+        {
+            onError: (err: unknown) => {
+                console.error(err);
+                toast({
+                    title: t("addCocktail.toasters.errorGetIngredients.title"),
+                    description: t("addCocktail.toasters.errorGetIngredients.description"),
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        }
+    );
 
     return (
         <div className={styles.container}>
