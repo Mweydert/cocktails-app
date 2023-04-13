@@ -35,6 +35,7 @@ const CocktailDetail = () => {
             toast({
                 title: t("cocktailDetail.toasters.success.title"),
                 description: t("cocktailDetail.toasters.success.description"),
+                position: "top",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -45,6 +46,7 @@ const CocktailDetail = () => {
             toast({
                 title: t("cocktailDetail.toasters.error.title"),
                 description: t("cocktailDetail.toasterss.error.descripition"),
+                position: "top",
                 status: "error",
                 duration: 5000,
                 isClosable: true,
