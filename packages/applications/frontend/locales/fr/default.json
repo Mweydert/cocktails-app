@@ -15,6 +15,9 @@
             "rate": "Note",
             "cta": "Ajouter",
             "pictures": "Photo",
+            "ingredients": {
+                "title": "Ingrédients"
+            },
             "errors": {
                 "required": "Merci de renseigner ce champ"
             }
@@ -33,6 +36,11 @@
     "cocktailDetail": {
         "error": "Une erreur est survenue lors de la récupération des détails du cocktail",
         "noPicture": "Pas de photo",
+        "ingredients": {
+            "title": "Ingrédients",
+            "cancel": "Annule",
+            "save": "Enregistrer"
+        },
         "toasters": {
             "success": {
                 "title": "Mise à jour d'un cocktail",
@@ -47,5 +55,15 @@
     "cocktailCard": {
         "noRate": "Non noté",
         "noPicture": "Pas de photo"
+    },
+    "SelectCocktailIngredients": {
+        "placeholder": "Rechercher des ingrédients",
+        "noMatch": "Pas d'ingrédients correspondant à votre recherche",
+        "toasters": {
+            "error": {
+                "title": "Ingrédients",
+                "description": "Une erreur est survenue lors de la récupération des ingrédients disponbibles"
+            }
+        }
     }
 }

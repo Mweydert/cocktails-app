@@ -11,6 +11,7 @@ import {
     UpdateCocktailGatewayResult
 } from "app-domain";
 import { DataSource } from "typeorm";
+import { IngredientPSQLGateway } from "../ingredients";
 import logger from "../utils/logger";
 import { Cocktail as PSQLCocktail } from "./cocktail.contract";
 
@@ -27,16 +28,24 @@ export default class CocktailGatewayImpl implements CocktailGateway {
             cocktail.name,
             cocktail.note,
             cocktail.pictureKey,
+            cocktail.ingredients && cocktail.ingredients
         )
     }
 
-    private static psqlCocktailToCocktail({ id, name, note, pictureKey }: PSQLCocktail): Cocktail {
+    private static psqlCocktailToCocktail(
+        psqlCocktail: PSQLCocktail,
+    ): Cocktail {
+        const ingredients = psqlCocktail.ingredients
+            ? psqlCocktail.ingredients.map(
+                IngredientPSQLGateway.psqlIngredientToIngredient
+            ) : undefined;
+
         return new Cocktail({
-            id,
-            name,
-            note,
-            pictureKey,
-        })
+            id: psqlCocktail.id,
+            name: psqlCocktail.name,
+            note: psqlCocktail.note,
+            pictureKey: psqlCocktail.pictureKey
+        }, ingredients);
     }
 
     async createCocktail(
@@ -53,12 +62,20 @@ export default class CocktailGatewayImpl implements CocktailGateway {
     }
 
     async getCocktail(
-        id: string
+        id: string,
+        includeIngredients = false
     ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
         logger.verbose(`Get cocktail ${id}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
-        const psqlCocktail = await repository.findOneBy({ id });
+        const psqlCocktail = await repository.findOne({
+            where: {
+                id
+            },
+            relations: {
+                ingredients: includeIngredients
+            }
+        });
 
         if (!psqlCocktail) {
             return new ResultObject(GetCocktailGatewayResult.NOT_FOUND);
@@ -134,7 +151,24 @@ export default class CocktailGatewayImpl implements CocktailGateway {
         logger.verbose(`Update cocktail ${id}`);
 
         const repository = this.#dataSource.getRepository(PSQLCocktail);
-        await repository.update(id, payload);
+
+        const psqlCocktailToUpdate = await repository.findOneBy({ id });
+        if (!psqlCocktailToUpdate) {
+            return new ResultObject(UpdateCocktailGatewayResult.UNHANDLED_ERROR);
+        }
+        for (const [key, value] of Object.entries(payload)) {
+            if (key === "ingredients") {
+                logger.debug(`${value.length} ingredients to add to cocktail ${id}`)
+                psqlCocktailToUpdate.ingredients = value.map(
+                    IngredientPSQLGateway.ingredientToPSQLIngredient
+                )
+            } else if (key in psqlCocktailToUpdate) {
+                // Author note: we check key exist in psqlCocktailToUpdate so key is controlled
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (psqlCocktailToUpdate as any)[key] = value;
+            }
+        }
+        await repository.save(psqlCocktailToUpdate);
 
         logger.debug(`Successfully updated cocktail ${id}`);
         return new ResultObject(UpdateCocktailGatewayResult.SUCCESS);

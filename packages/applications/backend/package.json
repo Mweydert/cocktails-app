@@ -40,7 +40,8 @@
     "module-alias": "^2.2.2",
     "multer": "^1.4.5-lts.1",
     "winston": "^3.8.2",
-    "zod": "^3.21.2"
+    "zod": "^3.21.2",
+    "zod_utilz": "^0.7.3"
   },
   "repository": {
     "type": "git",

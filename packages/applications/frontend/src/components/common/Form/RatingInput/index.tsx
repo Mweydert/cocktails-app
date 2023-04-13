@@ -56,7 +56,7 @@ const RatingInput = ({
                 const leftStarChecked = rate > index;
                 const rightStarChecked = rate > index + 0.5;
                 return (
-                    <div className={`${styles["full-star"]} ${styles[size]}`}>
+                    <div key={index} className={`${styles["full-star"]} ${styles[size]}`}>
                         <button
                             type="button"
                             className={`${styles.button} ${styles[size]}`}

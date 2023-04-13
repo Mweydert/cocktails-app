@@ -4,6 +4,7 @@ export interface UpdateCocktailCommand {
     id: string;
     note?: number;
     picture?: File;
+    ingredients?: string[];
 }
 
 export enum UpdateCocktailResult {

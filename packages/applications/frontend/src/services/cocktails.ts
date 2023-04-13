@@ -34,7 +34,8 @@ export const getCocktails = async ({
 export const createCocktail = async ({
     name,
     note,
-    pictures
+    pictures,
+    ingredients
 }: CreateCocktailPayload) => {
     const form = new FormData();
 
@@ -44,6 +45,11 @@ export const createCocktail = async ({
     }
     if (pictures && pictures.length > 0) {
         form.append("picture", pictures[0]);
+    }
+    if (ingredients && ingredients.length > 0) {
+        form.append("ingredientIds", JSON.stringify(ingredients.map(
+            ingredient => ingredient.id
+        )));
     }
 
     const res = await axios.post(`${API_URL}/cocktails`, form, {
@@ -72,6 +78,11 @@ export const updateCocktail = async (
     }
     if (payload.picture) {
         form.append("picture", payload.picture);
+    }
+    if (payload.ingredients) {
+        form.append("ingredients", JSON.stringify(payload.ingredients.map(
+            ingredient => ingredient.id
+        )));
     }
 
     const res = await axios.put(`${API_URL}/cocktails/${id}`, form, {

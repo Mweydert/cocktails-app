@@ -10,12 +10,13 @@ import {
     GetCocktaiListResult,
     UpdateCocktailResult
 } from "app-domain";
-import { CocktailPSQLGateway, S3MediaGateway } from "infrastructure";
+import { CocktailPSQLGateway, IngredientPSQLGateway, S3MediaGateway } from "infrastructure";
 import {
     CreateCocktailFileScheme,
     CreateCocktailScheme,
     GetCocktailListScheme,
     GetCocktailScheme,
+    StringifiedJsonScheme,
     UpdateCocktailBodyScheme,
     UpdateCocktailIdScheme,
     UpdateCocktailPictureScheme
@@ -33,10 +34,12 @@ const router = new Router();
 
 const cocktailGateway = new CocktailPSQLGateway(dataSource);
 const mediaGateway = new S3MediaGateway(s3Client, config.S3_BUCKET);
+const ingredientGateway = new IngredientPSQLGateway(dataSource);
 
 const createCocktailUC = new CreateCocktail(
     cocktailGateway,
-    mediaGateway
+    mediaGateway,
+    ingredientGateway
 );
 const getCocktailUC = new GetCocktail(
     cocktailGateway,
@@ -48,7 +51,8 @@ const getCocktailListUC = new GetCocktailList(
 );
 const updateCocktailUC = new UpdateCocktail(
     cocktailGateway,
-    mediaGateway
+    mediaGateway,
+    ingredientGateway
 );
 
 
@@ -58,6 +62,20 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         logger.debug("POST /cocktails/ file", ctx.request.file.originalname);
     }
 
+    if (
+        ctx.request.body
+        && typeof ctx.request.body === "object"
+        && "ingredientIds" in ctx.request.body
+    ) {
+        const parsedIngredients = StringifiedJsonScheme.safeParse(ctx.request.body.ingredientIds);
+        if (!parsedIngredients.success) {
+            logger.warn("CocktailRouter - POST / - Invalid body[ingredients]", parsedIngredients.error);
+            ctx.status = 400;
+            ctx.body = parsedIngredients.error;
+            return;
+        }
+        ctx.request.body.ingredientIds = parsedIngredients.data;
+    }
     const commandBody = CreateCocktailScheme.safeParse(ctx.request.body);
     if (!commandBody.success) {
         logger.warn("CocktailRouter - POST / - Invalid body", commandBody.error);
@@ -72,6 +90,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         ctx.body = commandPicture.error;
         return;
     }
+
     const command = {
         ...commandBody.data,
         picture: commandPicture.data && {
@@ -92,11 +111,7 @@ router.post("/", upload.single("picture"), async (ctx, next) => {
         ctx.status = 500;
     } else if (res.result === CreateCocktailResult.SUCCESS) {
         ctx.status = 200;
-        ctx.body = {
-            id: res.data.id,
-            name: res.data.name,
-            note: res.data.note,
-        }
+        ctx.body = res.data
         return;
     }
 
@@ -109,6 +124,7 @@ router.get("/:id", async (ctx, next) => {
     const query = GetCocktailScheme.safeParse(ctx.params);
 
     if (!query.success) {
+        logger.warn("CocktailRouter - GET /:id - Invalid query", query.error);
         ctx.status = 400;
         ctx.body = query.error;
         return;
@@ -136,6 +152,7 @@ router.get("/", async (ctx, next) => {
 
     const query = GetCocktailListScheme.safeParse(ctx.query);
     if (!query.success) {
+        logger.warn("CocktailRouter - GET / - Invalid query", ctx.query);
         ctx.status = 400;
         ctx.body = query.error;
         return;
@@ -160,24 +177,42 @@ router.get("/", async (ctx, next) => {
 })
 
 router.put("/:id", upload.single("picture"), async (ctx, next) => {
-    logger.debug("update cocktail", ctx.params.id);
+    logger.debug("PUT /cocktail/", ctx.params.id);
 
     const parsedId = UpdateCocktailIdScheme.safeParse({
         id: ctx.params.id,
     });
-    const parsedBody = UpdateCocktailBodyScheme.safeParse(ctx.request.body)
-    const parsedPicture = UpdateCocktailPictureScheme.safeParse(ctx.request.file)
     if (!parsedId.success) {
+        logger.warn("CocktailRouter - PUT /:id - Invalid ID", ctx.params.id);
         ctx.status = 400;
         ctx.body = parsedId.error;
         return;
     }
+
+    if (
+        ctx.request.body
+        && typeof ctx.request.body === "object"
+        && "ingredients" in ctx.request.body
+    ) {
+        const parsedIngredients = StringifiedJsonScheme.safeParse(ctx.request.body.ingredients);
+        if (!parsedIngredients.success) {
+            logger.warn("CocktailRouter - PUT /:id - Invalid body[ingredients]", parsedIngredients.error);
+            ctx.status = 400;
+            ctx.body = parsedIngredients.error;
+            return;
+        }
+        ctx.request.body.ingredients = parsedIngredients.data;
+    }
+    const parsedBody = UpdateCocktailBodyScheme.safeParse(ctx.request.body)
     if (!parsedBody.success) {
+        logger.warn("CocktailRouter - PUT /:id - Invalid body", ctx.request.body);
         ctx.status = 400;
         ctx.body = parsedBody.error;
         return;
     }
+    const parsedPicture = UpdateCocktailPictureScheme.safeParse(ctx.request.file);
     if (!parsedPicture.success) {
+        logger.warn("CocktailRouter - PUT /:id - Invalid file");
         ctx.status = 400;
         ctx.body = parsedPicture.error;
         return;

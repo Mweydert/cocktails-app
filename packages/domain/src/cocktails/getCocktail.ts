@@ -26,13 +26,14 @@ export default class GetCocktail {
             name: cocktail.name,
             note: cocktail.note,
             pictureUrl: signedUrl,
+            ingredients: cocktail.ingredients
         }
     }
 
     async execute({
         id
     }: GetCocktailQuery): Promise<ResultObject<GetCocktailResult, GetCocktailData>> {
-        const cocktailRes = await this.#cocktailGateway.getCocktail(id);
+        const cocktailRes = await this.#cocktailGateway.getCocktail(id, true);
         if (cocktailRes.result === GetCocktailGatewayResult.NOT_FOUND) {
             return new ResultObject(GetCocktailResult.NOT_FOUNT);
         } else if (!cocktailRes.data) {

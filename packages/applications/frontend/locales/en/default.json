@@ -15,6 +15,9 @@
             "rate": "Rate",
             "pictures": "Picture",
             "cta": "Add",
+            "ingredients": {
+                "title": "Ingredients"
+            },
             "errors": {
                 "required": "Please enter a value"
             }
@@ -33,6 +36,11 @@
     "cocktailDetail": {
         "error": "An error occured when getting cocktail detail",
         "noPicture": "No picture",
+        "ingredients": {
+            "title": "Ingredients",
+            "cancel": "Cancel",
+            "save": "Save"
+        },
         "toasters": {
             "success": {
                 "title": "Update cocktail",
@@ -47,5 +55,15 @@
     "cocktailCard": {
         "noRate": "Unrated",
         "noPicture": "No picture"
+    },
+    "SelectCocktailIngredients": {
+        "placeholder": "Search ingredients",
+        "noMatch": "No ingredients matching your research",
+        "toasters": {
+            "error": {
+                "title": "Get ingredients",
+                "description": "An error occured when getting available ingredients"
+            }
+        }
     }
 }

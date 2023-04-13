@@ -14,13 +14,14 @@ import { useCreateCocktail } from "../../data/useCreateCocktail";
 import { CreateCocktailPayload } from "../../models/payloads";
 import { ROUTE_PATH } from "../../router";
 import styles from "./AddCocktail.module.scss";
+import SelectCocktailIngredients from "../../components/SelectCocktailIngredients";
 
 const AddCocktail = () => {
     const {
         register,
         handleSubmit,
         control,
-        formState: { errors }
+        formState: { errors },
     } = useForm<CreateCocktailPayload>();
 
     const navigate = useNavigate();
@@ -58,6 +59,8 @@ const AddCocktail = () => {
     }
 
     const { t } = useTranslation();
+    
+    // TODO: enable to create new ingredients here
 
     return (
         <div className={styles.container}>
@@ -115,6 +118,27 @@ const AddCocktail = () => {
                         />
                         <FormErrorMessage>
                             {errors?.pictures?.message}
+                        </FormErrorMessage>
+                    </FormControl>
+                </div>
+
+                <div className={styles["form-group"]}>
+                    <FormControl isInvalid={!!errors.pictures}>
+                        <FormLabel htmlFor="ingredients">{t("addCocktail.form.ingredients.title")}</FormLabel>
+                        <Controller
+                            control={control}
+                            name="ingredients"
+                            render={({
+                                field: { onChange, value },
+                            }) => (
+                                <SelectCocktailIngredients
+                                    value={value || []}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <FormErrorMessage>
+                            {errors?.ingredients?.message}
                         </FormErrorMessage>
                     </FormControl>
                 </div>

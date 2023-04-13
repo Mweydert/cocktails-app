@@ -1,10 +1,12 @@
 import { CocktailGateway, CreateCocktailGatewayResult, GetCocktailGatewayResult, GetCocktailListGatewayResult, UpdateCocktailGatewayResult, UpdateCocktailPayload } from "../../src/cocktails/cocktails.contract";
 import Cocktail from "../../src/cocktails/model";
+import { Ingredient } from "../../src/ingredients";
 import { PaginatedListResult, PaginationParams } from "../../src/utils/pagination.model";
 import ResultObject from "../../src/utils/resultObject";
 
 export default class CocktailInMemoryGateway implements CocktailGateway {
     data: Map<string, Cocktail>
+    cocktailIngredients: Map<string, Ingredient[]>
 
     constructor(initialData?: Cocktail[]) {
         this.data = new Map<string, Cocktail>(
@@ -12,6 +14,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
                 cocktail => ([cocktail.id, cocktail])
             ) || []
         );
+        this.cocktailIngredients = new Map<string, Ingredient[]>();
     }
 
     async createCocktail(
@@ -21,11 +24,17 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
             throw new Error("Cocktail already exist");
         }
         this.data.set(cocktail.id, cocktail);
+
+        if (cocktail.ingredients?.length) {
+            this.cocktailIngredients.set(cocktail.id, cocktail.ingredients)
+        }
+
         return new ResultObject(CreateCocktailGatewayResult.SUCCESS);
     }
 
     async getCocktail(
-        id: string
+        id: string,
+        includeIngredients = false
     ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
         const cocktail = this.data.get(id);
         if (!cocktail) {
@@ -33,6 +42,12 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         }
 
         const data = new Cocktail(cocktail);
+
+        if (includeIngredients) {
+            const ingredients = this.cocktailIngredients.get(cocktail.id);
+            cocktail.ingredients = ingredients;
+        }
+
         return new ResultObject(GetCocktailGatewayResult.SUCCESS, data);
     }
 
@@ -89,8 +104,12 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
         }
 
         for (const [key, value] of Object.entries(payload)) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (cocktail as any)[key] = value;
+            if (key === "ingredients") {
+                this.cocktailIngredients.set(id, value);
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (cocktail as any)[key] = value;
+            }
         }
         this.data.set(id, cocktail);
         return new ResultObject(UpdateCocktailGatewayResult.SUCCESS)

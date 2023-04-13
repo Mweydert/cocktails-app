@@ -1,0 +1,15 @@
+.container {
+    width: 100%;
+
+    .selected-ingredients {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        margin-bottom: 10px;
+
+        .selected-ingredient {
+            cursor: pointer;
+        }
+    }
+}

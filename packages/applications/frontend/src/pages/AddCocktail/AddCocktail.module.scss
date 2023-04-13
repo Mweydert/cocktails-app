@@ -1,13 +1,28 @@
 @import "../../utils/styles/globals.scss";
 
 .container {
+    h1 {
+        font-weight: bold;
+    }
+
     .content {
         margin-top: 50px;
 
         .form-group {
             &:not(:last-child) {
                 margin-bottom: 20px;
-                ;
+            }
+        }
+
+        .selected-ingredients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+
+            margin-bottom: 10px;
+
+            .selected-ingredient {
+                cursor: pointer;
             }
         }
 

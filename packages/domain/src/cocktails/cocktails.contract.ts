@@ -1,3 +1,4 @@
+import { Ingredient } from "../ingredients";
 import { PaginatedListResult, PaginationParams } from "../utils/pagination.model";
 import ResultObject from "../utils/resultObject";
 import Cocktail from "./model";
@@ -5,6 +6,7 @@ import Cocktail from "./model";
 export interface UpdateCocktailPayload {
     note?: number;
     pictureKey?: string;
+    ingredients?: Ingredient[];
 }
 
 export enum CreateCocktailGatewayResult {
@@ -21,7 +23,8 @@ export enum GetCocktailListGatewayResult {
 }
 
 export enum UpdateCocktailGatewayResult {
-    SUCCESS = "success"
+    SUCCESS = "success",
+    UNHANDLED_ERROR = "unhandled_error"
 }
 
 export interface CocktailGateway {
@@ -29,7 +32,8 @@ export interface CocktailGateway {
         cocktail: Cocktail
     ) => Promise<ResultObject<CreateCocktailGatewayResult, undefined>>;
     getCocktail: (
-        id: string
+        id: string,
+        includeIngredients?: boolean
     ) => Promise<ResultObject<GetCocktailGatewayResult, Cocktail>>;
     getCocktailByName: (
         name: string

@@ -1,3 +1,4 @@
+import { GET_INGREDIENT_RESULT, Ingredient, IngredientGateway } from "../ingredients";
 import { DeleteMediaGatewayResult, MediaGateway, StoreMediaGatewayResult } from "../medias";
 import { ResultObject } from "../utils";
 import logger from "../utils/logger";
@@ -7,13 +8,16 @@ import { UpdateCocktailCommand, UpdateCocktailResult } from "./updateCocktail.co
 export default class UpdateCocktail {
     #cocktailGateway: CocktailGateway;
     #mediaGateway: MediaGateway;
+    #ingredientGateway: IngredientGateway;
 
     constructor(
         cocktailGateway: CocktailGateway,
-        mediaGateway: MediaGateway
+        mediaGateway: MediaGateway,
+        ingredientGateway: IngredientGateway
     ) {
         this.#cocktailGateway = cocktailGateway;
         this.#mediaGateway = mediaGateway;
+        this.#ingredientGateway = ingredientGateway;
     }
 
     async execute(
@@ -49,6 +53,29 @@ export default class UpdateCocktail {
             payload = {
                 ...payload,
                 note: command.note
+            }
+        }
+
+        if (command.ingredients) {
+            const getIngredientsRes = await Promise.all(command.ingredients.map(
+                ingredientId => this.#ingredientGateway.getIngredient(ingredientId)
+            ));
+            const ingredients = getIngredientsRes.filter(ingredientRes =>
+                ingredientRes.result === GET_INGREDIENT_RESULT.SUCCESS
+                && !!ingredientRes.data
+            ).map(
+                ingredientRes => ingredientRes.data
+            );
+            if (ingredients.length !== getIngredientsRes.length) {
+                return new ResultObject(UpdateCocktailResult.UNHANDLED_ERROR);
+            }
+
+            // Author note: we cast as Ingredient here as we has checked ingredientRes.data
+            // is not undefined. Don't know why TS doesn't figure it out by itself
+            cocktail.ingredients = ingredients as Ingredient[];
+            payload = {
+                ...payload,
+                ingredients: cocktail.ingredients
             }
         }
 
