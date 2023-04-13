@@ -19,6 +19,7 @@ interface AutocompleteProps {
     isLoading?: boolean;
     onSearch: (value: string) => void;
     onSelect: (item: Option) => void;
+    clearAtSelect?: boolean;
 }
 
 const Autocomplete = ({
@@ -27,7 +28,8 @@ const Autocomplete = ({
     onSelect,
     onSearch,
     isLoading,
-    options
+    options,
+    clearAtSelect
 }: AutocompleteProps) => {
     const [displayOptions, setDisplayOptions] = useState<boolean>(false);
     const { ref } = useClickAway(() => {
@@ -56,8 +58,12 @@ const Autocomplete = ({
     }
 
     const handleSelectOption = (option: Option) => {
-        setSearchRawValue("");
-        setDisplayOptions(false);
+        if (clearAtSelect) {
+            setSearchRawValue("");
+            setDisplayOptions(false);
+        } else if (options.length === 1) {
+            setDisplayOptions(false);
+        }
         onSelect(option);
     }
 

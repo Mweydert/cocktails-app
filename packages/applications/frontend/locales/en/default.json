@@ -16,9 +16,7 @@
             "pictures": "Picture",
             "cta": "Add",
             "ingredients": {
-                "title": "Ingredients",
-                "placeholder": "Search ingredients",
-                "noMatch": "No ingredients matching your research"
+                "title": "Ingredients"
             },
             "errors": {
                 "required": "Please enter a value"
@@ -32,16 +30,17 @@
             "error": {
                 "title": "Add cocktail",
                 "description": "An error occured when adding cocktail"
-            },
-            "errorGetIngredients": {
-                "title": "Get ingredients",
-                "description": "An error occured when getting available ingredients"
             }
         }
     },
     "cocktailDetail": {
         "error": "An error occured when getting cocktail detail",
         "noPicture": "No picture",
+        "ingredients": {
+            "title": "Ingredients",
+            "cancel": "Cancel",
+            "save": "Save"
+        },
         "toasters": {
             "success": {
                 "title": "Update cocktail",
@@ -56,5 +55,15 @@
     "cocktailCard": {
         "noRate": "Unrated",
         "noPicture": "No picture"
+    },
+    "SelectCocktailIngredients": {
+        "placeholder": "Search ingredients",
+        "noMatch": "No ingredients matching your research",
+        "toasters": {
+            "error": {
+                "title": "Get ingredients",
+                "description": "An error occured when getting available ingredients"
+            }
+        }
     }
 }

@@ -1,6 +1,10 @@
 @import "../../utils/styles/globals.scss";
 
 .container {
+    h1 {
+        font-weight: bold;
+    }
+
     .content {
         margin-top: 50px;
 

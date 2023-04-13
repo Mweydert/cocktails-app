@@ -10,4 +10,5 @@ export interface CreateCocktailPayload {
 export interface UpdateCocktailPayload {
     note?: number;
     picture?: File;
+    ingredients?: Ingredient[];
 }

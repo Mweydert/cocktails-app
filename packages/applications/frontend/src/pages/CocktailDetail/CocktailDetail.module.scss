@@ -10,7 +10,30 @@
 }
 
 
+.cta-icon {
+    background-color: get-color(light_gray);
+
+    min-height: 30px;
+    min-width: 30px;
+
+    @media screen and (min-width: breakpoint("tablet")) {
+        min-height: 40px;
+        min-width: 40px;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .container {
+    .cocktail-title {
+        font-weight: bold;
+    }
+
     .content {
         margin-top: 50px;
 
@@ -28,27 +51,46 @@
                     top: 20px;
                 }
 
-                .cta-icon {
-                    background-color: get-color(light_gray);
-
-                    height: 30px;
-                    width: 30px;
-
-                    @media screen and (min-width: breakpoint("tablet")) {
-                        height: 40px;
-                        width: 40px;
-                    }
-
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-
-                    border-radius: 5px;
-                    cursor: pointer;
-                }
 
                 input {
                     display: none;
+                }
+            }
+        }
+
+        .ingredients {
+            margin-top: 30px;
+
+            .title-container {
+                display: flex;
+                align-items: center;
+
+                .title {
+                    font-size: 18px;
+                    margin-right: 20px;
+                }
+
+                .cta-icon {
+                    span {
+                        padding: 5px;
+                    }
+                }
+            }
+
+            .ingredients-list {
+                margin-top: 20px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .save-ingredients-cta {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+
+                button {
+                    width: 200px;
                 }
             }
         }

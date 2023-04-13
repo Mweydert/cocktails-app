@@ -34,4 +34,4 @@ export const useCocktailIngredients = (
         isLoading,
         isError
     }
-}
+};
