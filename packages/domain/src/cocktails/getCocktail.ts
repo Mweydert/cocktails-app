@@ -1,7 +1,6 @@
 import { CocktailGateway, GetCocktailGatewayResult } from "./cocktails.contract";
 import { GetCocktailData, GetCocktailQuery, GetCocktailResult } from "./getCocktail.contract";
 import Cocktail from "./model";
-import logger from "../utils/logger";
 import { GetMediaSignedUrlGatewayResult, MediaGateway } from "../medias/medias.contract";
 import { ResultObject } from "../utils";
 

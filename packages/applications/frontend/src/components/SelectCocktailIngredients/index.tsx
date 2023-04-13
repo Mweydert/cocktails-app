@@ -1,10 +1,16 @@
-import { Tag, TagCloseButton, TagLabel, useToast } from "@chakra-ui/react";
+import {
+    Tag,
+    TagCloseButton,
+    TagLabel,
+    useToast
+} from "@chakra-ui/react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Ingredient } from "../../models/ingredients";
 import Autocomplete from "../common/Form/Autocomplete";
+import AddIngredientModal from "./AddIngredientModal";
 import styles from "./SelectCocktailIngredients.module.scss";
 import { useCocktailIngredients } from "./useCocktailIngredients";
-
 interface SelectCocktailIngredientsProps {
     value: Ingredient[];
     onChange: (ingredients: Ingredient[]) => void;
@@ -13,7 +19,7 @@ interface SelectCocktailIngredientsProps {
 const SelectCocktailIngredients = ({
     value,
     onChange,
-}: SelectCocktailIngredientsProps) => {    
+}: SelectCocktailIngredientsProps) => {
     const handleAddIngredient = (ingredient: Ingredient) => {
         const newValue = value ? [...value, ingredient] : [ingredient];
         onChange(newValue);
@@ -22,7 +28,7 @@ const SelectCocktailIngredients = ({
         const newVal = value?.filter(item => item.id !== ingredient.id);
         onChange(newVal);
     }
-    
+
     const toast = useToast();
     const {
         handleIngredientNameSearch,
@@ -36,6 +42,7 @@ const SelectCocktailIngredients = ({
                 toast({
                     title: t("SelectCocktailIngredients.toasters.error.title"),
                     description: t("SelectCocktailIngredients.toasters.error.description"),
+                    position: "top",
                     status: "error",
                     duration: 5000,
                     isClosable: true,
@@ -43,7 +50,20 @@ const SelectCocktailIngredients = ({
             }
         }
     );
-    
+
+    const handleCancelCreateIngredient = () => {
+        setIngredientToCreate("");
+    }
+    const [ingredientToCreate, setIngredientToCreate] = useState<string>("");
+    const handleAddNewIngredient = (value: string) => {
+        setIngredientToCreate(value);
+    }
+
+    const handleNewIngredientCreated = (ingredient: Ingredient) => {
+        handleAddIngredient(ingredient);
+        setIngredientToCreate("");
+    }
+
     const { t } = useTranslation();
 
     return (
@@ -72,6 +92,13 @@ const SelectCocktailIngredients = ({
                 onSearch={handleIngredientNameSearch}
                 options={selectableIngredients}
                 isLoading={isLoadingSelectaleIngredients}
+                onEnterSearch={handleAddNewIngredient}
+            />
+            <AddIngredientModal
+                isOpen={ingredientToCreate !== ""}
+                onClose={handleCancelCreateIngredient}
+                onCreated={handleNewIngredientCreated}
+                ingredientName={ingredientToCreate}
             />
         </div>
     )

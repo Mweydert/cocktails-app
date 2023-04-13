@@ -1,4 +1,4 @@
-import { useGetCocktailsInfinite } from "../../data/useGetCocktailsInfinite";
+import { useGetCocktailsInfinite } from "../../data/cocktails";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, CircularProgress } from "@chakra-ui/react"
 import styles from "./Home.module.scss";

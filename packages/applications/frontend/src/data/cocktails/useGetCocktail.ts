@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
-import { getCocktail } from "../services/cocktails"
-import QUERY_KEYS from "./keys"
+import { getCocktail } from "../../services/cocktails"
+import QUERY_KEYS from "../keys"
 
 export const useGetCocktail = (id: string) => {
     const {

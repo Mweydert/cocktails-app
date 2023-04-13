@@ -65,5 +65,21 @@
                 "description": "Une erreur est survenue lors de la récupération des ingrédients disponbibles"
             }
         }
+    },
+    "AddIngredientModal": {
+        "title": "Ajout d'ingrédient",
+        "confirmMessage": "Vous êtes sur le point de créer un nouvel ingrédient, êtes vous sur ?",
+        "cancel": "Annuler",
+        "cta": "Créer",
+        "toasters": {
+            "success": {
+                "title": "Ajout d'ingrédient",
+                "description": "Ingrédient ajouté avec succès"
+            },
+            "error": {
+                "title": "Ajout d'ingrédient",
+                "description": "Une erreur est survenue lors de l'ajout de l'ingrédient"
+            }
+        }
     }
 }

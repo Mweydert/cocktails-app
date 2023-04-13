@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Cocktail } from "../models/cocktails";
-import { UpdateCocktailPayload } from "../models/payloads";
-import { updateCocktail } from "../services/cocktails";
-import QUERY_KEYS from "./keys";
+import { Cocktail } from "../../models/cocktails";
+import { UpdateCocktailPayload } from "../../models/payloads";
+import { updateCocktail } from "../../services/cocktails";
+import QUERY_KEYS from "../keys";
 
 
 export interface UseUpdateCocktailOptions {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetIngredientsByName } from "../../data/useGetIngredientsByName";
+import { useGetIngredientsByName } from "../../data/ingredients";
 import { Ingredient } from "../../models/ingredients";
 
 interface CocktailIngredientsQueryOptions {

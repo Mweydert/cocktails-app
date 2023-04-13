@@ -19,6 +19,7 @@ interface AutocompleteProps {
     isLoading?: boolean;
     onSearch: (value: string) => void;
     onSelect: (item: Option) => void;
+    onEnterSearch?: (value: string) => void;
     clearAtSelect?: boolean;
 }
 
@@ -27,6 +28,7 @@ const Autocomplete = ({
     noContentLabel,
     onSelect,
     onSearch,
+    onEnterSearch,
     isLoading,
     options,
     clearAtSelect
@@ -67,6 +69,12 @@ const Autocomplete = ({
         onSelect(option);
     }
 
+    const handleEnterSearch = () => {
+        if (onEnterSearch) {
+            onEnterSearch(searchRawValue);
+        }
+    }
+
     return (
         <div className={styles.container} ref={ref}>
             <Input
@@ -74,6 +82,11 @@ const Autocomplete = ({
                 placeholder={placeholder}
                 onChange={handleInputChange}
                 onClick={handleToggleOptions}
+                onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                        handleEnterSearch();
+                    }
+                }}
             />
             {displayOptions && searchValue !== "" && (
                 <div className={styles["options-container"]}>

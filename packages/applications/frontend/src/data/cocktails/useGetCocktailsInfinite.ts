@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getCocktails } from "../services/cocktails";
-import { QUERY_KEYS } from "./keys";
+import { getCocktails } from "../../services/cocktails";
+import { QUERY_KEYS } from "../keys";
 
 export const useGetCocktailsInfinite = () => {
     const {

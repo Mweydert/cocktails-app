@@ -54,6 +54,7 @@ export default class CocktailInMemoryGateway implements CocktailGateway {
     async getCocktailByName(
         name: string
     ): Promise<ResultObject<GetCocktailGatewayResult, Cocktail>> {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, item] of this.data) {
             if (item.name === name) {
                 return new ResultObject(GetCocktailGatewayResult.SUCCESS, item);

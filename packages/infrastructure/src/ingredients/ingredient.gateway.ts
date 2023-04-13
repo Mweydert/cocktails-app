@@ -6,7 +6,7 @@ import {
     GET_INGREDIENT_RESULT,
     GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT,
 } from "app-domain";
-import { DataSource, Like, Raw } from "typeorm";
+import { DataSource, Raw } from "typeorm";
 
 import { Ingredient as PSQLIngredient } from "./ingredient.contract";
 import logger from "../utils/logger";

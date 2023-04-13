@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
-import { getIngredientsByName } from "../services/ingredients";
-import QUERY_KEYS from "./keys"
+import { getIngredientsByName } from "../../services/ingredients";
+import QUERY_KEYS from "../keys"
 
 export interface UseGetIngredientsByNameOptions {
     onSuccess?: () => void;
