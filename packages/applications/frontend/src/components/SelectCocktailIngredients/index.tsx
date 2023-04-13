@@ -19,7 +19,7 @@ interface SelectCocktailIngredientsProps {
 const SelectCocktailIngredients = ({
     value,
     onChange,
-}: SelectCocktailIngredientsProps) => {    
+}: SelectCocktailIngredientsProps) => {
     const handleAddIngredient = (ingredient: Ingredient) => {
         const newValue = value ? [...value, ingredient] : [ingredient];
         onChange(newValue);
@@ -28,7 +28,7 @@ const SelectCocktailIngredients = ({
         const newVal = value?.filter(item => item.id !== ingredient.id);
         onChange(newVal);
     }
-    
+
     const toast = useToast();
     const {
         handleIngredientNameSearch,
@@ -51,22 +51,17 @@ const SelectCocktailIngredients = ({
         }
     );
 
-    const [createIngredientModalIsOpen, setCreateIngredientModalIsOpen] = useState<boolean>(false);
     const handleCancelCreateIngredient = () => {
-        setCreateIngredientModalIsOpen(false);
         setIngredientToCreate("");
     }
-    // TODO: use this as isOpen boolean ? 
     const [ingredientToCreate, setIngredientToCreate] = useState<string>("");
     const handleAddNewIngredient = (value: string) => {
         setIngredientToCreate(value);
-        setCreateIngredientModalIsOpen(true);
     }
-    
+
     const handleNewIngredientCreated = (ingredient: Ingredient) => {
         handleAddIngredient(ingredient);
         setIngredientToCreate("");
-        setCreateIngredientModalIsOpen(false);
     }
 
     const { t } = useTranslation();
@@ -100,7 +95,7 @@ const SelectCocktailIngredients = ({
                 onEnterSearch={handleAddNewIngredient}
             />
             <AddIngredientModal
-                isOpen={createIngredientModalIsOpen}
+                isOpen={ingredientToCreate !== ""}
                 onClose={handleCancelCreateIngredient}
                 onCreated={handleNewIngredientCreated}
                 ingredientName={ingredientToCreate}
