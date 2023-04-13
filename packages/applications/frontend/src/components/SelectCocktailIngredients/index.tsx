@@ -12,7 +12,7 @@ interface SelectCocktailIngredientsProps {
 
 const SelectCocktailIngredients = ({
     value,
-    onChange
+    onChange,
 }: SelectCocktailIngredientsProps) => {    
     const handleAddIngredient = (ingredient: Ingredient) => {
         const newValue = value ? [...value, ingredient] : [ingredient];
@@ -47,11 +47,12 @@ const SelectCocktailIngredients = ({
     const { t } = useTranslation();
 
     return (
-        <div>
+        <div className={styles.container}>
             <div className={styles["selected-ingredients"]}>
                 {value?.map(ingredient => (
                     <div className={styles["selected-ingredient"]}>
                         <Tag
+                            borderRadius="2xl"
                             key={ingredient.id}
                             onClick={() => handleRemoveIngredient(ingredient)}
                         >

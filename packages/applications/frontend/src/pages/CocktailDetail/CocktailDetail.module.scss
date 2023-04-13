@@ -30,6 +30,10 @@
 }
 
 .container {
+    .cocktail-title {
+        font-weight: bold;
+    }
+
     .content {
         margin-top: 50px;
 
@@ -57,20 +61,37 @@
         .ingredients {
             margin-top: 30px;
 
-            .title {
+            .title-container {
                 display: flex;
                 align-items: center;
 
-                span {
+                .title {
+                    font-size: 18px;
                     margin-right: 20px;
+                }
+
+                .cta-icon {
+                    span {
+                        padding: 5px;
+                    }
                 }
             }
 
             .ingredients-list {
-                margin-top: 10px;
+                margin-top: 20px;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 10px;
+            }
+
+            .save-ingredients-cta {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+
+                button {
+                    width: 200px;
+                }
             }
         }
     }

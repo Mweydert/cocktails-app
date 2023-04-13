@@ -100,7 +100,7 @@ const CocktailDetail = () => {
                 </Alert>
             ) : (
                 <>
-                    <h1>{data.name}</h1>
+                    <h1 className={styles["cocktail-title"]}>{data.name}</h1>
                     <div className={styles.content}>
                         <div className={styles.rate}>
                             <RatingInput
@@ -124,6 +124,7 @@ const CocktailDetail = () => {
                                 />
                             </div>
                             
+                            {/* TODO: limite picture height */}
                             {data.pictureUrl ? (
                                 <img src={data.pictureUrl} alt="" />
                             ): (
@@ -133,8 +134,8 @@ const CocktailDetail = () => {
                             )}
                         </div>
                         <div className={styles.ingredients}>
-                            <div className={styles.title}>
-                                <span>{t("cocktailDetail.ingredients.title")}</span>
+                            <div className={styles["title-container"]}>
+                                <h2 className={styles.title}>{t("cocktailDetail.ingredients.title")}</h2>
                                 <div
                                     className={styles["cta-icon"]}
                                     onClick={handleToggleEditIngredients}
@@ -155,7 +156,7 @@ const CocktailDetail = () => {
                                         />
                                     ) : (
                                         data.ingredients.map(ingredient => (
-                                            <Tag key={ingredient.id}>
+                                            <Tag borderRadius="2xl" key={ingredient.id}>
                                                 <TagLabel>{ingredient.name}</TagLabel>
                                             </Tag>
                                         ))
@@ -169,7 +170,7 @@ const CocktailDetail = () => {
                                 </>
                             )}
                             {isEditingIngredients && (
-                                <div>
+                                <div className={styles["save-ingredients-cta"]}>
                                     <Button
                                         colorScheme="yellow"
                                         isLoading={mutateLoading}
