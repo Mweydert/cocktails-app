@@ -65,5 +65,11 @@
                 "description": "Une erreur est survenue lors de la récupération des ingrédients disponbibles"
             }
         }
+    },
+    "AddIngredientModal": {
+        "title": "Ajout d'ingrédient",
+        "confirmMessage": "Vous êtes sur le point de créer un nouvel ingrédient, êtes vous sur ?",
+        "cancel": "Annuler",
+        "cta": "Créer"
     }
 }

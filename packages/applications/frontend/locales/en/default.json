@@ -64,6 +64,22 @@
                 "title": "Get ingredients",
                 "description": "An error occured when getting available ingredients"
             }
+        },
+        "AddIngredientModal": {
+            "title": "Add ingredient",
+            "confirmMessage": "You're about to create a new ingredient, are you sure?",
+            "cancel": "Cancel",
+            "cta": "Create",
+            "toasters": {
+                "success": {
+                    "title": "Add ingredient",
+                    "description": "Ingredient successfully added"
+                },
+                "error": {
+                    "title": "Add ingredient",
+                    "description": "An error occured when creating ingredient"
+                }
+            }
         }
     }
 }

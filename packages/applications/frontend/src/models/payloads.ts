@@ -12,3 +12,7 @@ export interface UpdateCocktailPayload {
     picture?: File;
     ingredients?: Ingredient[];
 }
+
+export interface CreateIngredientPayload {
+    name: string;
+}
