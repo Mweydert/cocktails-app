@@ -27,6 +27,7 @@ export default class InMemoryIngredientGateway implements IngredientGateway {
     async getIngredientByName(
         name: string
     ): Promise<ResultObject<GET_INGREDIENT_RESULT, Ingredient>> {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, item] of this.data) {
             if (item.name.toLowerCase() === name.toLowerCase()) {
                 return new ResultObject(GET_INGREDIENT_RESULT.SUCCESS, item);
@@ -51,6 +52,7 @@ export default class InMemoryIngredientGateway implements IngredientGateway {
         value: string
     ): Promise<ResultObject<GET_INGREDIENTS_WITH_NAME_MATCHING_RESULT, Ingredient[]>> {
         const res: Ingredient[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, item] of this.data) {
             if (item.name.toLowerCase().includes(value.toLowerCase())) {
                 res.push(item);
