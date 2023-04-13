@@ -124,6 +124,7 @@ router.get("/:id", async (ctx, next) => {
     const query = GetCocktailScheme.safeParse(ctx.params);
 
     if (!query.success) {
+        logger.warn("CocktailRouter - GET /:id - Invalid query", query.error);
         ctx.status = 400;
         ctx.body = query.error;
         return;
@@ -151,6 +152,7 @@ router.get("/", async (ctx, next) => {
 
     const query = GetCocktailListScheme.safeParse(ctx.query);
     if (!query.success) {
+        logger.warn("CocktailRouter - GET / - Invalid query", ctx.query);
         ctx.status = 400;
         ctx.body = query.error;
         return;
@@ -181,7 +183,7 @@ router.put("/:id", upload.single("picture"), async (ctx, next) => {
         id: ctx.params.id,
     });
     if (!parsedId.success) {
-        // TODO: log warning
+        logger.warn("CocktailRouter - PUT /:id - Invalid ID", ctx.params.id);
         ctx.status = 400;
         ctx.body = parsedId.error;
         return;
@@ -202,13 +204,15 @@ router.put("/:id", upload.single("picture"), async (ctx, next) => {
         ctx.request.body.ingredients = parsedIngredients.data;
     }
     const parsedBody = UpdateCocktailBodyScheme.safeParse(ctx.request.body)
-    const parsedPicture = UpdateCocktailPictureScheme.safeParse(ctx.request.file)
     if (!parsedBody.success) {
+        logger.warn("CocktailRouter - PUT /:id - Invalid body", ctx.request.body);
         ctx.status = 400;
         ctx.body = parsedBody.error;
         return;
     }
+    const parsedPicture = UpdateCocktailPictureScheme.safeParse(ctx.request.file);
     if (!parsedPicture.success) {
+        logger.warn("CocktailRouter - PUT /:id - Invalid file");
         ctx.status = 400;
         ctx.body = parsedPicture.error;
         return;

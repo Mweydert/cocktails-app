@@ -49,6 +49,7 @@ router.get("/", async (ctx, next) => {
 
     const query = GetIngredientsByNameScheme.safeParse(ctx.query);
     if (!query.success) {
+        logger.warn("Ingredient Router - GET / - Invalid query", query.error);
         ctx.status = 400;
         ctx.body = query.error;
         return;
