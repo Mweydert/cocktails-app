@@ -37,26 +37,41 @@
     .content {
         margin-top: 50px;
 
-        .picture {
-            margin-top: 30px;
-            position: relative;
+        .picture-container {
+            display: flex;
+            justify-content: center;
 
-            .edit-picture-cta {
-                position: absolute;
-                right: 10px;
-                top: 10px;
+            .picture {
+                height: 100%;
+                width: fit-content;
 
-                @media screen and (min-width: breakpoint("tablet")) {
-                    right: 20px;
-                    top: 20px;
+                img {
+                    height: 400px;
+                    background-color: get-color-variant(gray, 0.2);
+                    object-fit: contain;
                 }
 
+                margin-top: 30px;
+                position: relative;
 
-                input {
-                    display: none;
+                .edit-picture-cta {
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+
+                    @media screen and (min-width: breakpoint("tablet")) {
+                        right: 20px;
+                        top: 20px;
+                    }
+
+
+                    input {
+                        display: none;
+                    }
                 }
             }
         }
+
 
         .ingredients {
             margin-top: 30px;

@@ -108,30 +108,32 @@ const CocktailDetail = () => {
                                 onRate={handleUpdateNote}
                             />
                         </div>
-                        <div className={styles.picture}>
-                            <div className={styles["edit-picture-cta"]}>
-                                <label htmlFor="file-input">
-                                    <div className={styles["cta-icon"]}>
-                                        <EditIcon />
-                                    </div>
-                                </label>
+                        <div className={styles["picture-container"]}>
+                            <div className={styles.picture}>
+                                <div className={styles["edit-picture-cta"]}>
+                                    <label htmlFor="file-input">
+                                        <div className={styles["cta-icon"]}>
+                                            <EditIcon />
+                                        </div>
+                                    </label>
                                 
-                                <input
-                                    id="file-input"
-                                    type="file"
-                                    accept="image/png,image/jpeg,image/jpg"
-                                    onChange={handleFileSelected}
-                                />
-                            </div>
-                            
-                            {/* TODO: limite picture height */}
-                            {data.pictureUrl ? (
-                                <img src={data.pictureUrl} alt="" />
-                            ): (
-                                <div className={styles["no-picture"]}>
-                                    {t("cocktailDetail.noPicture")}
+                                    <input
+                                        id="file-input"
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg"
+                                        onChange={handleFileSelected}
+                                    />
                                 </div>
-                            )}
+                            
+                                {/* TODO: limite picture height */}
+                                {data.pictureUrl ? (
+                                    <img src={data.pictureUrl} alt="" />
+                                ): (
+                                    <div className={styles["no-picture"]}>
+                                        {t("cocktailDetail.noPicture")}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         <div className={styles.ingredients}>
                             <div className={styles["title-container"]}>
