@@ -10,7 +10,7 @@ import {
     useToast
 } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next";
-import { useCreateIngredient } from "../../data/useCreateIngredient";
+import { useCreateIngredient } from "../../data/ingredients";
 import { Ingredient } from "../../models/ingredients";
 
 interface AddIngredientModalProps {

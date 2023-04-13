@@ -1,15 +1,16 @@
 import { useMutation } from "@tanstack/react-query"
-import { createCocktail } from "../services/cocktails"
+import { Ingredient } from "../../models/ingredients";
+import { createIngredient } from "../../services/ingredients"
 
-export interface UseCreateCocktailParams {
-    onSuccess?: () => void;
+export interface UseCreateIngredientParams {
+    onSuccess?: (data: Ingredient) => void;
     onError?: (error: unknown) => void;
 }
 
-export const useCreateCocktail = ({
+export const useCreateIngredient = ({
     onSuccess,
     onError,
-}: UseCreateCocktailParams = {}) => {
+}: UseCreateIngredientParams = {}) => {
     const {
         mutate,
         isLoading,
@@ -17,7 +18,7 @@ export const useCreateCocktail = ({
         error,
         isSuccess
     } = useMutation({
-        mutationFn: createCocktail,
+        mutationFn: createIngredient,
         onError,
         onSuccess,
     });

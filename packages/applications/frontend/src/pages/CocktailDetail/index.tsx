@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
 import styles from "./CocktailDetail.module.scss";
 import { useParams } from "react-router-dom";
-import { useGetCocktail } from "../../data/useGetCocktail";
+import { useGetCocktail, useUpdateCocktail } from "../../data/cocktails";
 import { Alert, Button, CircularProgress, Tag, TagLabel, useToast } from "@chakra-ui/react";
 import RatingInput from "../../components/common/Form/RatingInput";
-import { useUpdateCocktail } from "../../data/useUpdateCocktail";
 import { EditIcon } from "@chakra-ui/icons";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Ingredient } from "../../models/ingredients";

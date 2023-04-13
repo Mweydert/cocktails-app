@@ -10,7 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import RatingInput from "../../components/common/Form/RatingInput";
-import { useCreateCocktail } from "../../data/useCreateCocktail";
+import { useCreateCocktail } from "../../data/cocktails";
 import { CreateCocktailPayload } from "../../models/payloads";
 import { ROUTE_PATH } from "../../router";
 import styles from "./AddCocktail.module.scss";

@@ -1,18 +1,15 @@
-// TODO: folder in data
-
 import { useMutation } from "@tanstack/react-query"
-import { Ingredient } from "../models/ingredients";
-import { createIngredient } from "../services/ingredients"
+import { createCocktail } from "../../services/cocktails"
 
-export interface UseCreateIngredientParams {
-    onSuccess?: (data: Ingredient) => void;
+export interface UseCreateCocktailParams {
+    onSuccess?: () => void;
     onError?: (error: unknown) => void;
 }
 
-export const useCreateIngredient = ({
+export const useCreateCocktail = ({
     onSuccess,
     onError,
-}: UseCreateIngredientParams = {}) => {
+}: UseCreateCocktailParams = {}) => {
     const {
         mutate,
         isLoading,
@@ -20,7 +17,7 @@ export const useCreateIngredient = ({
         error,
         isSuccess
     } = useMutation({
-        mutationFn: createIngredient,
+        mutationFn: createCocktail,
         onError,
         onSuccess,
     });
