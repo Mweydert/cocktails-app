@@ -4,7 +4,7 @@ services:
   lb:
     image: lb:latest
     build:
-      context: ./infra/nginx
+      context: ./infra/local/nginx
     ports:
       - 80:80
     networks:
